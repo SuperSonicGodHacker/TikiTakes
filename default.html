@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tiki Takes - Pizza and Lemonade</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
+        }
+        header {
+            background-color: #ff5733;
+            color: white;
+            padding: 10px 0;
+            text-align: center;
+        }
+        nav {
+            background-color: #c70039;
+            color: white;
+            display: flex;
+            justify-content: center;
+            padding: 10px 0;
+        }
+        nav a {
+            color: white;
+            margin: 0 15px;
+            text-decoration: none;
+        }
+        .hero {
+            background: url('https://via.placeholder.com/1200x400') no-repeat center center/cover;
+            height: 400px;
+            text-align: center;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2em;
+        }
+        .container {
+            width: 80%;
+            margin: 20px auto;
+        }
+        .menu, .contact {
+            margin: 20px 0;
+        }
+        .menu-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+        .menu-item:last-child {
+            border-bottom: none;
+        }
+        .menu-item h3, .menu-item p {
+            margin: 0;
+        }
+        footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Tiki Takes - Pizza and Lemonade</h1>
+    </header>
+    <nav>
+        <a href="#home">Home</a>
+        <a href="#menu">Menu</a>
+        <a href="#contact">Contact</a>
+    </nav>
+    <section class="hero" id="home">
+        <div>Delicious Pizza and Refreshing Lemonade</div>
+    </section>
+    <div class="container">
+        <section class="menu" id="menu">
+            <h2>Our Menu</h2>
+            <div class="menu-item">
+                <h3>Classic Margherita Pizza</h3>
+                <p>$10.00</p>
+            </div>
+            <div class="menu-item">
+                <h3>Pepperoni Pizza</h3>
+                <p>$12.00</p>
+            </div>
+            <div class="menu-item">
+                <h3>Veggie Pizza</h3>
+                <p>$11.00</p>
+            </div>
+            <div class="menu-item">
+                <h3>Fresh Lemonade</h3>
+                <p>$3.00</p>
+            </div>
+        </section>
+        <section class="contact" id="contact">
+            <h2>Contact Us</h2>
+            <form action="https://example.com/contact" method="post">
+                <div>
+                    <label for="name">Name:</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                <div>
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <div>
+                    <label for="message">Message:</label>
+                    <textarea id="message" name="message" required></textarea>
+                </div>
+                <div>
+                    <button type="submit">Send</button>
+                </div>
+            </form>
+        </section>
+    </div>
+    <footer>
+        <p>&copy; 2024 Tiki Takes. All rights reserved.</p>
+    </footer>
+</body>
+</html>
