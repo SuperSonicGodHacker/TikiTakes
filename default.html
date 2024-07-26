@@ -1,3 +1,21 @@
+<?php
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $name = htmlspecialchars($_POST['name']);
+    $email = htmlspecialchars($_POST['email']);
+    $message = htmlspecialchars($_POST['message']);
+
+    $to = 'vihaannbhatt@gmail.com';
+    $subject = 'New Contact Form Submission';
+    $body = "Name: $name\nEmail: $email\nMessage: $message";
+    $headers = "From: $email";
+
+    if (mail($to, $subject, $body, $headers)) {
+        echo "Message sent successfully!";
+    } else {
+        echo "Failed to send message.";
+    }
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -125,7 +143,7 @@
         </section>
         <section class="contact" id="contact">
             <h2>Contact Us</h2>
-            <form action="https://example.com/contact" method="post">
+            <form action="contact.php" method="post">
                 <div>
                     <label for="name">Name:</label>
                     <input type="text" id="name" name="name" required>
