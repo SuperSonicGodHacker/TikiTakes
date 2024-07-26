@@ -1,21 +1,33 @@
 <?php
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $name = htmlspecialchars($_POST['name']);
-    $email = htmlspecialchars($_POST['email']);
-    $message = htmlspecialchars($_POST['message']);
+    // Sanitize and validate inputs
+    $name = filter_var(trim($_POST['name']), FILTER_SANITIZE_STRING);
+    $email = filter_var(trim($_POST['email']), FILTER_SANITIZE_EMAIL);
+    $message = filter_var(trim($_POST['message']), FILTER_SANITIZE_STRING);
 
-    $to = 'vihaannbhatt@gmail.com';
-    $subject = 'New Contact Form Submission';
-    $body = "Name: $name\nEmail: $email\nMessage: $message";
-    $headers = "From: $email";
-
-    if (mail($to, $subject, $body, $headers)) {
-        echo "Message sent successfully!";
+    // Validate email
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $feedback = "Invalid email address.";
     } else {
-        echo "Failed to send message.";
+        // Email details
+        $to = 'vihaannbhatt@gmail.com';
+        $subject = 'New Contact Form Submission';
+        $body = "Name: $name\nEmail: $email\nMessage: $message";
+        $headers = "From: $email\r\n";
+        $headers .= "Reply-To: $email\r\n";
+        $headers .= "X-Mailer: PHP/" . phpversion();
+
+        // Send email and log the result
+        if (mail($to, $subject, $body, $headers)) {
+            $feedback = "Message sent successfully!";
+        } else {
+            $error_message = error_get_last()['message'];
+            $feedback = "Failed to send message. Error: " . $error_message;
+        }
     }
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -143,7 +155,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </section>
         <section class="contact" id="contact">
             <h2>Contact Us</h2>
-            <form action="contact.php" method="post">
+            <?php
+            if (isset($feedback)) {
+                echo "<p>$feedback</p>";
+            }
+            ?>
+            <form action="" method="post">
                 <div>
                     <label for="name">Name:</label>
                     <input type="text" id="name" name="name" required>
