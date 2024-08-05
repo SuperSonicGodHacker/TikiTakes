@@ -1,32 +1,3 @@
-<?php
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Sanitize and validate inputs
-    $name = filter_var(trim($_POST['name']), FILTER_SANITIZE_STRING);
-    $email = filter_var(trim($_POST['email']), FILTER_SANITIZE_EMAIL);
-    $message = filter_var(trim($_POST['message']), FILTER_SANITIZE_STRING);
-
-    // Validate email
-    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        $feedback = "Invalid email address.";
-    } else {
-        // Email details
-        $to = 'vihaannbhatt@gmail.com';
-        $subject = 'New Contact Form Submission';
-        $body = "Name: $name\nEmail: $email\nMessage: $message";
-        $headers = "From: $email\r\n";
-        $headers .= "Reply-To: $email\r\n";
-        $headers .= "X-Mailer: PHP/" . phpversion();
-
-        // Send email and log the result
-        if (mail($to, $subject, $body, $headers)) {
-            $feedback = "Message sent successfully!";
-        } else {
-            $error_message = error_get_last()['message'];
-            $feedback = "Failed to send message. Error: " . $error_message;
-        }
-    }
-}
-?>
 
 <!DOCTYPE html>
 <html lang="en">
