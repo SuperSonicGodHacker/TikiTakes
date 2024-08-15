@@ -54,8 +54,6 @@
         }
 
         .hero {
-            background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),
-            url('https://images.unsplash.com/photo-1601924638867-3a6c1b2b5c9c?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80') no-repeat center center/cover;
             height: 500px;
             text-align: center;
             display: flex;
@@ -214,7 +212,7 @@
         <a href="#contact">Contact</a>
     </nav>
     <section class="hero" id="home">
-        <img src="your-image-url-here" alt="Pizza and Lemonade">
+        <img src="data:image/jpeg;base64,YOUR_BASE64_ENCODED_IMAGE_HERE" alt="Pizza and Lemonade">
     </section>
     <div class="container">
         <section class="menu" id="menu">
@@ -234,11 +232,6 @@
         </section>
         <section class="contact" id="contact">
             <h2>Contact Us</h2>
-            <?php
-            if (isset($feedback)) {
-                echo "<p>$feedback</p>";
-            }
-            ?>
             <form action="" method="post">
                 <div>
                     <label for="name">Name:</label>
@@ -264,3 +257,4 @@
 </body>
 
 </html>
+
