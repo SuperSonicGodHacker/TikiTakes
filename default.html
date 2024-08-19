@@ -100,34 +100,48 @@
     </footer>
 
     <script>
+        // Function to load dishes from localStorage and display them
+        function loadDishes() {
+            const dishes = JSON.parse(localStorage.getItem('dishes')) || [];
+            const dishList = document.getElementById('dish-list');
+            dishList.innerHTML = '<h2>Available Dishes</h2>'; // Clear the dish list with header
+
+            dishes.forEach(dish => {
+                const dishItem = document.createElement('div');
+                dishItem.className = 'dish-item';
+                dishItem.innerHTML = `
+                    <h3>${dish.name}</h3>
+                    <p>Price: $${dish.price}</p>
+                `;
+                dishList.appendChild(dishItem);
+            });
+        }
+
+        // Function to add a new dish and save it to localStorage
         function addDish() {
-            // Get the dish name and price from input fields
             const dishName = document.getElementById('dishName').value;
             const dishPrice = document.getElementById('dishPrice').value;
 
-            // Validate input
             if (dishName === '' || dishPrice === '') {
                 alert('Please enter both dish name and price.');
                 return;
             }
 
-            // Create a new dish item
-            const dishList = document.getElementById('dish-list');
-            const dishItem = document.createElement('div');
-            dishItem.className = 'dish-item';
-            dishItem.innerHTML = `
-                <h3>${dishName}</h3>
-                <p>Price: $${dishPrice}</p>
-            `;
+            const dishes = JSON.parse(localStorage.getItem('dishes')) || [];
 
-            // Append the dish item to the list
-            dishList.appendChild(dishItem);
+            dishes.push({ name: dishName, price: dishPrice });
+            localStorage.setItem('dishes', JSON.stringify(dishes));
 
-            // Clear input fields
+            loadDishes();
+
             document.getElementById('dishName').value = '';
             document.getElementById('dishPrice').value = '';
         }
+
+        // Load dishes when the page is loaded
+        window.onload = loadDishes;
     </script>
 </body>
 </html>
+
 
