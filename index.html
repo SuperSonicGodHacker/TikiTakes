@@ -1,109 +1,265 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
-<title>W3.CSS Template</title>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-<style>
-body {font-family: "Pacifico", Georgia, Serif;}
-h1, h2, h3, h4, h5, h6 {
-  font-family: "Playfair Display";
-  letter-spacing: 5px;
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tiki Takes - Pizza and Lemonade</title>
+    <style>
+        /* Import Google Fonts */
+        @import url('https://fonts.googleapis.com/css2?family=Pacifico&family=Roboto:wght@300;400;500;700&display=swap');
+
+        /* Base Styles */
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 30px 0;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        header h1 {
+            font-family: 'Pacifico', cursive;
+            font-size: 3em;
+            margin: 0;
+        }
+
+        nav {
+            background-color: #34495e;
+            display: flex;
+            justify-content: center;
+            padding: 15px 0;
+        }
+
+        nav a {
+            color: white;
+            margin: 0 20px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s, transform 0.3s;
+        }
+
+        nav a:hover {
+            color: #1abc9c;
+            transform: scale(1.1);
+        }
+
+        .hero {
+            height: 500px;
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        .hero img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .container {
+            width: 85%;
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+
+        .menu,
+        .contact,
+        .survey {
+            margin: 40px 0;
+        }
+
+        .menu h2,
+        .contact h2,
+        .survey h2 {
+            margin-bottom: 20px;
+            font-size: 2em;
+            color: #2c3e50;
+            text-align: center;
+        }
+
+        .menu-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px 20px;
+            border-bottom: 1px solid #ddd;
+            align-items: center;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        .menu-item:hover {
+            background-color: #f1f1f1;
+            transform: translateY(-5px);
+        }
+
+        .menu-item:last-child {
+            border-bottom: none;
+        }
+
+        .menu-item h3 {
+            margin: 0;
+            font-size: 1.4em;
+            color: #34495e;
+        }
+
+        .menu-item p {
+            margin: 0;
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #1abc9c;
+        }
+
+        footer {
+            background-color: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 25px 0;
+            margin-top: 30px;
+        }
+
+        /* Form Styles */
+        form {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            background-color: #f9f9f9;
+        }
+
+        form div {
+            display: flex;
+            flex-direction: column;
+        }
+
+        form label {
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        form input,
+        form textarea,
+        form select {
+            padding: 10px;
+            border: 1px solid #bdc3c7;
+            border-radius: 5px;
+            font-size: 1em;
+            transition: border-color 0.3s;
+        }
+
+        form input:focus,
+        form textarea:focus,
+        form select:focus {
+            border-color: #1abc9c;
+            outline: none;
+        }
+
+        form button {
+            background-color: #1abc9c;
+            color: white;
+            border: none;
+            cursor: pointer;
+            padding: 10px;
+            font-size: 1.1em;
+            border-radius: 5px;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        form button:hover {
+            background-color: #16a085;
+            transform: scale(1.05);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .menu-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .hero {
+                height: 300px;
+            }
+
+            .container {
+                width: 95%;
+            }
+        }
+    </style>
 </head>
+
 <body>
-
-<!-- Navbar (sit on top) -->
-<div class="w3-top">
-  <div class="w3-bar w3-white w3-padding w3-card" style="letter-spacing:4px;">
-    <a href="#home" class="w3-bar-item w3-button">TikiTakes</a>
-    <!-- Right-sided navbar links. Hide them on small screens -->
-    <div class="w3-right w3-hide-small">
-      <a href="#about" class="w3-bar-item w3-button">About</a>
-      <a href="#menu" class="w3-bar-item w3-button">Menu</a>
-      <a href="#contact" class="w3-bar-item w3-button">Contact</a>
-    </div>
-  </div>
-</div>
-
-<!-- Header -->
-<header class="w3-display-container w3-content w3-wide" style="max-width:1600px;min-width:500px" id="home">
-  <img class="w3-image" src="/w3images/hamburger.jpg" alt="Hamburger Catering" width="1600" height="800">
-  <div class="w3-display-bottomleft w3-padding-large w3-opacity">
-    <h1 class="w3-xxlarge">Le Catering</h1>
-  </div>
-</header>
-
-<!-- Page content -->
-<div class="w3-content" style="max-width:1100px">
-
-  <!-- About Section -->
-  <div class="w3-row w3-padding-64" id="about">
-    <div class="w3-col m6 w3-padding-large w3-hide-small">
-     <img src="/w3images/tablesetting2.jpg" class="w3-round w3-image w3-opacity-min" alt="Table Setting" width="600" height="750">
-    </div>
-
-    <div class="w3-col m6 w3-padding-large">
-      <h1 class="w3-center">About TikiTakes</h1><br>
-      <h5 class="w3-center">Started in 2024</h5>
-      <p class="w3-large">TikiTakes is a restaurant made by Vihaan Bhatt the idea was that people could have a lovely and delightful time we hope have a great and enjoyable time at tikitakes thanks for coming !! </p>
-      <p class="w3-large w3-text-blue" w3-hide-medium">TikiTakes es un restaurante hecho por Vihaan Bhatt, la idea era que la gente pudiera pasar un rato agradable y placentero. Esperamos que lo pases muy bien en tikitakes, ¡¡gracias por venir!</p>
-    </div>
-  </div>
-  
-  <hr>
-  
-  <!-- Menu Section -->
-  <div class="w3-row w3-padding-64" id="menu">
-    <div class="w3-col l6 w3-padding-large">
-      <h1 class="w3-center">Our Menu</h1><br>
-      <h4>Bhakri Pizza</h4>
-      <p class="w3-text-blue">With a nice Bhakhari Base and Tomato Sauce, With some lovely topping on top !! 12.50$</p><br>
-    
-      <h4>Brownies</h4>
-      <p class="w3-text-blue">With chocolate and fudge, wwith a delightful amount of sprinkles !!5.00$</p><br>
-    
-      <h4>Lemonade</h4>
-      <p class="w3-text-blue">Made out of perfectly cut lemons with some cold ice on top 2.00$ </p><br>
-    
-      <h4>Coffee</h4>
-      <p class="w3-text-blue">Coffee with sugar and cream to make a start to your delightful day !!</p><br>
-    
-      <h4>Water</h4>
-      <p class="w3-text-blue">50 Cents with ice + 25 Cents/p>    
-    </div>
-    
-    <div class="w3-col l6 w3-padding-large">
-      <img src="/w3images/tablesetting.jpg" class="w3-round w3-image w3-opacity-min" alt="Menu" style="width:100%">
-    </div>
-  </div>
-
-  <hr>
-
-  <!-- Contact Section -->
-  <div class="w3-container w3-padding-64" id="contact">
-    <h1>Contact</h1><br>
-    <p>We offer full-service catering for any event, large or small. We understand your needs and we will cater the food to satisfy the biggerst criteria of them all, both look and taste. Do not hesitate to contact us.</p>
-    <p class="w3-text-blue-grey w3-large"><b>Catering Service, House # 11127 In Your Own Community</b></p>
-    <p>,</p>
-    <form action="/action_page.php" target="_blank">
-      <p><input class="w3-input w3-padding-16" type="text" placeholder="Name" required name="Name"></p>
-      <p><input class="w3-input w3-padding-16" type="number" placeholder="How many people" required name="People"></p>
-      <p><input class="w3-input w3-padding-16" type="datetime-local" placeholder="Date and time" required name="date" value="2020-11-16T20:00"></p>
-      <p><input class="w3-input w3-padding-16" type="text" placeholder="Message \ Special requirements" required name="Message"></p>
-      <p><button class="w3-button w3-light-grey w3-section" type="submit">SEND MESSAGE</button></p>
-    </form>
-  </div>
-  
-<!-- End page content -->
-</div>
-
-<!-- Footer -->
-<footer class="w3-center w3-light-grey w3-padding-32">
-  <p>Powered by <a href="https://www.w3schools.com/w3css/default.asp" title="W3.CSS" target="_blank" class="w3-hover-text-green">w3.css</a></p>
-</footer>
-
+    <header>
+        <h1>Tiki Takes - Delicious Pizza and Refreshing Lemonade</h1>
+    </header>
+    <nav>
+        <a href="#home">Home</a>
+        <a href="#menu">Menu</a>
+        <a href="#contact">Contact</a>
+        <a href="#survey">Survey</a>
+        <a href="https://docs.google.com/forms/d/1zKlUp-oiHBVUapup6QZq24yjISbc-psXuHFHqQXTyTo/edit?pli=1#response=ACYDBNgdFjlg_KYsar2sbKDDzRil97seuoALTLUEXwNwHOIkudg4BgUN2lGXwaCIZ-Mc2k0" target="_blank">Feedback Form</a>
+    </nav>
+    <section class="hero" id="home">
+        <img src="data:image/jpeg;base64,YOUR_BASE64_ENCODED_IMAGE_HERE" alt="Pizza and Lemonade">
+    </section>
+    <div class="container">
+        <section class="menu" id="menu">
+            <h2>Our Menu</h2>
+            <div class="menu-item">
+                <h3>Bhakri Pizza</h3>
+                <p>$6.00</p>
+            </div>
+            <div class="menu-item">
+                <h3>Fresh Lemonade</h3>
+                <p>$3.00</p>
+            </div>
+            <div class="menu-item">
+                <h3>Water</h3>
+                <p>$2.00</p>
+            </div>
+        </section>
+        <section class="contact" id="contact">
+            <h2>Contact Us</h2>
+            <form action="" method="post">
+                <div>
+                    <label for="name">Name:</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                <div>
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <div>
+                    <label for="message">Message:</label>
+                    <textarea id="message" name="message" required></textarea>
+                </div>
+                <div>
+                    <button type="submit">Send</button>
+                </div>
+            </form>
+        </section>
+        <section class="survey" id="survey">
+           
+        <p>&copy; 2024 Tiki Takes. All rights reserved.</p>
+    </footer>
 </body>
+
 </html>
