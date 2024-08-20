@@ -1,3 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Food Sales</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        #form-container {
+            margin-bottom: 20px;
+        }
+        .dish {
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #ccc;
+        }
+    </style>
+</head>
+<body>
+    <h1>Sell Your Food</h1>
+    <div id="form-container">
+        <input type="text" id="dish-name" placeholder="Enter dish name">
+        <input type="number" id="dish-price" placeholder="Enter price">
+        <button onclick="addDish()">Add Dish</button>
+    </div>
+    <h2>Available Dishes:</h2>
+    <div id="dish-list"></div>
+
+    <script>
+        function addDish() {
+            var dishName = document.getElementById("dish-name").value;
+            var dishPrice = document.getElementById("dish-price").value;
+
+            if(dishName && dishPrice) {
+                var dishList = document.getElementById("dish-list");
+                var dishDiv = document.createElement("div");
+                dishDiv.className = "dish";
+                dishDiv.innerHTML = "<strong>" + dishName + "</strong> - $" + dishPrice;
+
+                dishList.appendChild(dishDiv);
+
+                // Clear input fields
+                document.getElementById("dish-name").value = "";
+                document.getElementById("dish-price").value = "";
+            } else {
+                alert("Please enter both dish name and price.");
+            }
+        }
+    </script>
+</body>
+</html>
 
 
 
