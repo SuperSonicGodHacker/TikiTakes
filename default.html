@@ -74,26 +74,12 @@
             margin: 5px 0 0;
             color: #333;
         }
-
-        .dish-item button {
-            background-color: #f44336;
-            color: white;
-            border: none;
-            padding: 5px 10px;
-            border-radius: 3px;
-            cursor: pointer;
-            margin-top: 10px;
-        }
-
-        .dish-item button:hover {
-            background-color: #e53935;
-        }
     </style>
 </head>
 <body>
     <header>
         <h1>Welcome to Dish Market!</h1>
-        <p>Sell your dish and manage your stock easily!</p>
+        <p>Sell your dish and earn money!</p>
     </header>
 
     <section>
@@ -101,7 +87,6 @@
             <h2>Add Your Dish</h2>
             <input type="text" id="dishName" placeholder="Dish Name" />
             <input type="number" id="dishPrice" placeholder="Price ($)" />
-            <input type="password" id="dishPassword" placeholder="Set a Password" />
             <button onclick="addDish()">Add Dish</button>
         </div>
         <div id="dish-list">
@@ -121,13 +106,12 @@
             const dishList = document.getElementById('dish-list');
             dishList.innerHTML = '<h2>Available Dishes</h2>'; // Clear the dish list with header
 
-            dishes.forEach((dish, index) => {
+            dishes.forEach(dish => {
                 const dishItem = document.createElement('div');
                 dishItem.className = 'dish-item';
                 dishItem.innerHTML = `
                     <h3>${dish.name}</h3>
                     <p>Price: $${dish.price}</p>
-                    <button onclick="removeDish(${index})">Remove Dish</button>
                 `;
                 dishList.appendChild(dishItem);
             });
@@ -137,37 +121,21 @@
         function addDish() {
             const dishName = document.getElementById('dishName').value;
             const dishPrice = document.getElementById('dishPrice').value;
-            const dishPassword = document.getElementById('dishPassword').value;
 
-            if (dishName === '' || dishPrice === '' || dishPassword === '') {
-                alert('Please enter dish name, price, and password.');
+            if (dishName === '' || dishPrice === '') {
+                alert('Please enter both dish name and price.');
                 return;
             }
 
             const dishes = JSON.parse(localStorage.getItem('dishes')) || [];
 
-            dishes.push({ name: dishName, price: dishPrice, password: dishPassword });
+            dishes.push({ name: dishName, price: dishPrice });
             localStorage.setItem('dishes', JSON.stringify(dishes));
 
             loadDishes();
 
             document.getElementById('dishName').value = '';
             document.getElementById('dishPrice').value = '';
-            document.getElementById('dishPassword').value = '';
-        }
-
-        // Function to remove a dish by verifying the password
-        function removeDish(index) {
-            const dishes = JSON.parse(localStorage.getItem('dishes'));
-            const enteredPassword = prompt('Enter the password to remove this dish:');
-
-            if (enteredPassword === dishes[index].password) {
-                dishes.splice(index, 1);
-                localStorage.setItem('dishes', JSON.stringify(dishes));
-                loadDishes();
-            } else {
-                alert('Incorrect password. Dish was not removed.');
-            }
         }
 
         // Load dishes when the page is loaded
@@ -175,6 +143,8 @@
     </script>
 </body>
 </html>
+
+
 
 
 
