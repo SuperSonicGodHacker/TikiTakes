@@ -77,15 +77,15 @@ def template():
         </form>
         <h1>Available Dishes</h1>
         <ul>
-            {% for dish in dishes %}
-            <li>{{ dish[1] }} - ${{ dish[2] }}
+            
+            
                 <form action="/remove" method="post" style="display:inline;">
                     <input type="hidden" name="id" value="{{ dish[0] }}">
                     <input type="password" name="password" placeholder="Enter password to remove">
                     <input type="submit" value="Remove">
                 </form>
             </li>
-            {% endfor %}
+            
         </ul>
     </body>
     </html>
