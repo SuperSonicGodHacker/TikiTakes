@@ -1,265 +1,97 @@
-<!DOCTYPE html>
-<html lang="en">
+from flask import Flask, request, render_template, redirect, url_for
+import sqlite3
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tiki Takes - Pizza and Lemonade</title>
-    <style>
-        /* Import Google Fonts */
-        @import url('https://fonts.googleapis.com/css2?family=Pacifico&family=Roboto:wght@300;400;500;700&display=swap');
+app = Flask(__name__)
 
-        /* Base Styles */
-        body {
-            font-family: 'Roboto', sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f8f9fa;
-            color: #333;
-            line-height: 1.6;
-        }
+# Initialize the database
+def init_db():
+    conn = sqlite3.connect('dishes.db')
+    c = conn.cursor()
+    c.execute('''CREATE TABLE IF NOT EXISTS dishes
+                 (id INTEGER PRIMARY KEY, name TEXT, price REAL, password TEXT)''')
+    conn.commit()
+    conn.close()
 
-        header {
-            background-color: #2c3e50;
-            color: white;
-            padding: 30px 0;
-            text-align: center;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        }
+# Route to display all dishes
+@app.route('/')
+def index():
+    conn = sqlite3.connect('dishes.db')
+    c = conn.cursor()
+    c.execute("SELECT id, name, price FROM dishes")
+    dishes = c.fetchall()
+    conn.close()
+    return render_template('index.html', dishes=dishes)
 
-        header h1 {
-            font-family: 'Pacifico', cursive;
-            font-size: 3em;
-            margin: 0;
-        }
+# Route to add a new dish
+@app.route('/add', methods=['POST'])
+def add_dish():
+    name = request.form['name']
+    price = request.form['price']
+    password = request.form['password']
 
-        nav {
-            background-color: #34495e;
-            display: flex;
-            justify-content: center;
-            padding: 15px 0;
-        }
+    conn = sqlite3.connect('dishes.db')
+    c = conn.cursor()
+    c.execute("INSERT INTO dishes (name, price, password) VALUES (?, ?, ?)", (name, price, password))
+    conn.commit()
+    conn.close()
 
-        nav a {
-            color: white;
-            margin: 0 20px;
-            text-decoration: none;
-            font-weight: bold;
-            transition: color 0.3s, transform 0.3s;
-        }
+    return redirect(url_for('index'))
 
-        nav a:hover {
-            color: #1abc9c;
-            transform: scale(1.1);
-        }
+# Route to remove a dish
+@app.route('/remove', methods=['POST'])
+def remove_dish():
+    dish_id = request.form['id']
+    password = request.form['password']
 
-        .hero {
-            height: 500px;
-            text-align: center;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            position: relative;
-        }
+    conn = sqlite3.connect('dishes.db')
+    c = conn.cursor()
+    c.execute("SELECT password FROM dishes WHERE id=?", (dish_id,))
+    stored_password = c.fetchone()
 
-        .hero img {
-            max-width: 100%;
-            height: auto;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-        }
+    if stored_password and stored_password[0] == password:
+        c.execute("DELETE FROM dishes WHERE id=?", (dish_id,))
+        conn.commit()
 
-        .container {
-            width: 85%;
-            max-width: 1200px;
-            margin: 30px auto;
-            padding: 20px;
-            background-color: #fff;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-        }
+    conn.close()
+    return redirect(url_for('index'))
 
-        .menu,
-        .contact,
-        .survey {
-            margin: 40px 0;
-        }
+# HTML templates
+@app.route('/template')
+def template():
+    return '''
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>Dish List</title>
+    </head>
+    <body>
+        <h1>Add a Dish</h1>
+        <form action="/add" method="post">
+            <label for="name">Dish Name:</label>
+            <input type="text" id="name" name="name" required><br><br>
+            <label for="price">Price:</label>
+            <input type="text" id="price" name="price" required><br><br>
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required><br><br>
+            <input type="submit" value="Add Dish">
+        </form>
+        <h1>Available Dishes</h1>
+        <ul>
+            {% for dish in dishes %}
+            <li>{{ dish[1] }} - ${{ dish[2] }}
+                <form action="/remove" method="post" style="display:inline;">
+                    <input type="hidden" name="id" value="{{ dish[0] }}">
+                    <input type="password" name="password" placeholder="Enter password to remove">
+                    <input type="submit" value="Remove">
+                </form>
+            </li>
+            {% endfor %}
+        </ul>
+    </body>
+    </html>
+    '''
 
-        .menu h2,
-        .contact h2,
-        .survey h2 {
-            margin-bottom: 20px;
-            font-size: 2em;
-            color: #2c3e50;
-            text-align: center;
-        }
+if __name__ == '__main__':
+    init_db()
+    app.run(debug=True)
 
-        .menu-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 15px 20px;
-            border-bottom: 1px solid #ddd;
-            align-items: center;
-            transition: background-color 0.3s, transform 0.3s;
-        }
-
-        .menu-item:hover {
-            background-color: #f1f1f1;
-            transform: translateY(-5px);
-        }
-
-        .menu-item:last-child {
-            border-bottom: none;
-        }
-
-        .menu-item h3 {
-            margin: 0;
-            font-size: 1.4em;
-            color: #34495e;
-        }
-
-        .menu-item p {
-            margin: 0;
-            font-size: 1.2em;
-            font-weight: bold;
-            color: #1abc9c;
-        }
-
-        footer {
-            background-color: #2c3e50;
-            color: white;
-            text-align: center;
-            padding: 25px 0;
-            margin-top: 30px;
-        }
-
-        /* Form Styles */
-        form {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 15px;
-            padding: 20px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            background-color: #f9f9f9;
-        }
-
-        form div {
-            display: flex;
-            flex-direction: column;
-        }
-
-        form label {
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
-
-        form input,
-        form textarea,
-        form select {
-            padding: 10px;
-            border: 1px solid #bdc3c7;
-            border-radius: 5px;
-            font-size: 1em;
-            transition: border-color 0.3s;
-        }
-
-        form input:focus,
-        form textarea:focus,
-        form select:focus {
-            border-color: #1abc9c;
-            outline: none;
-        }
-
-        form button {
-            background-color: #1abc9c;
-            color: white;
-            border: none;
-            cursor: pointer;
-            padding: 10px;
-            font-size: 1.1em;
-            border-radius: 5px;
-            transition: background-color 0.3s, transform 0.3s;
-        }
-
-        form button:hover {
-            background-color: #16a085;
-            transform: scale(1.05);
-        }
-
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .menu-item {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-
-            .hero {
-                height: 300px;
-            }
-
-            .container {
-                width: 95%;
-            }
-        }
-    </style>
-</head>
-
-<body>
-    <header>
-        <h1>Tiki Takes - Delicious Pizza and Refreshing Lemonade</h1>
-    </header>
-    <nav>
-        <a href="#home">Home</a>
-        <a href="#menu">Menu</a>
-        <a href="#contact">Contact</a>
-        <a href="#survey">Survey</a>
-        <a href="https://docs.google.com/forms/d/1zKlUp-oiHBVUapup6QZq24yjISbc-psXuHFHqQXTyTo/edit?pli=1#response=ACYDBNgdFjlg_KYsar2sbKDDzRil97seuoALTLUEXwNwHOIkudg4BgUN2lGXwaCIZ-Mc2k0" target="_blank">Feedback Form</a>
-    </nav>
-    <section class="hero" id="home">
-        <img src="data:image/jpeg;base64,YOUR_BASE64_ENCODED_IMAGE_HERE" alt="Pizza and Lemonade">
-    </section>
-    <div class="container">
-        <section class="menu" id="menu">
-            <h2>Our Menu</h2>
-            <div class="menu-item">
-                <h3>Bhakri Pizza</h3>
-                <p>$6.00</p>
-            </div>
-            <div class="menu-item">
-                <h3>Fresh Lemonade</h3>
-                <p>$3.00</p>
-            </div>
-            <div class="menu-item">
-                <h3>Water</h3>
-                <p>$2.00</p>
-            </div>
-        </section>
-        <section class="contact" id="contact">
-            <h2>Contact Us</h2>
-            <form action="" method="post">
-                <div>
-                    <label for="name">Name:</label>
-                    <input type="text" id="name" name="name" required>
-                </div>
-                <div>
-                    <label for="email">Email:</label>
-                    <input type="email" id="email" name="email" required>
-                </div>
-                <div>
-                    <label for="message">Message:</label>
-                    <textarea id="message" name="message" required></textarea>
-                </div>
-                <div>
-                    <button type="submit">Send</button>
-                </div>
-            </form>
-        </section>
-        <section class="survey" id="survey">
-           
-        <p>&copy; 2024 Tiki Takes. All rights reserved.</p>
-    </footer>
-</body>
-
-</html>
