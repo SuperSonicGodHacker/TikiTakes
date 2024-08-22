@@ -1,13 +1,70 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template_string, request, redirect, url_for
+import json
 
 app = Flask(__name__)
 
-# Store dishes in a dictionary with a password for each dish
-dishes = {}
+# File to store dishes
+DATA_FILE = 'dishes.json'
+
+def load_dishes():
+    try:
+        with open(DATA_FILE, 'r') as f:
+            return json.load(f)
+    except FileNotFoundError:
+        return {}
+
+def save_dishes(dishes):
+    with open(DATA_FILE, 'w') as f:
+        json.dump(dishes, f)
 
 @app.route('/')
 def index():
-    return render_template('index.html', dishes=dishes)
+    dishes = load_dishes()
+    return render_template_string('''
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Tikitakes - Dish Market</title>
+    </head>
+    <body>
+        <h1>Dish Market</h1>
+
+        <h2>Available Dishes</h2>
+        <ul>
+            {% for dish, details in dishes.items() %}
+                <li>{{ dish }} - ${{ details['price'] }}</li>
+            {% endfor %}
+        </ul>
+
+        <h2>Add a Dish</h2>
+        <form action="{{ url_for('add_dish') }}" method="POST">
+            <label for="dish_name">Dish Name:</label>
+            <input type="text" id="dish_name" name="dish_name" required><br>
+
+            <label for="price">Price:</label>
+            <input type="text" id="price" name="price" required><br>
+
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required><br>
+
+            <button type="submit">Add Dish</button>
+        </form>
+
+        <h2>Remove a Dish</h2>
+        <form action="{{ url_for('remove_dish') }}" method="POST">
+            <label for="dish_name">Dish Name:</label>
+            <input type="text" id="dish_name" name="dish_name" required><br>
+
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required><br>
+
+            <button type="submit">Remove Dish</button>
+        </form>
+    </body>
+    </html>
+    ''', dishes=dishes)
 
 @app.route('/add_dish', methods=['POST'])
 def add_dish():
@@ -16,8 +73,9 @@ def add_dish():
     password = request.form['password']
     
     if dish_name and price and password:
-        # Add dish to the dictionary with the password
+        dishes = load_dishes()
         dishes[dish_name] = {'price': price, 'password': password}
+        save_dishes(dishes)
     return redirect(url_for('index'))
 
 @app.route('/remove_dish', methods=['POST'])
@@ -25,9 +83,10 @@ def remove_dish():
     dish_name = request.form['dish_name']
     password = request.form['password']
     
-    # Check if the dish exists and the password matches
+    dishes = load_dishes()
     if dish_name in dishes and dishes[dish_name]['password'] == password:
         del dishes[dish_name]
+        save_dishes(dishes)
     return redirect(url_for('index'))
 
 if __name__ == '__main__':
