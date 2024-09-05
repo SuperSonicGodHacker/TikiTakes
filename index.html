@@ -1,93 +1,36 @@
-from flask import Flask, render_template_string, request, redirect, url_for
-import json
+import random
 
-app = Flask(__name__)
+# Function to display the current score
+def display_score(score):
+    print(f"Your current score: {score}")
 
-# File to store dishes
-DATA_FILE = 'dishes.json'
+# Function to play the game
+def play_game(score):
+    print("\nWelcome to Soccer Hut!")
+    print("Press 'p' to play or 'q' to quit.")
+    while True:
+        choice = input("Enter your choice: ").strip().lower()
+        if choice == 'p':
+            result = random.choice(['goal', 'miss'])
+            if result == 'goal':
+                points = random.randint(1, 10)
+                score += points
+                print(f"Goal! You scored {points} points.")
+            else:
+                print("Miss! No points scored.")
+        elif choice == 'q':
+            break
+        else:
+            print("Invalid choice. Please enter 'p' to play or 'q' to quit.")
+        display_score(score)
+    return score
 
-def load_dishes():
-    try:
-        with open(DATA_FILE, 'r') as f:
-            return json.load(f)
-    except FileNotFoundError:
-        return {}
+# Main function
+def main():
+    score = 0
+    print("Welcome to Soccer Hut!")
+    score = play_game(score)
+    print(f"\nGame Over! Your final score is {score}.")
 
-def save_dishes(dishes):
-    with open(DATA_FILE, 'w') as f:
-        json.dump(dishes, f)
-
-@app.route('/')
-def index():
-    dishes = load_dishes()
-    return render_template_string('''
-    <!DOCTYPE html>
-    <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Tikitakes - Dish Market</title>
-    </head>
-    <body>
-        <h1>Dish Market</h1>
-
-        <h2>Available Dishes</h2>
-        <ul>
-            {% for dish, details in dishes.items() %}
-                <li>{{ dish }} - ${{ details['price'] }}</li>
-            {% endfor %}
-        </ul>
-
-        <h2>Add a Dish</h2>
-        <form action="{{ url_for('add_dish') }}" method="POST">
-            <label for="dish_name">Dish Name:</label>
-            <input type="text" id="dish_name" name="dish_name" required><br>
-
-            <label for="price">Price:</label>
-            <input type="text" id="price" name="price" required><br>
-
-            <label for="password">Password:</label>
-            <input type="password" id="password" name="password" required><br>
-
-            <button type="submit">Add Dish</button>
-        </form>
-
-        <h2>Remove a Dish</h2>
-        <form action="{{ url_for('remove_dish') }}" method="POST">
-            <label for="dish_name">Dish Name:</label>
-            <input type="text" id="dish_name" name="dish_name" required><br>
-
-            <label for="password">Password:</label>
-            <input type="password" id="password" name="password" required><br>
-
-            <button type="submit">Remove Dish</button>
-        </form>
-    </body>
-    </html>
-    ''', dishes=dishes)
-
-@app.route('/add_dish', methods=['POST'])
-def add_dish():
-    dish_name = request.form['dish_name']
-    price = request.form['price']
-    password = request.form['password']
-    
-    if dish_name and price and password:
-        dishes = load_dishes()
-        dishes[dish_name] = {'price': price, 'password': password}
-        save_dishes(dishes)
-    return redirect(url_for('index'))
-
-@app.route('/remove_dish', methods=['POST'])
-def remove_dish():
-    dish_name = request.form['dish_name']
-    password = request.form['password']
-    
-    dishes = load_dishes()
-    if dish_name in dishes and dishes[dish_name]['password'] == password:
-        del dishes[dish_name]
-        save_dishes(dishes)
-    return redirect(url_for('index'))
-
-if __name__ == '__main__':
-    app.run(debug=True)
+if __name__ == "__main__":
+    main()
