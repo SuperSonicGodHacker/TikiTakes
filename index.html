@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Soccer Hut - Trade, Accessories & Gifting</title>
+    <title>Soccer Hut</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -16,6 +16,10 @@
         h1 {
             font-size: 3em;
             color: #333;
+        }
+
+        #loginScreen {
+            margin-top: 50px;
         }
 
         canvas {
@@ -62,7 +66,7 @@
             margin-top: 20px;
         }
 
-        #teamSelection, #shopScreen, #gameScreen, #teamRoster, #tradeScreen {
+        #teamSelection, #shopScreen, #gameScreen, #teamRoster {
             display: none;
         }
 
@@ -100,18 +104,18 @@
 
     <h1>Soccer Hut</h1>
 
+    <!-- Login/Sign-Up Screen -->
     <div id="loginScreen">
-        <h2>Login to Play or Sign In</h2>
+        <h2>Login or Sign Up</h2>
         <input type="text" id="username" placeholder="Username"><br><br>
         <input type="password" id="password" placeholder="Password"><br><br>
         <button onclick="login()">Login</button>
-        <button onclick="signIn()">Sign In</button> <!-- Sign In Button -->
+        <button onclick="signUp()">Sign Up</button>
     </div>
 
     <div id="teamSelection">
         <h2>Select a Team to Play Against</h2>
         <div id="teamChoices">
-            <!-- Team selection with flags -->
             <div class="team" onclick="viewRoster('England')">
                 <img src="https://upload.wikimedia.org/wikipedia/en/b/be/Flag_of_England.svg" alt="England Flag">
                 <p>England</p>
@@ -124,9 +128,7 @@
 
     <div id="teamRoster">
         <h2>Team Roster for <span id="selectedTeam"></span></h2>
-        <div id="rosterPlayers">
-            <!-- Players will be listed here -->
-        </div>
+        <div id="rosterPlayers"></div>
         <br>
         <button onclick="startMatch()">Start Match with this Team</button>
         <button onclick="goBackToTeamSelection()">Choose Another Team</button>
@@ -153,29 +155,6 @@
         <button onclick="goBackToTeamSelection()">Back to Team Selection</button>
     </div>
 
-    <div id="tradeScreen">
-        <h2>Trade Players, Teams, and Hut Coins</h2>
-        <div>
-            <label for="tradeWith">Trade With (Username):</label>
-            <input type="text" id="tradeWith" placeholder="Enter Username"><br><br>
-            <label for="tradeItem">Item to Trade (Player, Team, or Hut Coins):</label>
-            <input type="text" id="tradeItem" placeholder="Enter Item"><br><br>
-            <button onclick="initiateTrade()">Propose Trade</button>
-        </div>
-        <div id="tradeLog"></div>
-        <br>
-        <button onclick="goBackToTeamSelection()">Back to Team Selection</button>
-    </div>
-
-    <div id="ownerControls">
-        <h2>Owner Controls</h2>
-        <p><strong>You have the ability to gift items and players to others for free!</strong></p>
-        <input type="text" id="giftTo" placeholder="Username to Gift">
-        <button onclick="giftItem()">Gift Item for Free</button>
-        <br><br>
-        <div id="giftLog"></div>
-    </div>
-
     <div id="gameScreen">
         <canvas id="soccerField" width="800" height="400"></canvas>
         <div id="controls">
@@ -189,42 +168,86 @@
     </div>
 
     <script>
+        // Store users and owner status in localStorage
+        let users = JSON.parse(localStorage.getItem('users')) || [];
         let hutCoins = 0;
         let playerInventory = [];
         let isOwner = false;
-        let bannedPlayers = [];
-        const users = [{ username: 'l', password: 'm', isOwner: true }];  // You are the first owner
-        const trades = [];
+        const MAX_OWNERS = 3;
+
+        function signUp() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            if (!username || !password) {
+                alert("Please fill out both fields.");
+                return;
+            }
+
+            // Check if username is already taken
+            const userExists = users.find(user => user.username === username);
+            if (userExists) {
+                alert("Username already taken. Please choose another one.");
+                return;
+            }
+
+            // If less than 3 owners exist, new users get Owner status
+            isOwner = users.length < MAX_OWNERS;
+
+            // Add new user
+            users.push({ username, password, isOwner });
+            localStorage.setItem('users', JSON.stringify(users));
+
+            alert(isOwner ? "You are an Owner with infinite Hut Coins!" : "You signed up as a regular user.");
+            loginUser(username, password);
+        }
 
         function login() {
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
 
-            let user = users.find(user => user.username === username && user.password === password);
-
-            if (user && bannedPlayers.includes(username)) {
-                alert("You are banned from the game.");
-                return;
-            }
+            const user = users.find(user => user.username === username && user.password === password);
 
             if (!user) {
-                alert("Invalid login");
+                alert("Invalid login. Please check your username and password.");
                 return;
             }
 
+            loginUser(username, password);
+        }
+
+        function loginUser(username, password) {
+            const user = users.find(user => user.username === username && user.password === password);
             isOwner = user.isOwner;
             alert(isOwner ? "Welcome back, Owner!" : "Welcome back!");
+
+            // Hide login screen and show team selection
             document.getElementById('loginScreen').style.display = 'none';
             document.getElementById('teamSelection').style.display = 'block';
 
-            if (isOwner) {
-                document.getElementById('ownerControls').style.display = 'block';
-            }
-
+            // Load user data (like Hut Coins and Inventory) from localStorage
             loadUserData();
         }
 
-        // Buy items from the shop
+        function loadUserData() {
+            // Load the user's data (e.g., Hut Coins, Inventory) from localStorage
+            const storedHutCoins = localStorage.getItem('hutCoins');
+            hutCoins = storedHutCoins ? parseInt(storedHutCoins) : 0;
+
+            updateHutCoinsDisplay();
+        }
+
+        function updateHutCoinsDisplay() {
+            document.getElementById('hutCoinsDisplay').innerText = "Hut Coins: " + (isOwner ? "Infinite" : hutCoins);
+        }
+
+        // Save user data
+        function saveUserData() {
+            if (!isOwner) {
+                localStorage.setItem('hutCoins', hutCoins);
+            }
+        }
+
         function buyItem(price, item) {
             if (isOwner || hutCoins >= price) {
                 if (!isOwner) hutCoins -= price;
@@ -237,20 +260,11 @@
             }
         }
 
-        // Gifting system for Owners
-        function giftItem() {
-            if (isOwner) {
-                const giftTo = document.getElementById('giftTo').value;
-                alert(`You gifted an item to ${giftTo} for free!`);
-                document.getElementById('giftLog').innerHTML += `Gifted to ${giftTo}<br>`;
-            } else {
-                alert("Only Owners can gift items!");
-            }
+        function play() {
+            alert("You played a match!");
+            hutCoins += 50;  // For demonstration purposes, 50 Hut Coins are added.
+            updateHutCoinsDisplay();
+            saveUserData();
         }
 
-        // Trade system between players
-        function initiateTrade() {
-            const tradeWith = document.getElementById('tradeWith').value;
-            const tradeItem = document.getElementById('tradeItem').value;
-            trades.push({ tradeWith, tradeItem });
-            document.getElementById('tradeLog').innerHTML += `Trade proposed to ${tradeWith} for ${trade
+        function reset
