@@ -1,37 +1,124 @@
-import random
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soccer Hut</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            text-align: center;
+            margin: 0;
+            padding: 20px;
+        }
 
-# Function to display the current score
-def display_score(score):
-    print(f"Your current score: {score}")
+        .game-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            max-width: 600px;
+            margin: auto;
+        }
 
-# Function to play the game
-def play_game(score):
-    print("\nWelcome to Soccer Hut!")
-    print("Press 'p' to play or 'q' to quit.")
-    while True:
-        choice = input("Enter your choice: ").strip().lower()
-        if choice == 'p':
-            result = random.choice(['goal', 'miss'])
-            if result == 'goal':
-                points = random.randint(1, 10)
-                score += points
-                print(f"Goal! You scored {points} points.")
-            else:
-                print("Miss! No points scored.")
-        elif choice == 'q':
-            break
-        else:
-            print("Invalid choice. Please enter 'p' to play or 'q' to quit.")
-        display_score(score)
-    return score
+        button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
 
-# Main function
-def main():
-    score = 0
-    print("Welcome to Soccer Hut!")
-    score = play_game(score)
-    print(f"\nGame Over! Your final score is {score}.")
+        button:hover {
+            background-color: #218838;
+        }
 
-if __name__ == "__main__":
-    main()
-<h1>Vihaan BHATT & VIHAAN BAHL ALSO ARANYA CHATTERJEE AND IN PARTNERSHIP Ryan Chindu @All copyrights reserved</h1>
+        .player-card {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin: 10px;
+            display: inline-block;
+            background-color: #f9f9f9;
+        }
+
+        .player-card button {
+            background-color: #007bff;
+        }
+
+        .player-card button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <h1>Soccer Hut</h1>
+        <div class="stats">
+            <p>Hut Coins: <span id="hutCoins">0</span></p>
+        </div>
+
+        <h2>Players Available for Purchase</h2>
+        <div id="playerList"></div>
+
+        <button onclick="playMatch()">Play a Match and Earn Hut Coins</button>
+    </div>
+
+    <script>
+        // Basic setup for player data
+        const players = [
+            { name: "Lionel Messi", price: 5000, rating: 95 },
+            { name: "Cristiano Ronaldo", price: 4800, rating: 94 },
+            { name: "Neymar Jr.", price: 4500, rating: 92 },
+            { name: "Kylian Mbappe", price: 4700, rating: 93 },
+            { name: "Kevin De Bruyne", price: 4000, rating: 91 },
+            { name: "Erling Haaland", price: 4300, rating: 91 },
+        ];
+
+        // Hut coins starting point
+        let hutCoins = 0;
+
+        // Load the player data into the page
+        function loadPlayers() {
+            const playerList = document.getElementById('playerList');
+            playerList.innerHTML = '';
+
+            players.forEach(player => {
+                const playerCard = document.createElement('div');
+                playerCard.className = 'player-card';
+                playerCard.innerHTML = `
+                    <h3>${player.name}</h3>
+                    <p>Price: ${player.price} Hut Coins</p>
+                    <p>Rating: ${player.rating}</p>
+                    <button onclick="buyPlayer('${player.name}', ${player.price})">Buy Player</button>
+                `;
+                playerList.appendChild(playerCard);
+            });
+        }
+
+        // Function to simulate playing a match and earning coins
+        function playMatch() {
+            const coinsEarned = Math.floor(Math.random() * 1000) + 100;
+            hutCoins += coinsEarned;
+            document.getElementById('hutCoins').textContent = hutCoins;
+            alert(`You earned ${coinsEarned} Hut Coins!`);
+        }
+
+        // Function to buy a player if enough coins are available
+        function buyPlayer(playerName, playerPrice) {
+            if (hutCoins >= playerPrice) {
+                hutCoins -= playerPrice;
+                document.getElementById('hutCoins').textContent = hutCoins;
+                alert(`You bought ${playerName}!`);
+            } else {
+                alert(`You don't have enough Hut Coins to buy ${playerName}!`);
+            }
+        }
+
+        // Initialize the game
+        document.addEventListener('DOMContentLoaded', () => {
+            loadPlayers();
+        });
+    </script>
+</body>
+</html>
