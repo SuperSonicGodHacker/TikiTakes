@@ -3,14 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Soccer Hut - 2D Game with AI Opponents</title>
+    <title>Soccer Hut</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             text-align: center;
             background-color: #f4f4f4;
             margin: 0;
-            padding: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            font-size: 3em;
+            color: #333;
         }
 
         canvas {
@@ -31,21 +36,91 @@
             cursor: pointer;
         }
 
+        #shop {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .shop-item {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin: 10px;
+            text-align: center;
+            background-color: #f9f9f9;
+            width: 150px;
+        }
+
+        .shop-item img {
+            width: 100%;
+            height: auto;
+        }
+
         .credits {
             font-size: 12px;
             color: gray;
             margin-top: 20px;
+        }
+
+        #teamSelection, #shopScreen, #gameScreen {
+            display: none;
         }
     </style>
 </head>
 <body>
 
     <h1>Soccer Hut</h1>
-    <canvas id="soccerField" width="800" height="400"></canvas>
-    
-    <div id="controls">
-        <button onclick="startGame()">Start Game</button>
-        <button onclick="resetGame()">Reset Game</button>
+
+    <div id="loginScreen">
+        <h2>Login to Play</h2>
+        <input type="text" id="username" placeholder="Username"><br><br>
+        <button onclick="login()">Login</button>
+    </div>
+
+    <div id="teamSelection">
+        <h2>Select a Team to Play Against</h2>
+        <select id="teamChoice">
+            <option value="Team 1">Team 1</option>
+            <option value="Team 2">Team 2</option>
+            <option value="Team 3">Team 3</option>
+        </select><br><br>
+        <button onclick="startMatch()">Start Match</button>
+        <button onclick="openShop()">Go to Shop</button>
+    </div>
+
+    <div id="shopScreen">
+        <h2>Shop - Buy Players</h2>
+        <div id="hutCoinsDisplay">Hut Coins: 0</div>
+        <div id="shop">
+            <div class="shop-item">
+                <img src="https://via.placeholder.com/100" alt="Player 1">
+                <h3>Player 1</h3>
+                <p>Price: 100 Hut Coins</p>
+                <button onclick="buyPlayer(100)">Buy</button>
+            </div>
+            <div class="shop-item">
+                <img src="https://via.placeholder.com/100" alt="Player 2">
+                <h3>Player 2</h3>
+                <p>Price: 200 Hut Coins</p>
+                <button onclick="buyPlayer(200)">Buy</button>
+            </div>
+            <div class="shop-item">
+                <img src="https://via.placeholder.com/100" alt="Player 3">
+                <h3>Player 3</h3>
+                <p>Price: 300 Hut Coins</p>
+                <button onclick="buyPlayer(300)">Buy</button>
+            </div>
+        </div>
+        <br>
+        <button onclick="goBackToTeamSelection()">Back to Team Selection</button>
+    </div>
+
+    <div id="gameScreen">
+        <canvas id="soccerField" width="800" height="400"></canvas>
+        <div id="controls">
+            <button onclick="play()">Play Match</button>
+            <button onclick="resetGame()">Reset Game</button>
+        </div>
     </div>
 
     <div class="credits">
@@ -53,231 +128,113 @@
     </div>
 
     <script>
-        // Player and ball images
-        const playerImage = new Image();
-        playerImage.src = "https://via.placeholder.com/50";  // Replace with your player image URL
+        // Variables for game and shop
+        let hutCoins = 0;
+        let playerInventory = [];
+        let isLoggedIn = false;
 
-        const ballImage = new Image();
-        ballImage.src = "https://via.placeholder.com/30";    // Replace with your soccer ball image URL
-
-        const opponentImage = new Image();
-        opponentImage.src = "https://via.placeholder.com/50";  // Replace with your opponent image URL
-
-        // Canvas setup
         const canvas = document.getElementById("soccerField");
         const ctx = canvas.getContext("2d");
 
-        // Player properties
-        let player = {
-            x: 400,
-            y: 200,
-            width: 50,
-            height: 50,
-            speed: 5,
-            dx: 0,
-            dy: 0
-        };
+        // Hide everything except login screen initially
+        document.getElementById('loginScreen').style.display = 'block';
 
-        // Ball properties
-        let ball = {
-            x: 300,
-            y: 200,
-            width: 30,
-            height: 30,
-            dx: 2,
-            dy: 2
-        };
+        // Function to handle login
+        function login() {
+            const username = document.getElementById('username').value;
 
-        // AI Opponents properties
-        const opponents = [
-            { x: 100, y: 100, width: 50, height: 50, speed: 2, dx: 1, dy: 1 },
-            { x: 700, y: 300, width: 50, height: 50, speed: 2, dx: -1, dy: -1 }
-        ];
+            if (username === 'l') {  // Simulate a successful login with predefined username
+                isLoggedIn = true;
+                document.getElementById('loginScreen').style.display = 'none';
+                document.getElementById('teamSelection').style.display = 'block';
 
-        // Draw the soccer field
-        function drawField() {
+                // Load user data (if any exists)
+                loadUserData();
+            } else {
+                alert("Invalid login");
+            }
+        }
+
+        // Function to load user data (using localStorage for simulation)
+        function loadUserData() {
+            const savedHutCoins = localStorage.getItem('hutCoins');
+            const savedInventory = localStorage.getItem('playerInventory');
+
+            if (savedHutCoins) {
+                hutCoins = parseInt(savedHutCoins);
+                document.getElementById('hutCoinsDisplay').innerText = "Hut Coins: " + hutCoins;
+            }
+
+            if (savedInventory) {
+                playerInventory = JSON.parse(savedInventory);
+            }
+        }
+
+        // Function to start match
+        function startMatch() {
+            const teamChoice = document.getElementById('teamChoice').value;
+            document.getElementById('teamSelection').style.display = 'none';
+            document.getElementById('gameScreen').style.display = 'block';
+            // Setup the game logic for the chosen team
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
             ctx.fillStyle = "green";
             ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-            // Field lines
-            ctx.strokeStyle = "white";
-            ctx.lineWidth = 4;
-
-            // Center circle
-            ctx.beginPath();
-            ctx.arc(canvas.width / 2, canvas.height / 2, 50, 0, Math.PI * 2);
-            ctx.stroke();
-
-            // Middle line
-            ctx.moveTo(canvas.width / 2, 0);
-            ctx.lineTo(canvas.width / 2, canvas.height);
-            ctx.stroke();
-
-            // Goals
             ctx.fillStyle = "white";
-            ctx.fillRect(0, canvas.height / 2 - 50, 10, 100);
-            ctx.fillRect(canvas.width - 10, canvas.height / 2 - 50, 10, 100);
+            ctx.fillText(`Playing against ${teamChoice}`, 350, 200);
         }
 
-        // Draw player on the canvas
-        function drawPlayer() {
-            ctx.drawImage(playerImage, player.x, player.y, player.width, player.height);
+        // Function to play match and earn Hut Coins
+        function play() {
+            alert("You played a match! +50 Hut Coins");
+            hutCoins += 50;
+            updateHutCoinsDisplay();
+            saveUserData();
         }
 
-        // Draw the soccer ball
-        function drawBall() {
-            ctx.drawImage(ballImage, ball.x, ball.y, ball.width, ball.height);
-        }
-
-        // Draw AI Opponents on the canvas
-        function drawOpponents() {
-            opponents.forEach(opponent => {
-                ctx.drawImage(opponentImage, opponent.x, opponent.y, opponent.width, opponent.height);
-            });
-        }
-
-        // Clear the canvas
-        function clearCanvas() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-        }
-
-        // Update player position
-        function updatePlayerPosition() {
-            player.x += player.dx;
-            player.y += player.dy;
-
-            // Prevent player from going off the field
-            if (player.x < 0) player.x = 0;
-            if (player.x + player.width > canvas.width) player.x = canvas.width - player.width;
-            if (player.y < 0) player.y = 0;
-            if (player.y + player.height > canvas.height) player.y = canvas.height - player.height;
-        }
-
-        // Update ball position
-        function updateBallPosition() {
-            ball.x += ball.dx;
-            ball.y += ball.dy;
-
-            // Bounce the ball off the walls
-            if (ball.x < 0 || ball.x + ball.width > canvas.width) {
-                ball.dx *= -1;
-            }
-            if (ball.y < 0 || ball.y + ball.height > canvas.height) {
-                ball.dy *= -1;
-            }
-        }
-
-        // Update AI Opponents' positions
-        function updateOpponentsPosition() {
-            opponents.forEach(opponent => {
-                opponent.x += opponent.dx * opponent.speed;
-                opponent.y += opponent.dy * opponent.speed;
-
-                // Bounce off walls
-                if (opponent.x < 0 || opponent.x + opponent.width > canvas.width) {
-                    opponent.dx *= -1;
-                }
-                if (opponent.y < 0 || opponent.y + opponent.height > canvas.height) {
-                    opponent.dy *= -1;
-                }
-
-                // Simple AI logic: move towards the ball
-                if (opponent.x < ball.x) {
-                    opponent.dx = 1;
-                } else {
-                    opponent.dx = -1;
-                }
-                if (opponent.y < ball.y) {
-                    opponent.dy = 1;
-                } else {
-                    opponent.dy = -1;
-                }
-            });
-        }
-
-        // Game loop
-        function gameLoop() {
-            clearCanvas();
-            drawField();
-            drawPlayer();
-            drawBall();
-            drawOpponents();
-            updatePlayerPosition();
-            updateBallPosition();
-            updateOpponentsPosition();
-
-            requestAnimationFrame(gameLoop);
-        }
-
-        // Move player
-        function movePlayer(e) {
-            switch (e.key) {
-                case "ArrowUp":
-                    player.dy = -player.speed;
-                    break;
-                case "ArrowDown":
-                    player.dy = player.speed;
-                    break;
-                case "ArrowLeft":
-                    player.dx = -player.speed;
-                    break;
-                case "ArrowRight":
-                    player.dx = player.speed;
-                    break;
-            }
-        }
-
-        // Stop player movement when the key is released
-        function stopPlayer(e) {
-            switch (e.key) {
-                case "ArrowUp":
-                case "ArrowDown":
-                    player.dy = 0;
-                    break;
-                case "ArrowLeft":
-                case "ArrowRight":
-                    player.dx = 0;
-                    break;
-            }
-        }
-
-        // Start the game
-        function startGame() {
-            gameLoop();
-        }
-
-        // Reset the game
+        // Function to reset the game
         function resetGame() {
-            player.x = canvas.width / 2 - player.width / 2;
-            player.y = canvas.height / 2 - player.height / 2;
-            player.dx = 0;
-            player.dy = 0;
-            ball.x = 300;
-            ball.y = 200;
-            ball.dx = 2;
-            ball.dy = 2;
-            opponents.forEach(opponent => {
-                opponent.x = Math.random() * canvas.width;
-                opponent.y = Math.random() * canvas.height;
-            });
-            clearCanvas();
-            drawField();
-            drawPlayer();
-            drawBall();
-            drawOpponents();
+            hutCoins = 0;
+            playerInventory = [];
+            updateHutCoinsDisplay();
+            saveUserData();
+            alert("Game reset");
         }
 
-        // Initialize the game
-        document.addEventListener('DOMContentLoaded', () => {
-            drawField();
-            drawPlayer();
-            drawBall();
-            drawOpponents();
-        });
+        // Function to update the Hut Coins display
+        function updateHutCoinsDisplay() {
+            document.getElementById('hutCoinsDisplay').innerText = "Hut Coins: " + hutCoins;
+        }
 
-        // Event listeners for player movement
-        document.addEventListener("keydown", movePlayer);
-        document.addEventListener("keyup", stopPlayer);
+        // Function to buy players
+        function buyPlayer(price) {
+            if (hutCoins >= price) {
+                hutCoins -= price;
+                playerInventory.push(`Player ${price}`);
+                alert(`You bought a player for ${price} Hut Coins`);
+                updateHutCoinsDisplay();
+                saveUserData();
+            } else {
+                alert("Not enough Hut Coins!");
+            }
+        }
+
+        // Function to open the shop
+        function openShop() {
+            document.getElementById('teamSelection').style.display = 'none';
+            document.getElementById('shopScreen').style.display = 'block';
+        }
+
+        // Function to go back to team selection from the shop
+        function goBackToTeamSelection() {
+            document.getElementById('shopScreen').style.display = 'none';
+            document.getElementById('teamSelection').style.display = 'block';
+        }
+
+        // Function to save user data in localStorage
+        function saveUserData() {
+            localStorage.setItem('hutCoins', hutCoins);
+            localStorage.setItem('playerInventory', JSON.stringify(playerInventory));
+        }
     </script>
 </body>
 </html>
