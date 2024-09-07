@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Soccer Hut</title>
+    <title>Soccer Hut - Trade, Accessories & Gifting</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -62,8 +62,37 @@
             margin-top: 20px;
         }
 
-        #teamSelection, #shopScreen, #gameScreen {
+        #teamSelection, #shopScreen, #gameScreen, #teamRoster, #tradeScreen {
             display: none;
+        }
+
+        .team {
+            border: 1px solid #ccc;
+            padding: 20px;
+            margin: 10px;
+            display: inline-block;
+            width: 150px;
+        }
+
+        .team img {
+            width: 100px;
+            height: auto;
+        }
+
+        .infinite-symbol {
+            font-size: 24px;
+            color: red;
+            margin-left: 5px;
+        }
+
+        #ownerControls {
+            display: none;
+            margin-top: 20px;
+        }
+
+        #banList {
+            margin-top: 20px;
+            color: red;
         }
     </style>
 </head>
@@ -72,48 +101,79 @@
     <h1>Soccer Hut</h1>
 
     <div id="loginScreen">
-        <h2>Login to Play</h2>
+        <h2>Login to Play or Sign In</h2>
         <input type="text" id="username" placeholder="Username"><br><br>
         <input type="password" id="password" placeholder="Password"><br><br>
         <button onclick="login()">Login</button>
+        <button onclick="signIn()">Sign In</button> <!-- Sign In Button -->
     </div>
 
     <div id="teamSelection">
         <h2>Select a Team to Play Against</h2>
-        <select id="teamChoice">
-            <option value="Team 1">Team 1</option>
-            <option value="Team 2">Team 2</option>
-            <option value="Team 3">Team 3</option>
-        </select><br><br>
-        <button onclick="startMatch()">Start Match</button>
-        <button onclick="openShop()">Go to Shop</button>
+        <div id="teamChoices">
+            <!-- Team selection with flags -->
+            <div class="team" onclick="viewRoster('England')">
+                <img src="https://upload.wikimedia.org/wikipedia/en/b/be/Flag_of_England.svg" alt="England Flag">
+                <p>England</p>
+            </div>
+            <!-- Add other teams similarly -->
+        </div>
+        <br>
+        <button onclick="goBackToTeamSelection()">Go Back</button>
+    </div>
+
+    <div id="teamRoster">
+        <h2>Team Roster for <span id="selectedTeam"></span></h2>
+        <div id="rosterPlayers">
+            <!-- Players will be listed here -->
+        </div>
+        <br>
+        <button onclick="startMatch()">Start Match with this Team</button>
+        <button onclick="goBackToTeamSelection()">Choose Another Team</button>
     </div>
 
     <div id="shopScreen">
-        <h2>Shop - Buy Players</h2>
+        <h2>Shop - Buy Accessories and Players</h2>
         <div id="hutCoinsDisplay">Hut Coins: 0</div>
         <div id="shop">
+            <div class="shop-item">
+                <img src="https://via.placeholder.com/100" alt="Cool Cleats">
+                <h3>Cool Cleats</h3>
+                <p>Price: 150 Hut Coins</p>
+                <button onclick="buyItem(150, 'Cool Cleats')">Buy</button>
+            </div>
             <div class="shop-item">
                 <img src="https://via.placeholder.com/100" alt="Player 1">
                 <h3>Player 1</h3>
                 <p>Price: 100 Hut Coins</p>
-                <button onclick="buyPlayer(100)">Buy</button>
-            </div>
-            <div class="shop-item">
-                <img src="https://via.placeholder.com/100" alt="Player 2">
-                <h3>Player 2</h3>
-                <p>Price: 200 Hut Coins</p>
-                <button onclick="buyPlayer(200)">Buy</button>
-            </div>
-            <div class="shop-item">
-                <img src="https://via.placeholder.com/100" alt="Player 3">
-                <h3>Player 3</h3>
-                <p>Price: 300 Hut Coins</p>
-                <button onclick="buyPlayer(300)">Buy</button>
+                <button onclick="buyItem(100, 'Player 1')">Buy</button>
             </div>
         </div>
         <br>
         <button onclick="goBackToTeamSelection()">Back to Team Selection</button>
+    </div>
+
+    <div id="tradeScreen">
+        <h2>Trade Players, Teams, and Hut Coins</h2>
+        <div>
+            <label for="tradeWith">Trade With (Username):</label>
+            <input type="text" id="tradeWith" placeholder="Enter Username"><br><br>
+            <label for="tradeItem">Item to Trade (Player, Team, or Hut Coins):</label>
+            <input type="text" id="tradeItem" placeholder="Enter Item"><br><br>
+            <button onclick="initiateTrade()">Propose Trade</button>
+        </div>
+        <div id="tradeLog"></div>
+        <br>
+        <button onclick="goBackToTeamSelection()">Back to Team Selection</button>
+    </div>
+
+    <div id="ownerControls">
+        <h2>Owner Controls</h2>
+        <p><strong>You have the ability to gift items and players to others for free!</strong></p>
+        <input type="text" id="giftTo" placeholder="Username to Gift">
+        <button onclick="giftItem()">Gift Item for Free</button>
+        <br><br>
+        <div id="giftLog"></div>
     </div>
 
     <div id="gameScreen">
@@ -129,128 +189,47 @@
     </div>
 
     <script>
-        // Variables for game and shop
         let hutCoins = 0;
         let playerInventory = [];
-        let isLoggedIn = false;
         let isOwner = false;
+        let bannedPlayers = [];
+        const users = [{ username: 'l', password: 'm', isOwner: true }];  // You are the first owner
+        const trades = [];
 
-        const canvas = document.getElementById("soccerField");
-        const ctx = canvas.getContext("2d");
-
-        // Hide everything except login screen initially
-        document.getElementById('loginScreen').style.display = 'block';
-
-        // Predefined users with their passwords
-        const users = [
-            { username: 'l', password: 'm', isOwner: false },  // Predefined user
-        ];
-
-        // Check if 3 owners exist already
-        let ownerCount = localStorage.getItem('ownerCount') ? parseInt(localStorage.getItem('ownerCount')) : 0;
-
-        // Function to handle login
         function login() {
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
 
-            // Check if user already exists
             let user = users.find(user => user.username === username && user.password === password);
 
-            if (!user) {
-                // Register new user
-                if (ownerCount < 3) {
-                    isOwner = true;
-                    ownerCount++;
-                    localStorage.setItem('ownerCount', ownerCount);
-                    alert("You are an Owner with infinite Hut Coins!");
-                } else {
-                    isOwner = false;
-                    alert("You are a regular player.");
-                }
-
-                user = { username, password, isOwner };
-                users.push(user);
-            } else {
-                isOwner = user.isOwner;
-                alert(isOwner ? "Welcome back, Owner!" : "Welcome back!");
+            if (user && bannedPlayers.includes(username)) {
+                alert("You are banned from the game.");
+                return;
             }
 
-            isLoggedIn = true;
+            if (!user) {
+                alert("Invalid login");
+                return;
+            }
+
+            isOwner = user.isOwner;
+            alert(isOwner ? "Welcome back, Owner!" : "Welcome back!");
             document.getElementById('loginScreen').style.display = 'none';
             document.getElementById('teamSelection').style.display = 'block';
 
-            // Load user data (if any exists)
+            if (isOwner) {
+                document.getElementById('ownerControls').style.display = 'block';
+            }
+
             loadUserData();
         }
 
-        // Function to load user data (using localStorage for simulation)
-        function loadUserData() {
-            const savedHutCoins = localStorage.getItem('hutCoins');
-            const savedInventory = localStorage.getItem('playerInventory');
-
-            if (savedHutCoins && !isOwner) {
-                hutCoins = parseInt(savedHutCoins);
-                document.getElementById('hutCoinsDisplay').innerText = "Hut Coins: " + hutCoins;
-            } else if (isOwner) {
-                hutCoins = Infinity; // Infinite Hut Coins for owners
-                document.getElementById('hutCoinsDisplay').innerText = "Hut Coins: Infinite";
-            }
-
-            if (savedInventory) {
-                playerInventory = JSON.parse(savedInventory);
-            }
-        }
-
-        // Function to start match
-        function startMatch() {
-            const teamChoice = document.getElementById('teamChoice').value;
-            document.getElementById('teamSelection').style.display = 'none';
-            document.getElementById('gameScreen').style.display = 'block';
-            // Setup the game logic for the chosen team
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            ctx.fillStyle = "green";
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            ctx.fillStyle = "white";
-            ctx.fillText(`Playing against ${teamChoice}`, 350, 200);
-        }
-
-        // Function to play match and earn Hut Coins
-        function play() {
-            if (!isOwner) {
-                alert("You played a match! +50 Hut Coins");
-                hutCoins += 50;
-                updateHutCoinsDisplay();
-                saveUserData();
-            } else {
-                alert("You are an Owner and have infinite Hut Coins!");
-            }
-        }
-
-        // Function to reset the game
-        function resetGame() {
-            if (!isOwner) {
-                hutCoins = 0;
-                playerInventory = [];
-                updateHutCoinsDisplay();
-                saveUserData();
-                alert("Game reset");
-            } else {
-                alert("Owners cannot reset their Hut Coins, as they are infinite!");
-            }
-        }
-
-        // Function to update the Hut Coins display
-        function updateHutCoinsDisplay() {
-            document.getElementById('hutCoinsDisplay').innerText = "Hut Coins: " + (isOwner ? "Infinite" : hutCoins);
-        }
-
-        // Function to buy players
-        function buyPlayer(price) {
+        // Buy items from the shop
+        function buyItem(price, item) {
             if (isOwner || hutCoins >= price) {
                 if (!isOwner) hutCoins -= price;
-                playerInventory.push(`Player ${price}`);
-                alert(`You bought a player for ${price} Hut Coins`);
+                playerInventory.push(item);
+                alert(`You bought ${item} for ${price} Hut Coins`);
                 updateHutCoinsDisplay();
                 saveUserData();
             } else {
@@ -258,25 +237,20 @@
             }
         }
 
-        // Function to open the shop
-        function openShop() {
-            document.getElementById('teamSelection').style.display = 'none';
-            document.getElementById('shopScreen').style.display = 'block';
-        }
-
-        // Function to go back to team selection from the shop
-        function goBackToTeamSelection() {
-            document.getElementById('shopScreen').style.display = 'none';
-            document.getElementById('teamSelection').style.display = 'block';
-        }
-
-        // Function to save user data in localStorage
-        function saveUserData() {
-            if (!isOwner) {
-                localStorage.setItem('hutCoins', hutCoins);
+        // Gifting system for Owners
+        function giftItem() {
+            if (isOwner) {
+                const giftTo = document.getElementById('giftTo').value;
+                alert(`You gifted an item to ${giftTo} for free!`);
+                document.getElementById('giftLog').innerHTML += `Gifted to ${giftTo}<br>`;
+            } else {
+                alert("Only Owners can gift items!");
             }
-            localStorage.setItem('playerInventory', JSON.stringify(playerInventory));
         }
-    </script>
-</body>
-</html>
+
+        // Trade system between players
+        function initiateTrade() {
+            const tradeWith = document.getElementById('tradeWith').value;
+            const tradeItem = document.getElementById('tradeItem').value;
+            trades.push({ tradeWith, tradeItem });
+            document.getElementById('tradeLog').innerHTML += `Trade proposed to ${tradeWith} for ${trade
