@@ -74,6 +74,7 @@
     <div id="loginScreen">
         <h2>Login to Play</h2>
         <input type="text" id="username" placeholder="Username"><br><br>
+        <input type="password" id="password" placeholder="Password"><br><br>
         <button onclick="login()">Login</button>
     </div>
 
@@ -132,6 +133,7 @@
         let hutCoins = 0;
         let playerInventory = [];
         let isLoggedIn = false;
+        let isOwner = false;
 
         const canvas = document.getElementById("soccerField");
         const ctx = canvas.getContext("2d");
@@ -139,20 +141,47 @@
         // Hide everything except login screen initially
         document.getElementById('loginScreen').style.display = 'block';
 
+        // Predefined users with their passwords
+        const users = [
+            { username: 'l', password: 'm', isOwner: false },  // Predefined user
+        ];
+
+        // Check if 3 owners exist already
+        let ownerCount = localStorage.getItem('ownerCount') ? parseInt(localStorage.getItem('ownerCount')) : 0;
+
         // Function to handle login
         function login() {
             const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
 
-            if (username === 'l') {  // Simulate a successful login with predefined username
-                isLoggedIn = true;
-                document.getElementById('loginScreen').style.display = 'none';
-                document.getElementById('teamSelection').style.display = 'block';
+            // Check if user already exists
+            let user = users.find(user => user.username === username && user.password === password);
 
-                // Load user data (if any exists)
-                loadUserData();
+            if (!user) {
+                // Register new user
+                if (ownerCount < 3) {
+                    isOwner = true;
+                    ownerCount++;
+                    localStorage.setItem('ownerCount', ownerCount);
+                    alert("You are an Owner with infinite Hut Coins!");
+                } else {
+                    isOwner = false;
+                    alert("You are a regular player.");
+                }
+
+                user = { username, password, isOwner };
+                users.push(user);
             } else {
-                alert("Invalid login");
+                isOwner = user.isOwner;
+                alert(isOwner ? "Welcome back, Owner!" : "Welcome back!");
             }
+
+            isLoggedIn = true;
+            document.getElementById('loginScreen').style.display = 'none';
+            document.getElementById('teamSelection').style.display = 'block';
+
+            // Load user data (if any exists)
+            loadUserData();
         }
 
         // Function to load user data (using localStorage for simulation)
@@ -160,9 +189,12 @@
             const savedHutCoins = localStorage.getItem('hutCoins');
             const savedInventory = localStorage.getItem('playerInventory');
 
-            if (savedHutCoins) {
+            if (savedHutCoins && !isOwner) {
                 hutCoins = parseInt(savedHutCoins);
                 document.getElementById('hutCoinsDisplay').innerText = "Hut Coins: " + hutCoins;
+            } else if (isOwner) {
+                hutCoins = Infinity; // Infinite Hut Coins for owners
+                document.getElementById('hutCoinsDisplay').innerText = "Hut Coins: Infinite";
             }
 
             if (savedInventory) {
@@ -185,30 +217,38 @@
 
         // Function to play match and earn Hut Coins
         function play() {
-            alert("You played a match! +50 Hut Coins");
-            hutCoins += 50;
-            updateHutCoinsDisplay();
-            saveUserData();
+            if (!isOwner) {
+                alert("You played a match! +50 Hut Coins");
+                hutCoins += 50;
+                updateHutCoinsDisplay();
+                saveUserData();
+            } else {
+                alert("You are an Owner and have infinite Hut Coins!");
+            }
         }
 
         // Function to reset the game
         function resetGame() {
-            hutCoins = 0;
-            playerInventory = [];
-            updateHutCoinsDisplay();
-            saveUserData();
-            alert("Game reset");
+            if (!isOwner) {
+                hutCoins = 0;
+                playerInventory = [];
+                updateHutCoinsDisplay();
+                saveUserData();
+                alert("Game reset");
+            } else {
+                alert("Owners cannot reset their Hut Coins, as they are infinite!");
+            }
         }
 
         // Function to update the Hut Coins display
         function updateHutCoinsDisplay() {
-            document.getElementById('hutCoinsDisplay').innerText = "Hut Coins: " + hutCoins;
+            document.getElementById('hutCoinsDisplay').innerText = "Hut Coins: " + (isOwner ? "Infinite" : hutCoins);
         }
 
         // Function to buy players
         function buyPlayer(price) {
-            if (hutCoins >= price) {
-                hutCoins -= price;
+            if (isOwner || hutCoins >= price) {
+                if (!isOwner) hutCoins -= price;
                 playerInventory.push(`Player ${price}`);
                 alert(`You bought a player for ${price} Hut Coins`);
                 updateHutCoinsDisplay();
@@ -232,7 +272,9 @@
 
         // Function to save user data in localStorage
         function saveUserData() {
-            localStorage.setItem('hutCoins', hutCoins);
+            if (!isOwner) {
+                localStorage.setItem('hutCoins', hutCoins);
+            }
             localStorage.setItem('playerInventory', JSON.stringify(playerInventory));
         }
     </script>
