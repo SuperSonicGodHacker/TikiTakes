@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Soccer Hut</title>
+    <title>Soccer Hut - 2D Game</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -31,22 +31,6 @@
             cursor: pointer;
         }
 
-        .player-card {
-            border: 1px solid #ccc;
-            padding: 10px;
-            margin: 10px;
-            display: inline-block;
-            background-color: #f9f9f9;
-        }
-
-        .player-card button {
-            background-color: #007bff;
-        }
-
-        .player-card button:hover {
-            background-color: #0056b3;
-        }
-
         .credits {
             font-size: 12px;
             color: gray;
@@ -64,49 +48,19 @@
         <button onclick="resetGame()">Reset Game</button>
     </div>
 
-    <h2>Buy Players</h2>
-    <div id="playerList"></div>
-
     <div class="credits">
         <p>Vihaan Bhatt, Aranya Chatterjee, Viaan Bahl, and Ryan Chindu</p>
     </div>
 
     <script>
-        // Expanded player list with more soccer players
-        const players = [
-            { name: "Lionel Messi", price: 5000, rating: 95 },
-            { name: "Cristiano Ronaldo", price: 4800, rating: 94 },
-            { name: "Neymar Jr.", price: 4500, rating: 92 },
-            { name: "Kylian Mbappe", price: 4700, rating: 93 },
-            { name: "Kevin De Bruyne", price: 4000, rating: 91 },
-            { name: "Erling Haaland", price: 4300, rating: 91 },
-            { name: "Mohamed Salah", price: 4400, rating: 91 },
-            { name: "Virgil van Dijk", price: 4200, rating: 90 },
-            { name: "Sadio Mane", price: 4100, rating: 89 },
-            { name: "Luka Modric", price: 4000, rating: 88 },
-            { name: "Toni Kroos", price: 3800, rating: 88 },
-            { name: "Robert Lewandowski", price: 4700, rating: 93 },
-            { name: "Sergio Ramos", price: 4100, rating: 89 },
-            { name: "Paul Pogba", price: 3900, rating: 88 },
-            { name: "Bruno Fernandes", price: 4200, rating: 89 },
-            { name: "Harry Kane", price: 4600, rating: 92 },
-            { name: "Marcus Rashford", price: 3900, rating: 88 },
-            { name: "Raheem Sterling", price: 4000, rating: 89 },
-            { name: "Eden Hazard", price: 4300, rating: 91 },
-            { name: "Antoine Griezmann", price: 4100, rating: 90 },
-            { name: "Zlatan Ibrahimovic", price: 4500, rating: 92 },
-            { name: "Gareth Bale", price: 4200, rating: 90 },
-            { name: "Gerard Pique", price: 3800, rating: 88 },
-            { name: "David Silva", price: 3900, rating: 88 },
-            { name: "Thiago Silva", price: 4000, rating: 88 },
-            { name: "Luis Suarez", price: 4400, rating: 91 },
-            { name: "Pierre-Emerick Aubameyang", price: 4300, rating: 91 }
-        ];
+        // Images for players and ball
+        const playerImage = new Image();
+        playerImage.src = "https://example.com/player.png"; // Replace with the URL of the player image
 
-        // Hut coins starting point
-        let hutCoins = 10000; // You can give the player some starting coins
+        const ballImage = new Image();
+        ballImage.src = "https://example.com/soccer-ball.png"; // Replace with the URL of the soccer ball image
 
-        // Canvas for the game field
+        // Canvas setup
         const canvas = document.getElementById("soccerField");
         const ctx = canvas.getContext("2d");
 
@@ -114,15 +68,24 @@
         let player = {
             x: 400,
             y: 200,
-            width: 30,
-            height: 30,
-            color: "blue",
+            width: 50,
+            height: 50,
             speed: 5,
             dx: 0,
             dy: 0
         };
 
-        // Draw the field (lines and goals)
+        // Ball properties
+        let ball = {
+            x: 300,
+            y: 200,
+            width: 30,
+            height: 30,
+            dx: 2,
+            dy: 2
+        };
+
+        // Draw the soccer field
         function drawField() {
             ctx.fillStyle = "green";
             ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -147,10 +110,14 @@
             ctx.fillRect(canvas.width - 10, canvas.height / 2 - 50, 10, 100);
         }
 
-        // Draw the player
+        // Draw player on the canvas
         function drawPlayer() {
-            ctx.fillStyle = player.color;
-            ctx.fillRect(player.x, player.y, player.width, player.height);
+            ctx.drawImage(playerImage, player.x, player.y, player.width, player.height);
+        }
+
+        // Draw the soccer ball
+        function drawBall() {
+            ctx.drawImage(ballImage, ball.x, ball.y, ball.width, ball.height);
         }
 
         // Clear the canvas
@@ -170,12 +137,28 @@
             if (player.y + player.height > canvas.height) player.y = canvas.height - player.height;
         }
 
+        // Update ball position
+        function updateBallPosition() {
+            ball.x += ball.dx;
+            ball.y += ball.dy;
+
+            // Bounce the ball off the walls
+            if (ball.x < 0 || ball.x + ball.width > canvas.width) {
+                ball.dx *= -1;
+            }
+            if (ball.y < 0 || ball.y + ball.height > canvas.height) {
+                ball.dy *= -1;
+            }
+        }
+
         // Game loop
         function gameLoop() {
             clearCanvas();
             drawField();
             drawPlayer();
+            drawBall();
             updatePlayerPosition();
+            updateBallPosition();
 
             requestAnimationFrame(gameLoop);
         }
@@ -212,33 +195,6 @@
             }
         }
 
-        // Load players into the buy section
-        function loadPlayers() {
-            const playerList = document.getElementById('playerList');
-            playerList.innerHTML = '';
-            players.forEach(player => {
-                const playerCard = document.createElement('div');
-                playerCard.className = 'player-card';
-                playerCard.innerHTML = `
-                    <h3>${player.name}</h3>
-                    <p>Price: ${player.price} Hut Coins</p>
-                    <p>Rating: ${player.rating}</p>
-                    <button onclick="buyPlayer('${player.name}', ${player.price})">Buy Player</button>
-                `;
-                playerList.appendChild(playerCard);
-            });
-        }
-
-        // Buy a player if enough coins are available
-        function buyPlayer(playerName, playerPrice) {
-            if (hutCoins >= playerPrice) {
-                hutCoins -= playerPrice;
-                alert(`You bought ${playerName}!`);
-            } else {
-                alert(`You don't have enough Hut Coins to buy ${playerName}!`);
-            }
-        }
-
         // Start the game
         function startGame() {
             gameLoop();
@@ -250,16 +206,21 @@
             player.y = canvas.height / 2 - player.height / 2;
             player.dx = 0;
             player.dy = 0;
+            ball.x = 300;
+            ball.y = 200;
+            ball.dx = 2;
+            ball.dy = 2;
             clearCanvas();
             drawField();
             drawPlayer();
+            drawBall();
         }
 
         // Initialize the game
         document.addEventListener('DOMContentLoaded', () => {
             drawField();
             drawPlayer();
-            loadPlayers();
+            drawBall();
         });
 
         // Event listeners for player movement
