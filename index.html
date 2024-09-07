@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Soccer Hut - 2D Game</title>
+    <title>Soccer Hut - 2D Game with AI Opponents</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -53,12 +53,15 @@
     </div>
 
     <script>
-        // Images for players and ball
+        // Player and ball images
         const playerImage = new Image();
-        playerImage.src = "https://example.com/player.png"; // Replace with the URL of the player image
+        playerImage.src = "https://via.placeholder.com/50";  // Replace with your player image URL
 
         const ballImage = new Image();
-        ballImage.src = "https://example.com/soccer-ball.png"; // Replace with the URL of the soccer ball image
+        ballImage.src = "https://via.placeholder.com/30";    // Replace with your soccer ball image URL
+
+        const opponentImage = new Image();
+        opponentImage.src = "https://via.placeholder.com/50";  // Replace with your opponent image URL
 
         // Canvas setup
         const canvas = document.getElementById("soccerField");
@@ -84,6 +87,12 @@
             dx: 2,
             dy: 2
         };
+
+        // AI Opponents properties
+        const opponents = [
+            { x: 100, y: 100, width: 50, height: 50, speed: 2, dx: 1, dy: 1 },
+            { x: 700, y: 300, width: 50, height: 50, speed: 2, dx: -1, dy: -1 }
+        ];
 
         // Draw the soccer field
         function drawField() {
@@ -120,6 +129,13 @@
             ctx.drawImage(ballImage, ball.x, ball.y, ball.width, ball.height);
         }
 
+        // Draw AI Opponents on the canvas
+        function drawOpponents() {
+            opponents.forEach(opponent => {
+                ctx.drawImage(opponentImage, opponent.x, opponent.y, opponent.width, opponent.height);
+            });
+        }
+
         // Clear the canvas
         function clearCanvas() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -151,14 +167,44 @@
             }
         }
 
+        // Update AI Opponents' positions
+        function updateOpponentsPosition() {
+            opponents.forEach(opponent => {
+                opponent.x += opponent.dx * opponent.speed;
+                opponent.y += opponent.dy * opponent.speed;
+
+                // Bounce off walls
+                if (opponent.x < 0 || opponent.x + opponent.width > canvas.width) {
+                    opponent.dx *= -1;
+                }
+                if (opponent.y < 0 || opponent.y + opponent.height > canvas.height) {
+                    opponent.dy *= -1;
+                }
+
+                // Simple AI logic: move towards the ball
+                if (opponent.x < ball.x) {
+                    opponent.dx = 1;
+                } else {
+                    opponent.dx = -1;
+                }
+                if (opponent.y < ball.y) {
+                    opponent.dy = 1;
+                } else {
+                    opponent.dy = -1;
+                }
+            });
+        }
+
         // Game loop
         function gameLoop() {
             clearCanvas();
             drawField();
             drawPlayer();
             drawBall();
+            drawOpponents();
             updatePlayerPosition();
             updateBallPosition();
+            updateOpponentsPosition();
 
             requestAnimationFrame(gameLoop);
         }
@@ -210,10 +256,15 @@
             ball.y = 200;
             ball.dx = 2;
             ball.dy = 2;
+            opponents.forEach(opponent => {
+                opponent.x = Math.random() * canvas.width;
+                opponent.y = Math.random() * canvas.height;
+            });
             clearCanvas();
             drawField();
             drawPlayer();
             drawBall();
+            drawOpponents();
         }
 
         // Initialize the game
@@ -221,6 +272,7 @@
             drawField();
             drawPlayer();
             drawBall();
+            drawOpponents();
         });
 
         // Event listeners for player movement
