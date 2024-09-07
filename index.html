@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Soccer Hut - Play Game</title>
+    <title>Soccer Hut</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -30,11 +30,33 @@
             margin: 5px;
             cursor: pointer;
         }
+
+        .player-card {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin: 10px;
+            display: inline-block;
+            background-color: #f9f9f9;
+        }
+
+        .player-card button {
+            background-color: #007bff;
+        }
+
+        .player-card button:hover {
+            background-color: #0056b3;
+        }
+
+        .credits {
+            font-size: 12px;
+            color: gray;
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
 
-    <h1>Soccer Hut - Play Game</h1>
+    <h1>Soccer Hut</h1>
     <canvas id="soccerField" width="800" height="400"></canvas>
     
     <div id="controls">
@@ -42,7 +64,49 @@
         <button onclick="resetGame()">Reset Game</button>
     </div>
 
+    <h2>Buy Players</h2>
+    <div id="playerList"></div>
+
+    <div class="credits">
+        <p>Vihaan Bhatt, Aranya Chatterjee, Viaan Bahl, and Ryan Chindu</p>
+    </div>
+
     <script>
+        // Expanded player list with more soccer players
+        const players = [
+            { name: "Lionel Messi", price: 5000, rating: 95 },
+            { name: "Cristiano Ronaldo", price: 4800, rating: 94 },
+            { name: "Neymar Jr.", price: 4500, rating: 92 },
+            { name: "Kylian Mbappe", price: 4700, rating: 93 },
+            { name: "Kevin De Bruyne", price: 4000, rating: 91 },
+            { name: "Erling Haaland", price: 4300, rating: 91 },
+            { name: "Mohamed Salah", price: 4400, rating: 91 },
+            { name: "Virgil van Dijk", price: 4200, rating: 90 },
+            { name: "Sadio Mane", price: 4100, rating: 89 },
+            { name: "Luka Modric", price: 4000, rating: 88 },
+            { name: "Toni Kroos", price: 3800, rating: 88 },
+            { name: "Robert Lewandowski", price: 4700, rating: 93 },
+            { name: "Sergio Ramos", price: 4100, rating: 89 },
+            { name: "Paul Pogba", price: 3900, rating: 88 },
+            { name: "Bruno Fernandes", price: 4200, rating: 89 },
+            { name: "Harry Kane", price: 4600, rating: 92 },
+            { name: "Marcus Rashford", price: 3900, rating: 88 },
+            { name: "Raheem Sterling", price: 4000, rating: 89 },
+            { name: "Eden Hazard", price: 4300, rating: 91 },
+            { name: "Antoine Griezmann", price: 4100, rating: 90 },
+            { name: "Zlatan Ibrahimovic", price: 4500, rating: 92 },
+            { name: "Gareth Bale", price: 4200, rating: 90 },
+            { name: "Gerard Pique", price: 3800, rating: 88 },
+            { name: "David Silva", price: 3900, rating: 88 },
+            { name: "Thiago Silva", price: 4000, rating: 88 },
+            { name: "Luis Suarez", price: 4400, rating: 91 },
+            { name: "Pierre-Emerick Aubameyang", price: 4300, rating: 91 }
+        ];
+
+        // Hut coins starting point
+        let hutCoins = 10000; // You can give the player some starting coins
+
+        // Canvas for the game field
         const canvas = document.getElementById("soccerField");
         const ctx = canvas.getContext("2d");
 
@@ -148,6 +212,33 @@
             }
         }
 
+        // Load players into the buy section
+        function loadPlayers() {
+            const playerList = document.getElementById('playerList');
+            playerList.innerHTML = '';
+            players.forEach(player => {
+                const playerCard = document.createElement('div');
+                playerCard.className = 'player-card';
+                playerCard.innerHTML = `
+                    <h3>${player.name}</h3>
+                    <p>Price: ${player.price} Hut Coins</p>
+                    <p>Rating: ${player.rating}</p>
+                    <button onclick="buyPlayer('${player.name}', ${player.price})">Buy Player</button>
+                `;
+                playerList.appendChild(playerCard);
+            });
+        }
+
+        // Buy a player if enough coins are available
+        function buyPlayer(playerName, playerPrice) {
+            if (hutCoins >= playerPrice) {
+                hutCoins -= playerPrice;
+                alert(`You bought ${playerName}!`);
+            } else {
+                alert(`You don't have enough Hut Coins to buy ${playerName}!`);
+            }
+        }
+
         // Start the game
         function startGame() {
             gameLoop();
@@ -164,13 +255,16 @@
             drawPlayer();
         }
 
+        // Initialize the game
+        document.addEventListener('DOMContentLoaded', () => {
+            drawField();
+            drawPlayer();
+            loadPlayers();
+        });
+
         // Event listeners for player movement
         document.addEventListener("keydown", movePlayer);
         document.addEventListener("keyup", stopPlayer);
-
-        // Draw initial field and player
-        drawField();
-        drawPlayer();
     </script>
 </body>
 </html>
