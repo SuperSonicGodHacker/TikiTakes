@@ -8,95 +8,53 @@
         body {
             font-family: Arial, sans-serif;
             text-align: center;
-            background-color: #f4f4f4;
             margin: 0;
             padding: 20px;
+            background: url('https://path-to-messi-image.jpg') no-repeat center center fixed; /* Replace with actual URL */
+            background-size: cover;
+            color: white;
         }
 
         h1 {
-            font-size: 3em;
-            color: #333;
+            font-size: 4em;
+            color: yellow;
+            text-shadow: 2px 2px 5px black;
         }
 
         #loginScreen {
             margin-top: 50px;
+            background-color: rgba(0, 0, 0, 0.6);
+            padding: 20px;
+            border-radius: 10px;
+            display: inline-block;
         }
 
-        canvas {
-            background-color: green;
-            display: block;
-            margin: 20px auto;
-            border: 5px solid #fff;
-        }
-
-        #controls {
-            margin-top: 20px;
+        input {
+            padding: 10px;
+            font-size: 16px;
+            margin: 10px 0;
+            width: 80%;
         }
 
         button {
             padding: 10px 20px;
             font-size: 16px;
-            margin: 5px;
+            margin: 10px 5px;
             cursor: pointer;
+            background-color: yellow;
+            border: none;
+            color: black;
+            border-radius: 5px;
         }
 
-        #shop {
-            margin-top: 20px;
-            display: flex;
-            justify-content: center;
-        }
-
-        .shop-item {
-            border: 1px solid #ccc;
-            padding: 10px;
-            margin: 10px;
-            text-align: center;
-            background-color: #f9f9f9;
-            width: 150px;
-        }
-
-        .shop-item img {
-            width: 100%;
-            height: auto;
+        button:hover {
+            background-color: #ffc107;
         }
 
         .credits {
             font-size: 12px;
-            color: gray;
+            color: lightgray;
             margin-top: 20px;
-        }
-
-        #teamSelection, #shopScreen, #gameScreen, #teamRoster {
-            display: none;
-        }
-
-        .team {
-            border: 1px solid #ccc;
-            padding: 20px;
-            margin: 10px;
-            display: inline-block;
-            width: 150px;
-        }
-
-        .team img {
-            width: 100px;
-            height: auto;
-        }
-
-        .infinite-symbol {
-            font-size: 24px;
-            color: red;
-            margin-left: 5px;
-        }
-
-        #ownerControls {
-            display: none;
-            margin-top: 20px;
-        }
-
-        #banList {
-            margin-top: 20px;
-            color: red;
         }
     </style>
 </head>
@@ -111,56 +69,6 @@
         <input type="password" id="password" placeholder="Password"><br><br>
         <button onclick="login()">Login</button>
         <button onclick="signUp()">Sign Up</button>
-    </div>
-
-    <div id="teamSelection">
-        <h2>Select a Team to Play Against</h2>
-        <div id="teamChoices">
-            <div class="team" onclick="viewRoster('England')">
-                <img src="https://upload.wikimedia.org/wikipedia/en/b/be/Flag_of_England.svg" alt="England Flag">
-                <p>England</p>
-            </div>
-            <!-- Add other teams similarly -->
-        </div>
-        <br>
-        <button onclick="goBackToTeamSelection()">Go Back</button>
-    </div>
-
-    <div id="teamRoster">
-        <h2>Team Roster for <span id="selectedTeam"></span></h2>
-        <div id="rosterPlayers"></div>
-        <br>
-        <button onclick="startMatch()">Start Match with this Team</button>
-        <button onclick="goBackToTeamSelection()">Choose Another Team</button>
-    </div>
-
-    <div id="shopScreen">
-        <h2>Shop - Buy Accessories and Players</h2>
-        <div id="hutCoinsDisplay">Hut Coins: 0</div>
-        <div id="shop">
-            <div class="shop-item">
-                <img src="https://via.placeholder.com/100" alt="Cool Cleats">
-                <h3>Cool Cleats</h3>
-                <p>Price: 150 Hut Coins</p>
-                <button onclick="buyItem(150, 'Cool Cleats')">Buy</button>
-            </div>
-            <div class="shop-item">
-                <img src="https://via.placeholder.com/100" alt="Player 1">
-                <h3>Player 1</h3>
-                <p>Price: 100 Hut Coins</p>
-                <button onclick="buyItem(100, 'Player 1')">Buy</button>
-            </div>
-        </div>
-        <br>
-        <button onclick="goBackToTeamSelection()">Back to Team Selection</button>
-    </div>
-
-    <div id="gameScreen">
-        <canvas id="soccerField" width="800" height="400"></canvas>
-        <div id="controls">
-            <button onclick="play()">Play Match</button>
-            <button onclick="resetGame()">Reset Game</button>
-        </div>
     </div>
 
     <div class="credits">
@@ -184,17 +92,13 @@
                 return;
             }
 
-            // Check if username is already taken
             const userExists = users.find(user => user.username === username);
             if (userExists) {
                 alert("Username already taken. Please choose another one.");
                 return;
             }
 
-            // If less than 3 owners exist, new users get Owner status
             isOwner = users.length < MAX_OWNERS;
-
-            // Add new user
             users.push({ username, password, isOwner });
             localStorage.setItem('users', JSON.stringify(users));
 
@@ -221,50 +125,9 @@
             isOwner = user.isOwner;
             alert(isOwner ? "Welcome back, Owner!" : "Welcome back!");
 
-            // Hide login screen and show team selection
             document.getElementById('loginScreen').style.display = 'none';
-            document.getElementById('teamSelection').style.display = 'block';
-
-            // Load user data (like Hut Coins and Inventory) from localStorage
-            loadUserData();
         }
+    </script>
 
-        function loadUserData() {
-            // Load the user's data (e.g., Hut Coins, Inventory) from localStorage
-            const storedHutCoins = localStorage.getItem('hutCoins');
-            hutCoins = storedHutCoins ? parseInt(storedHutCoins) : 0;
-
-            updateHutCoinsDisplay();
-        }
-
-        function updateHutCoinsDisplay() {
-            document.getElementById('hutCoinsDisplay').innerText = "Hut Coins: " + (isOwner ? "Infinite" : hutCoins);
-        }
-
-        // Save user data
-        function saveUserData() {
-            if (!isOwner) {
-                localStorage.setItem('hutCoins', hutCoins);
-            }
-        }
-
-        function buyItem(price, item) {
-            if (isOwner || hutCoins >= price) {
-                if (!isOwner) hutCoins -= price;
-                playerInventory.push(item);
-                alert(`You bought ${item} for ${price} Hut Coins`);
-                updateHutCoinsDisplay();
-                saveUserData();
-            } else {
-                alert("Not enough Hut Coins!");
-            }
-        }
-
-        function play() {
-            alert("You played a match!");
-            hutCoins += 50;  // For demonstration purposes, 50 Hut Coins are added.
-            updateHutCoinsDisplay();
-            saveUserData();
-        }
-
-        function reset
+</body>
+</html>
