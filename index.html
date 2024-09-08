@@ -21,7 +21,7 @@
             text-shadow: 2px 2px 5px black;
         }
 
-        #loginScreen {
+        #loginScreen, #teamSelection, #gameScreen {
             margin-top: 50px;
             background-color: rgba(0, 0, 0, 0.6);
             padding: 20px;
@@ -56,6 +56,41 @@
             color: lightgray;
             margin-top: 20px;
         }
+
+        #hutPointsDisplay {
+            font-size: 1.5em;
+            margin-top: 10px;
+        }
+
+        .hut-icon {
+            width: 24px;
+            vertical-align: middle;
+        }
+
+        #teamSelection, #gameScreen {
+            display: none;
+        }
+
+        /* Team selection */
+        .team {
+            display: inline-block;
+            margin: 10px;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.7);
+            border-radius: 10px;
+            cursor: pointer;
+        }
+
+        .team img {
+            width: 100px;
+            height: auto;
+        }
+
+        .team p {
+            font-size: 1.2em;
+            margin-top: 10px;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
@@ -71,15 +106,73 @@
         <button onclick="signUp()">Sign Up</button>
     </div>
 
+    <!-- Team Selection Screen -->
+    <div id="teamSelection">
+        <h2>Select a Team to Play With</h2>
+        <div id="teamChoices">
+            <div class="team" onclick="selectTeam('Terrible Team')">
+                <img src="https://via.placeholder.com/100?text=Terrible+Team" alt="Terrible Team">
+                <p>Terrible Team</p>
+            </div>
+            <div class="team" onclick="selectTeam('Brazil')">
+                <img src="https://upload.wikimedia.org/wikipedia/en/0/05/Flag_of_Brazil.svg" alt="Brazil Flag">
+                <p>Brazil</p>
+            </div>
+            <div class="team" onclick="selectTeam('Argentina')">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/1/1a/Flag_of_Argentina.svg" alt="Argentina Flag">
+                <p>Argentina</p>
+            </div>
+            <div class="team" onclick="selectTeam('France')">
+                <img src="https://upload.wikimedia.org/wikipedia/en/c/c3/Flag_of_France.svg" alt="France Flag">
+                <p>France</p>
+            </div>
+            <div class="team" onclick="selectTeam('Germany')">
+                <img src="https://upload.wikimedia.org/wikipedia/en/b/ba/Flag_of_Germany.svg" alt="Germany Flag">
+                <p>Germany</p>
+            </div>
+            <div class="team" onclick="selectTeam('Spain')">
+                <img src="https://upload.wikimedia.org/wikipedia/en/9/9a/Flag_of_Spain.svg" alt="Spain Flag">
+                <p>Spain</p>
+            </div>
+            <div class="team" onclick="selectTeam('England')">
+                <img src="https://upload.wikimedia.org/wikipedia/en/b/be/Flag_of_England.svg" alt="England Flag">
+                <p>England</p>
+            </div>
+            <div class="team" onclick="selectTeam('Italy')">
+                <img src="https://upload.wikimedia.org/wikipedia/en/0/03/Flag_of_Italy.svg" alt="Italy Flag">
+                <p>Italy</p>
+            </div>
+            <div class="team" onclick="selectTeam('Portugal')">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/5/5c/Flag_of_Portugal.svg" alt="Portugal Flag">
+                <p>Portugal</p>
+            </div>
+            <div class="team" onclick="selectTeam('Netherlands')">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/2/20/Flag_of_the_Netherlands.svg" alt="Netherlands Flag">
+                <p>Netherlands</p>
+            </div>
+        </div>
+        <br>
+        <button onclick="startGame()">Start Game</button>
+    </div>
+
+    <!-- Game Screen -->
+    <div id="gameScreen">
+        <h2>Playing Match...</h2>
+        <p>Earn Hut Points based on your performance!</p>
+        <button onclick="finishMatch()">Finish Match</button>
+    </div>
+
+    <div id="hutPointsDisplay">
+        Hut Points: <span id="hutPoints">500,000</span> <img class="hut-icon" src="https://via.placeholder.com/24" alt="Hut Points Icon">
+    </div>
+
     <div class="credits">
         <p>Vihaan Bhatt, Aranya Chatterjee, Viaan Bahl, and Ryan Chindu</p>
     </div>
 
     <script>
-        // Store users and owner status in localStorage
         let users = JSON.parse(localStorage.getItem('users')) || [];
-        let hutCoins = 0;
-        let playerInventory = [];
+        let hutPoints = 500000;
         let isOwner = false;
         const MAX_OWNERS = 3;
 
@@ -99,10 +192,12 @@
             }
 
             isOwner = users.length < MAX_OWNERS;
+            hutPoints = isOwner ? 'Infinite' : 500000;
+
             users.push({ username, password, isOwner });
             localStorage.setItem('users', JSON.stringify(users));
 
-            alert(isOwner ? "You are an Owner with infinite Hut Coins!" : "You signed up as a regular user.");
+            alert(isOwner ? "You are an Owner with infinite Hut Points!" : "You signed up as a regular user.");
             loginUser(username, password);
         }
 
@@ -123,9 +218,39 @@
         function loginUser(username, password) {
             const user = users.find(user => user.username === username && user.password === password);
             isOwner = user.isOwner;
+            hutPoints = isOwner ? 'Infinite' : 500000;
+
             alert(isOwner ? "Welcome back, Owner!" : "Welcome back!");
 
             document.getElementById('loginScreen').style.display = 'none';
+            document.getElementById('teamSelection').style.display = 'block';
+            updateHutPointsDisplay();
+        }
+
+        function updateHutPointsDisplay() {
+            document.getElementById('hutPoints').innerText = hutPoints;
+        }
+
+        function selectTeam(team) {
+            alert("You selected: " + team);
+        }
+
+        function startGame() {
+            document.getElementById('teamSelection').style.display = 'none';
+            document.getElementById('gameScreen').style.display = 'block';
+        }
+
+        function finishMatch() {
+            if (!isOwner) {
+                const pointsEarned = Math.floor(Math.random() * 10000 + 1000);
+                hutPoints += pointsEarned;
+                alert(`Match finished! You earned ${pointsEarned} Hut Points!`);
+                updateHutPointsDisplay();
+            } else {
+                alert("You are an Owner with Infinite Hut Points!");
+            }
+            document.getElementById('gameScreen').style.display = 'none';
+            document.getElementById('teamSelection').style.display = 'block';
         }
     </script>
 
