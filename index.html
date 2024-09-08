@@ -10,7 +10,7 @@
             text-align: center;
             margin: 0;
             padding: 20px;
-            background: url('https://path-to-messi-image.jpg') no-repeat center center fixed; /* Replace with actual URL */
+            background: url('https://path-to-soccer-field-image.jpg') no-repeat center center fixed; /* Replace with actual URL */
             background-size: cover;
             color: white;
         }
@@ -105,6 +105,19 @@
         #controlsManual h2 {
             margin-top: 0;
         }
+
+        #soccerField {
+            border: 2px solid white;
+            background-color: green;
+            margin: 0 auto;
+            display: block;
+        }
+
+        .player {
+            fill: red;
+            stroke: black;
+            stroke-width: 2;
+        }
     </style>
 </head>
 <body>
@@ -124,6 +137,7 @@
     <div id="teamSelection">
         <h2>Select a Team to Play With</h2>
         <div id="teamChoices">
+            <!-- Example teams, add more as needed -->
             <div class="team" onclick="selectTeam('Brazil')">
                 <img src="https://upload.wikimedia.org/wikipedia/en/0/05/Flag_of_Brazil.svg" alt="Brazil Flag">
                 <p>Brazil</p>
@@ -132,34 +146,7 @@
                 <img src="https://upload.wikimedia.org/wikipedia/commons/1/1a/Flag_of_Argentina.svg" alt="Argentina Flag">
                 <p>Argentina</p>
             </div>
-            <div class="team" onclick="selectTeam('France')">
-                <img src="https://upload.wikimedia.org/wikipedia/en/c/c3/Flag_of_France.svg" alt="France Flag">
-                <p>France</p>
-            </div>
-            <div class="team" onclick="selectTeam('Germany')">
-                <img src="https://upload.wikimedia.org/wikipedia/en/b/ba/Flag_of_Germany.svg" alt="Germany Flag">
-                <p>Germany</p>
-            </div>
-            <div class="team" onclick="selectTeam('Spain')">
-                <img src="https://upload.wikimedia.org/wikipedia/en/9/9a/Flag_of_Spain.svg" alt="Spain Flag">
-                <p>Spain</p>
-            </div>
-            <div class="team" onclick="selectTeam('England')">
-                <img src="https://upload.wikimedia.org/wikipedia/en/b/be/Flag_of_England.svg" alt="England Flag">
-                <p>England</p>
-            </div>
-            <div class="team" onclick="selectTeam('Italy')">
-                <img src="https://upload.wikimedia.org/wikipedia/en/0/03/Flag_of_Italy.svg" alt="Italy Flag">
-                <p>Italy</p>
-            </div>
-            <div class="team" onclick="selectTeam('Portugal')">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/5/5c/Flag_of_Portugal.svg" alt="Portugal Flag">
-                <p>Portugal</p>
-            </div>
-            <div class="team" onclick="selectTeam('Netherlands')">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/2/20/Flag_of_the_Netherlands.svg" alt="Netherlands Flag">
-                <p>Netherlands</p>
-            </div>
+            <!-- Add other teams similarly -->
         </div>
         <br>
         <button onclick="startGame()">Start Game</button>
@@ -247,16 +234,89 @@
 
         function selectTeam(team) {
             alert(`You have selected ${team}!`);
-            // Save selected team and proceed to game
             document.getElementById('teamSelection').style.display = 'none';
             document.getElementById('gameScreen').style.display = 'block';
-            // Implement team selection and game setup
+            setupGame(team);
+        }
+
+        function setupGame(team) {
+            const canvas = document.getElementById('soccerField');
+            const ctx = canvas.getContext('2d');
+
+            // Clear previous drawings
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Draw field
+            ctx.fillStyle = 'green';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Draw 11 players
+            const playerCount = 11;
+            const players = [];
+            for (let i = 0; i < playerCount; i++) {
+                players.push({ x: Math.random() * canvas.width, y: Math.random() * canvas.height });
+            }
+
+            function drawPlayers() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.fillStyle = 'green';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                ctx.fillStyle = 'red';
+                players.forEach(player => {
+                    ctx.beginPath();
+                    ctx.arc(player.x, player.y, 10, 0, 2 * Math.PI);
+                    ctx.fill();
+                });
+            }
+
+            drawPlayers();
+
+            function movePlayer(direction) {
+                switch (direction) {
+                    case 'up':
+                        players[0].y = Math.max(players[0].y - 10, 0);
+                        break;
+                    case 'down':
+                        players[0].y = Math.min(players[0].y + 10, canvas.height);
+                        break;
+                    case 'left':
+                        players[0].x = Math.max(players[0].x - 10, 0);
+                        break;
+                    case 'right':
+                        players[0].x = Math.min(players[0].x + 10, canvas.width);
+                        break;
+                }
+                drawPlayers();
+            }
+
+            document.addEventListener('keydown', function(event) {
+                switch (event.key) {
+                    case 'ArrowUp':
+                        movePlayer('up');
+                        break;
+                    case 'ArrowDown':
+                        movePlayer('down');
+                        break;
+                    case 'ArrowLeft':
+                        movePlayer('left');
+                        break;
+                    case 'ArrowRight':
+                        movePlayer('right');
+                        break;
+                    case 'b':
+                        alert('Shooting!');
+                        break;
+                    case 'd':
+                        alert('Dribbling!');
+                        break;
+                }
+            });
         }
 
         function startGame() {
             document.getElementById('teamSelection').style.display = 'none';
             document.getElementById('gameScreen').style.display = 'block';
-            // Initialize game logic here
         }
 
         function finishMatch() {
@@ -268,50 +328,7 @@
             } else {
                 alert("You are an Owner with Infinite Hut Points!");
             }
-            document.getElementById('gameScreen').style.display = 'none';
-            document.getElementById('teamSelection').style.display = 'block';
         }
-
-        document.addEventListener('keydown', function(event) {
-            const canvas = document.getElementById('soccerField');
-            const ctx = canvas.getContext('2d');
-
-            // Example player position
-            let player = { x: canvas.width / 2, y: canvas.height / 2 };
-
-            function drawPlayer() {
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                ctx.beginPath();
-                ctx.arc(player.x, player.y, 10, 0, 2 * Math.PI);
-                ctx.fillStyle = 'red';
-                ctx.fill();
-                ctx.stroke();
-            }
-
-            switch (event.key) {
-                case 'ArrowUp':
-                    player.y -= 10;
-                    break;
-                case 'ArrowDown':
-                    player.y += 10;
-                    break;
-                case 'ArrowLeft':
-                    player.x -= 10;
-                    break;
-                case 'ArrowRight':
-                    player.x += 10;
-                    break;
-                case 'b':
-                    alert('Shooting!');
-                    break;
-                case 'd':
-                    alert('Dribbling!');
-                    break;
-            }
-
-            drawPlayer();
-        });
     </script>
-
 </body>
 </html>
