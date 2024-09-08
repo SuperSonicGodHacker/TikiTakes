@@ -91,6 +91,20 @@
             margin-top: 10px;
             font-weight: bold;
         }
+
+        /* Game Controls */
+        #controlsManual {
+            background-color: rgba(0, 0, 0, 0.6);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px auto;
+            display: inline-block;
+            color: white;
+        }
+
+        #controlsManual h2 {
+            margin-top: 0;
+        }
     </style>
 </head>
 <body>
@@ -110,10 +124,6 @@
     <div id="teamSelection">
         <h2>Select a Team to Play With</h2>
         <div id="teamChoices">
-            <div class="team" onclick="selectTeam('Terrible Team')">
-                <img src="https://via.placeholder.com/100?text=Terrible+Team" alt="Terrible Team">
-                <p>Terrible Team</p>
-            </div>
             <div class="team" onclick="selectTeam('Brazil')">
                 <img src="https://upload.wikimedia.org/wikipedia/en/0/05/Flag_of_Brazil.svg" alt="Brazil Flag">
                 <p>Brazil</p>
@@ -158,7 +168,13 @@
     <!-- Game Screen -->
     <div id="gameScreen">
         <h2>Playing Match...</h2>
-        <p>Earn Hut Points based on your performance!</p>
+        <canvas id="soccerField" width="800" height="400"></canvas>
+        <div id="controlsManual">
+            <h2>Game Controls</h2>
+            <p>Arrow Keys: Move player</p>
+            <p>'B': Shoot</p>
+            <p>'D': Dribble</p>
+        </div>
         <button onclick="finishMatch()">Finish Match</button>
     </div>
 
@@ -219,25 +235,28 @@
             const user = users.find(user => user.username === username && user.password === password);
             isOwner = user.isOwner;
             hutPoints = isOwner ? 'Infinite' : 500000;
-
-            alert(isOwner ? "Welcome back, Owner!" : "Welcome back!");
+            updateHutPointsDisplay();
 
             document.getElementById('loginScreen').style.display = 'none';
             document.getElementById('teamSelection').style.display = 'block';
-            updateHutPointsDisplay();
         }
 
         function updateHutPointsDisplay() {
-            document.getElementById('hutPoints').innerText = hutPoints;
+            document.getElementById('hutPoints').innerText = isOwner ? 'Infinite' : hutPoints;
         }
 
         function selectTeam(team) {
-            alert("You selected: " + team);
+            alert(`You have selected ${team}!`);
+            // Save selected team and proceed to game
+            document.getElementById('teamSelection').style.display = 'none';
+            document.getElementById('gameScreen').style.display = 'block';
+            // Implement team selection and game setup
         }
 
         function startGame() {
             document.getElementById('teamSelection').style.display = 'none';
             document.getElementById('gameScreen').style.display = 'block';
+            // Initialize game logic here
         }
 
         function finishMatch() {
@@ -252,6 +271,46 @@
             document.getElementById('gameScreen').style.display = 'none';
             document.getElementById('teamSelection').style.display = 'block';
         }
+
+        document.addEventListener('keydown', function(event) {
+            const canvas = document.getElementById('soccerField');
+            const ctx = canvas.getContext('2d');
+
+            // Example player position
+            let player = { x: canvas.width / 2, y: canvas.height / 2 };
+
+            function drawPlayer() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.beginPath();
+                ctx.arc(player.x, player.y, 10, 0, 2 * Math.PI);
+                ctx.fillStyle = 'red';
+                ctx.fill();
+                ctx.stroke();
+            }
+
+            switch (event.key) {
+                case 'ArrowUp':
+                    player.y -= 10;
+                    break;
+                case 'ArrowDown':
+                    player.y += 10;
+                    break;
+                case 'ArrowLeft':
+                    player.x -= 10;
+                    break;
+                case 'ArrowRight':
+                    player.x += 10;
+                    break;
+                case 'b':
+                    alert('Shooting!');
+                    break;
+                case 'd':
+                    alert('Dribbling!');
+                    break;
+            }
+
+            drawPlayer();
+        });
     </script>
 
 </body>
