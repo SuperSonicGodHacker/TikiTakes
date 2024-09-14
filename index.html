@@ -9,274 +9,218 @@
             font-family: Arial, sans-serif;
             text-align: center;
             margin: 0;
-            padding: 20px;
-            background: url('https://path-to-ronaldo-image.jpg') no-repeat center center fixed; /* Replace with Ronaldo image URL */
-            background-size: cover;
+            padding: 0;
+            background: #1e1e1e; /* Dark background */
             color: white;
         }
 
-        h1 {
-            font-size: 4em;
+        header {
+            background: #333;
+            padding: 20px;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 3em;
             color: yellow;
             text-shadow: 2px 2px 5px black;
         }
 
-        #loginScreen, #teamSelection, #gameScreen {
-            margin-top: 50px;
-            background-color: rgba(0, 0, 0, 0.8);
+        #main-content {
             padding: 20px;
-            border-radius: 10px;
-            display: inline-block;
         }
 
-        input {
-            padding: 10px;
-            font-size: 16px;
-            margin: 10px 0;
-            width: 80%;
-        }
-
-        button {
-            padding: 10px 20px;
-            font-size: 16px;
-            margin: 10px 5px;
-            cursor: pointer;
-            background-color: yellow;
-            border: none;
-            color: black;
-            border-radius: 5px;
-        }
-
-        button:hover {
-            background-color: #ffc107;
-        }
-
-        #teamSelection, #gameScreen {
+        .team-selection, .game-play {
             display: none;
+            margin: 20px;
         }
 
         .team {
             display: inline-block;
-            margin: 10px;
-            padding: 20px;
-            background-color: rgba(255, 255, 255, 0.7);
+            margin: 20px;
+            padding: 10px;
+            background-color: #444;
             border-radius: 10px;
             cursor: pointer;
         }
 
         .team img {
-            width: 100px;
+            width: 80px;
             height: auto;
         }
 
         .team p {
-            font-size: 1.2em;
             margin-top: 10px;
-            font-weight: bold;
+            font-size: 1.2em;
         }
 
         #soccerField {
-            border: 1px solid #fff;
+            border: 2px solid #fff;
             background: green;
+            width: 800px;
+            height: 400px;
             position: relative;
+            margin: 0 auto;
         }
 
-        #musicControls {
-            margin-top: 20px;
-            color: white;
-            background-color: rgba(0, 0, 0, 0.7);
-            padding: 10px;
-            border-radius: 10px;
+        .goal {
+            position: absolute;
+            width: 100px;
+            height: 30px;
+            background: #fff;
+            border: 2px solid black;
+        }
+
+        .goal.left {
+            top: 50%;
+            left: 0;
+            transform: translateY(-50%);
+        }
+
+        .goal.right {
+            top: 50%;
+            right: 0;
+            transform: translateY(-50%);
+        }
+
+        .player {
+            width: 20px;
+            height: 20px;
+            background-color: yellow;
+            border-radius: 50%;
+            position: absolute;
+        }
+
+        .ball {
+            width: 15px;
+            height: 15px;
+            background-color: white;
+            border-radius: 50%;
+            position: absolute;
+        }
+
+        #timer {
+            font-size: 2em;
+            margin: 20px;
         }
     </style>
 </head>
 <body>
 
-    <h1>Soccer Hut</h1>
+    <header>
+        <h1>Soccer Hut</h1>
+    </header>
 
-    <!-- Login/Sign-Up Screen -->
-    <div id="loginScreen">
-        <img src="https://path-to-ronaldo-image.jpg" alt="Ronaldo" style="width: 100%; height: auto; border-radius: 10px; margin-bottom: 20px;"> <!-- Replace with Ronaldo image URL -->
-        <h2>Login or Sign Up</h2>
-        <input type="text" id="username" placeholder="Username"><br><br>
-        <input type="password" id="password" placeholder="Password"><br><br>
-        <button onclick="login()">Login</button>
-        <button onclick="signUp()">Sign Up</button>
-    </div>
-
-    <!-- Team Selection Screen -->
-    <div id="teamSelection">
-        <h2>Select a Team to Play With</h2>
-        <div id="teamChoices">
-            <!-- Add team images here -->
+    <div id="main-content">
+        <div class="team-selection">
+            <h2>Select Your Team</h2>
+            <div id="teams">
+                <div class="team" onclick="startGame('Denmark')">
+                    <img src="https://upload.wikimedia.org/wikipedia/en/3/3c/Flag_of_Denmark.svg" alt="Denmark">
+                    <p>Denmark</p>
+                </div>
+                <div class="team" onclick="startGame('Argentina')">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/1/1a/Flag_of_Argentina.svg" alt="Argentina">
+                    <p>Argentina</p>
+                </div>
+                <!-- Add more teams as needed -->
+            </div>
+            <button onclick="startChampionship()">Start Championship</button>
         </div>
-        <br>
-        <button onclick="startGame()">Start Game</button>
-    </div>
 
-    <!-- Game Screen -->
-    <div id="gameScreen">
-        <h2>Playing Match...</h2>
-        <canvas id="soccerField" width="800" height="400"></canvas>
-        <button onclick="finishMatch()">Finish Match</button>
-        
-        <!-- Music Controls -->
-        <div id="musicControls">
-            <h3>Music Controls</h3>
-            <button onclick="playMusic()">Play</button>
-            <button onclick="pauseMusic()">Pause</button>
-            <label for="volume">Volume:</label>
-            <input type="range" id="volume" min="0" max="1" step="0.1" onchange="setVolume(this.value)">
+        <div class="game-play">
+            <h2>Game On!</h2>
+            <div id="timer">Time: 90</div>
+            <div id="soccerField">
+                <!-- Goals -->
+                <div class="goal left"></div>
+                <div class="goal right"></div>
+
+                <!-- Player and Ball -->
+                <div class="player" id="player" style="left: 100px; top: 180px;"></div>
+                <div class="ball" id="ball" style="left: 390px; top: 190px;"></div>
+            </div>
+            <button onclick="endGame()">End Game</button>
         </div>
     </div>
 
-    <!-- Audio Elements for Background Music and Sound Effects -->
-    <audio id="backgroundMusic" src="https://example.com/path-to-song/background-music.mp3" loop></audio> <!-- Replace with actual URL -->
-    <audio id="shootSound" src="https://example.com/path-to-sound/shoot.mp3"></audio> <!-- Replace with actual URL -->
-    <audio id="dribbleSound" src="https://example.com/path-to-sound/dribble.mp3"></audio> <!-- Replace with actual URL -->
+    <!-- Background Music -->
+    <audio id="backgroundMusic" src="https://example.com/path-to-background-music.mp3" loop></audio> <!-- Replace with an actual URL -->
 
     <script>
-        let users = JSON.parse(localStorage.getItem('users')) || [];
-        let selectedTeam = null;
-        let playerTeam = [];
-        let currentPlayerIndex = 0;
-
-        // Background music and sound effects
+        let gameInterval;
+        let gameDuration = 90; // 90 seconds for the match
+        const playerElement = document.getElementById('player');
+        const ballElement = document.getElementById('ball');
         const backgroundMusic = document.getElementById('backgroundMusic');
-        const shootSound = document.getElementById('shootSound');
-        const dribbleSound = document.getElementById('dribbleSound');
 
-        // Music control functions
+        function startChampionship() {
+            document.querySelector('.team-selection').style.display = 'block';
+            playMusic();
+        }
+
+        function startGame(team) {
+            document.querySelector('.team-selection').style.display = 'none';
+            document.querySelector('.game-play').style.display = 'block';
+            startTimer();
+        }
+
+        function startTimer() {
+            let timeRemaining = gameDuration;
+            gameInterval = setInterval(() => {
+                document.getElementById('timer').innerText = `Time: ${timeRemaining}`;
+                timeRemaining--;
+                if (timeRemaining < 0) {
+                    clearInterval(gameInterval);
+                    endGame();
+                }
+            }, 1000);
+        }
+
+        function endGame() {
+            clearInterval(gameInterval);
+            document.querySelector('.game-play').style.display = 'none';
+            alert('Game Over!');
+        }
+
+        // Player control logic
+        document.addEventListener('keydown', function(event) {
+            const step = 5;
+            let playerX = playerElement.offsetLeft;
+            let playerY = playerElement.offsetTop;
+
+            switch (event.key) {
+                case 'ArrowUp':
+                    playerY -= step;
+                    break;
+                case 'ArrowDown':
+                    playerY += step;
+                    break;
+                case 'ArrowLeft':
+                    playerX -= step;
+                    break;
+                case 'ArrowRight':
+                    playerX += step;
+                    break;
+            }
+
+            // Keep player within field bounds
+            playerX = Math.max(0, Math.min(playerX, 780)); // Width constraint
+            playerY = Math.max(0, Math.min(playerY, 380)); // Height constraint
+
+            playerElement.style.left = playerX + 'px';
+            playerElement.style.top = playerY + 'px';
+        });
+
+        // Background music control
         function playMusic() {
             backgroundMusic.play();
         }
-
-        function pauseMusic() {
-            backgroundMusic.pause();
-        }
-
-        function setVolume(value) {
-            backgroundMusic.volume = value;
-        }
-
-        // Event listener for game sounds
-        function playSoundEffect(sound) {
-            sound.currentTime = 0; // Restart the sound effect
-            sound.play();
-        }
-
-        function signUp() {
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
-
-            if (!username || !password) {
-                alert("Please fill out both fields.");
-                return;
-            }
-
-            const userExists = users.find(user => user.username === username);
-            if (userExists) {
-                alert("Username already taken. Please choose another one.");
-                return;
-            }
-
-            users.push({ username, password });
-            localStorage.setItem('users', JSON.stringify(users));
-            alert("Sign-up successful! Please log in.");
-        }
-
-        function login() {
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
-
-            const user = users.find(user => user.username === username && user.password === password);
-            if (user) {
-                document.getElementById('loginScreen').style.display = 'none';
-                document.getElementById('teamSelection').style.display = 'block';
-            } else {
-                alert("Invalid username or password.");
-            }
-        }
-
-        function selectTeam(team) {
-            selectedTeam = team;
-            playerTeam = [
-                { x: 100, y: 200 },
-                { x: 150, y: 250 },
-                { x: 200, y: 300 }
-            ];
-            currentPlayerIndex = 0;
-            document.getElementById('teamSelection').style.display = 'none';
-            document.getElementById('gameScreen').style.display = 'block';
-            startGame();
-        }
-
-        function startGame() {
-            playMusic(); // Start background music
-            const canvas = document.getElementById('soccerField');
-            const ctx = canvas.getContext('2d');
-            const ball = { x: canvas.width / 2, y: canvas.height / 2 };
-
-            function drawField() {
-                // Clear the field
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-                // Draw ball
-                ctx.fillStyle = 'white';
-                ctx.beginPath();
-                ctx.arc(ball.x, ball.y, 15, 0, Math.PI * 2);
-                ctx.fill();
-
-                // Draw players
-                playerTeam.forEach((player, index) => {
-                    ctx.fillStyle = index === currentPlayerIndex ? 'blue' : 'green'; // Highlight current player
-                    ctx.beginPath();
-                    ctx.arc(player.x, player.y, 10, 0, Math.PI * 2);
-                    ctx.fill();
-                });
-            }
-
-            function gameLoop() {
-                drawField();
-                requestAnimationFrame(gameLoop);
-            }
-
-            document.addEventListener('keydown', function(event) {
-                switch(event.key) {
-                    case 'ArrowUp':
-                        playerTeam[currentPlayerIndex].y -= 5;
-                        break;
-                    case 'ArrowDown':
-                        playerTeam[currentPlayerIndex].y += 5;
-                        break;
-                    case 'ArrowLeft':
-                        playerTeam[currentPlayerIndex].x -= 5;
-                        break;
-                    case 'ArrowRight':
-                        playerTeam[currentPlayerIndex].x += 5;
-                        break;
-                    case 'b':
-                        playSoundEffect(shootSound);
-                        break;
-                    case 'd':
-                        playSoundEffect(dribbleSound);
-                        break;
-                    case 'r':
-                        currentPlayerIndex = (currentPlayerIndex + 1) % playerTeam.length;
-                        break;
-                }
-            });
-
-            gameLoop();
-        }
-
-        function finishMatch() {
-            pauseMusic();
-            document.getElementById('gameScreen').style.display = 'none';
-            document.getElementById('teamSelection').style.display = 'block';
-            alert('Match finished!');
-        }
     </script>
+
+    <footer>
+        <p>Vihaan Bhatt, Viaan Bahl, Aranya Chatterjee @ All Rights Reserved</p>
+    </footer>
 
 </body>
 </html>
