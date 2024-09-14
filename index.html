@@ -10,7 +10,7 @@
             text-align: center;
             margin: 0;
             padding: 20px;
-            background: url('https://path-to-messi-image.jpg') no-repeat center center fixed;
+            background: url('https://path-to-background-image.jpg') no-repeat center center fixed; /* Replace with actual background URL */
             background-size: cover;
             color: white;
         }
@@ -123,6 +123,14 @@
             background: white;
             position: absolute;
         }
+
+        #musicControls {
+            margin-top: 20px;
+            color: white;
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 10px;
+            border-radius: 10px;
+        }
     </style>
 </head>
 <body>
@@ -180,7 +188,23 @@
         <h2>Playing Match...</h2>
         <canvas id="soccerField" width="800" height="400"></canvas>
         <button onclick="finishMatch()">Finish Match</button>
+        
+        <!-- Music Controls -->
+        <div id="musicControls">
+            <h3>Music Controls</h3>
+            <button onclick="playMusic()">Play</button>
+            <button onclick="pauseMusic()">Pause</button>
+            <label for="volume">Volume:</label>
+            <input type="range" id="volume" min="0" max="1" step="0.1" onchange="setVolume(this.value)">
+        </div>
     </div>
+
+    <!-- Audio Elements for Music -->
+    <audio id="song1" src="path-to-your-song/believer.mp3"></audio>
+    <audio id="song2" src="path-to-your-song/hall_of_fame.mp3"></audio>
+    <audio id="song3" src="path-to-your-song/i_want_it_that_way.mp3"></audio>
+    <audio id="song4" src="path-to-your-song/happier.mp3"></audio>
+    <audio id="song5" src="path-to-your-song/how_you_like_that.mp3"></audio>
 
     <script>
         let users = JSON.parse(localStorage.getItem('users')) || [];
@@ -188,6 +212,37 @@
         let selectedTeam = null;
         let playerTeam = [];
         let currentPlayerIndex = 0; // To track which player is currently selected
+
+        // Playlist setup
+        const playlist = [
+            document.getElementById('song1'),
+            document.getElementById('song2'),
+            document.getElementById('song3'),
+            document.getElementById('song4'),
+            document.getElementById('song5')
+        ];
+        let currentSongIndex = 0;
+
+        // Music control functions
+        function playMusic() {
+            playlist[currentSongIndex].play();
+        }
+
+        function pauseMusic() {
+            playlist[currentSongIndex].pause();
+        }
+
+        function setVolume(value) {
+            playlist[currentSongIndex].volume = value;
+        }
+
+        // Automatically move to the next song
+        playlist.forEach((audio, index) => {
+            audio.onended = () => {
+                currentSongIndex = (currentSongIndex + 1) % playlist.length;
+                playMusic();
+            };
+        });
 
         function signUp() {
             const username = document.getElementById('username').value;
