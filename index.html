@@ -10,7 +10,7 @@
             text-align: center;
             margin: 0;
             padding: 20px;
-            background: url('https://path-to-ronaldo-bicycle-kick.jpg') no-repeat center center fixed; /* Replace with Ronaldo image URL */
+            background: url('https://path-to-ronaldo-image.jpg') no-repeat center center fixed; /* Replace with Ronaldo image URL */
             background-size: cover;
             color: white;
         }
@@ -81,49 +81,6 @@
             position: relative;
         }
 
-        .goal {
-            position: absolute;
-            width: 100px;
-            height: 30px;
-            background: white;
-            border: 3px solid black;
-        }
-
-        .goal.left {
-            top: 50%;
-            left: 0;
-            transform: translateY(-50%);
-        }
-
-        .goal.right {
-            top: 50%;
-            right: 0;
-            transform: translateY(-50%);
-        }
-
-        .player {
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            position: absolute;
-        }
-
-        .player.red {
-            background: red;
-        }
-
-        .player.green {
-            background: green;
-        }
-
-        .ball {
-            width: 15px;
-            height: 15px;
-            border-radius: 50%;
-            background: white;
-            position: absolute;
-        }
-
         #musicControls {
             margin-top: 20px;
             color: white;
@@ -139,6 +96,7 @@
 
     <!-- Login/Sign-Up Screen -->
     <div id="loginScreen">
+        <img src="https://path-to-ronaldo-image.jpg" alt="Ronaldo" style="width: 100%; height: auto; border-radius: 10px; margin-bottom: 20px;"> <!-- Replace with Ronaldo image URL -->
         <h2>Login or Sign Up</h2>
         <input type="text" id="username" placeholder="Username"><br><br>
         <input type="password" id="password" placeholder="Password"><br><br>
@@ -150,34 +108,7 @@
     <div id="teamSelection">
         <h2>Select a Team to Play With</h2>
         <div id="teamChoices">
-            <div class="team" onclick="selectTeam('Spain')">
-                <img src="https://upload.wikimedia.org/wikipedia/en/9/9a/Flag_of_Spain.svg" alt="Spain Flag">
-                <p>Spain</p>
-            </div>
-            <div class="team" onclick="selectTeam('Denmark')">
-                <img src="https://upload.wikimedia.org/wikipedia/en/3/3c/Flag_of_Denmark.svg" alt="Denmark Flag">
-                <p>Denmark</p>
-            </div>
-            <div class="team" onclick="selectTeam('Argentina')">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/1/1a/Flag_of_Argentina.svg" alt="Argentina Flag">
-                <p>Argentina</p>
-            </div>
-            <div class="team" onclick="selectTeam('Brazil')">
-                <img src="https://upload.wikimedia.org/wikipedia/en/0/05/Flag_of_Brazil.svg" alt="Brazil Flag">
-                <p>Brazil</p>
-            </div>
-            <div class="team" onclick="selectTeam('Switzerland')">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/2/2f/Flag_of_Switzerland.svg" alt="Switzerland Flag">
-                <p>Switzerland</p>
-            </div>
-            <div class="team" onclick="selectTeam('Miami')">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/e/e5/Flag_of_Miami%2C_Florida.svg" alt="Miami Flag">
-                <p>Miami</p>
-            </div>
-            <div class="team" onclick="selectTeam('Real Madrid')">
-                <img src="https://upload.wikimedia.org/wikipedia/en/5/56/Real_Madrid_CF.svg" alt="Real Madrid Logo">
-                <p>Real Madrid</p>
-            </div>
+            <!-- Add team images here -->
         </div>
         <br>
         <button onclick="startGame()">Start Game</button>
@@ -199,50 +130,40 @@
         </div>
     </div>
 
-    <!-- Audio Elements for Music -->
-    <audio id="song1" src="https://www.example.com/path-to-song/believer.mp3"></audio> <!-- Replace with actual URLs -->
-    <audio id="song2" src="https://www.example.com/path-to-song/hall_of_fame.mp3"></audio>
-    <audio id="song3" src="https://www.example.com/path-to-song/i_want_it_that_way.mp3"></audio>
-    <audio id="song4" src="https://www.example.com/path-to-song/happier.mp3"></audio>
-    <audio id="song5" src="https://www.example.com/path-to-song/how_you_like_that.mp3"></audio>
+    <!-- Audio Elements for Background Music and Sound Effects -->
+    <audio id="backgroundMusic" src="https://example.com/path-to-song/background-music.mp3" loop></audio> <!-- Replace with actual URL -->
+    <audio id="shootSound" src="https://example.com/path-to-sound/shoot.mp3"></audio> <!-- Replace with actual URL -->
+    <audio id="dribbleSound" src="https://example.com/path-to-sound/dribble.mp3"></audio> <!-- Replace with actual URL -->
 
     <script>
         let users = JSON.parse(localStorage.getItem('users')) || [];
-        let hutPoints = 500000;
         let selectedTeam = null;
         let playerTeam = [];
-        let currentPlayerIndex = 0; // To track which player is currently selected
+        let currentPlayerIndex = 0;
 
-        // Playlist setup
-        const playlist = [
-            document.getElementById('song1'),
-            document.getElementById('song2'),
-            document.getElementById('song3'),
-            document.getElementById('song4'),
-            document.getElementById('song5')
-        ];
-        let currentSongIndex = 0;
+        // Background music and sound effects
+        const backgroundMusic = document.getElementById('backgroundMusic');
+        const shootSound = document.getElementById('shootSound');
+        const dribbleSound = document.getElementById('dribbleSound');
 
         // Music control functions
         function playMusic() {
-            playlist[currentSongIndex].play();
+            backgroundMusic.play();
         }
 
         function pauseMusic() {
-            playlist[currentSongIndex].pause();
+            backgroundMusic.pause();
         }
 
         function setVolume(value) {
-            playlist[currentSongIndex].volume = value;
+            backgroundMusic.volume = value;
         }
 
-        // Automatically move to the next song
-        playlist.forEach((audio, index) => {
-            audio.onended = () => {
-                currentSongIndex = (currentSongIndex + 1) % playlist.length;
-                playMusic();
-            };
-        });
+        // Event listener for game sounds
+        function playSoundEffect(sound) {
+            sound.currentTime = 0; // Restart the sound effect
+            sound.play();
+        }
 
         function signUp() {
             const username = document.getElementById('username').value;
@@ -279,7 +200,6 @@
 
         function selectTeam(team) {
             selectedTeam = team;
-            // Initialize player positions here
             playerTeam = [
                 { x: 100, y: 200 },
                 { x: 150, y: 250 },
@@ -292,6 +212,7 @@
         }
 
         function startGame() {
+            playMusic(); // Start background music
             const canvas = document.getElementById('soccerField');
             const ctx = canvas.getContext('2d');
             const ball = { x: canvas.width / 2, y: canvas.height / 2 };
@@ -299,11 +220,6 @@
             function drawField() {
                 // Clear the field
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-                // Draw goals
-                ctx.fillStyle = 'white';
-                ctx.fillRect(0, canvas.height / 2 - 15, 100, 30);
-                ctx.fillRect(canvas.width - 100, canvas.height / 2 - 15, 100, 30);
 
                 // Draw ball
                 ctx.fillStyle = 'white';
@@ -320,12 +236,7 @@
                 });
             }
 
-            function update() {
-                // Update game logic here, e.g., move players
-            }
-
             function gameLoop() {
-                update();
                 drawField();
                 requestAnimationFrame(gameLoop);
             }
@@ -345,10 +256,10 @@
                         playerTeam[currentPlayerIndex].x += 5;
                         break;
                     case 'b':
-                        alert('Shoot');
+                        playSoundEffect(shootSound);
                         break;
                     case 'd':
-                        alert('Dribble');
+                        playSoundEffect(dribbleSound);
                         break;
                     case 'r':
                         currentPlayerIndex = (currentPlayerIndex + 1) % playerTeam.length;
@@ -360,6 +271,7 @@
         }
 
         function finishMatch() {
+            pauseMusic();
             document.getElementById('gameScreen').style.display = 'none';
             document.getElementById('teamSelection').style.display = 'block';
             alert('Match finished!');
