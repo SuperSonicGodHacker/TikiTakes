@@ -39,11 +39,37 @@
             font-size: 1em;
             cursor: pointer;
         }
+
+        #setup {
+            margin-bottom: 20px;
+        }
     </style>
 </head>
 <body>
     <h1>Tic Tac Toe</h1>
-    <div id="game-board">
+    
+    <!-- Game Setup -->
+    <div id="setup">
+        <label for="rounds">Best out of: </label>
+        <input type="number" id="rounds" min="1" max="10" value="3">
+        <br><br>
+        <label for="player1">Player X Name: </label>
+        <input type="text" id="player1" placeholder="Enter name">
+        <br><br>
+        <label for="player2">Player O Name: </label>
+        <input type="text" id="player2" placeholder="Enter name">
+        <br><br>
+        <button id="start-game">Start Game</button>
+    </div>
+
+    <!-- Scoreboard -->
+    <div id="scoreboard">
+        <h2>Scoreboard</h2>
+        <p id="score">Waiting for players...</p>
+    </div>
+
+    <!-- Game Board -->
+    <div id="game-board" style="display: none;">
         <div class="cell" data-index="0"></div>
         <div class="cell" data-index="1"></div>
         <div class="cell" data-index="2"></div>
@@ -54,14 +80,27 @@
         <div class="cell" data-index="7"></div>
         <div class="cell" data-index="8"></div>
     </div>
-    <button id="reset">Reset</button>
+
+    <button id="reset" style="display: none;">Reset</button>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const cells = document.querySelectorAll('.cell');
             const resetButton = document.getElementById('reset');
+            const startButton = document.getElementById('start-game');
+            const roundsInput = document.getElementById('rounds');
+            const player1Input = document.getElementById('player1');
+            const player2Input = document.getElementById('player2');
+            const scoreboard = document.getElementById('score');
+            const gameBoard = document.getElementById('game-board');
+            let player1 = 'Player X';
+            let player2 = 'Player O';
+            let player1Score = 0;
+            let player2Score = 0;
             let currentPlayer = 'X';
             let board = ['', '', '', '', '', '', '', '', ''];
+            let totalRounds = 3;
+            let roundsPlayed = 0;
 
             const winningCombinations = [
                 [0, 1, 2],
@@ -73,6 +112,10 @@
                 [0, 4, 8],
                 [2, 4, 6]
             ];
+
+            const updateScoreboard = () => {
+                scoreboard.textContent = `${player1} (X): ${player1Score} | ${player2} (O): ${player2Score}`;
+            };
 
             const checkWinner = () => {
                 for (let combination of winningCombinations) {
@@ -96,25 +139,73 @@
                     e.target.textContent = currentPlayer;
 
                     if (checkWinner()) {
-                        setTimeout(() => alert(`Player ${currentPlayer} wins!`), 10);
-                        resetGame();
+                        if (currentPlayer === 'X') {
+                            player1Score++;
+                        } else {
+                            player2Score++;
+                        }
+                        roundsPlayed++;
+                        setTimeout(() => {
+                            alert(`${currentPlayer === 'X' ? player1 : player2} wins this round!`);
+                            resetBoard();
+                        }, 10);
+
+                        if (roundsPlayed >= totalRounds) {
+                            setTimeout(() => {
+                                alert(`Game over! ${player1Score > player2Score ? player1 : player2} wins the best out of ${totalRounds}!`);
+                                resetGame();
+                            }, 100);
+                        } else {
+                            updateScoreboard();
+                        }
                     } else if (isDraw()) {
-                        setTimeout(() => alert(`It's a draw!`), 10);
-                        resetGame();
+                        roundsPlayed++;
+                        setTimeout(() => {
+                            alert(`It's a draw!`);
+                            resetBoard();
+                        }, 10);
+
+                        if (roundsPlayed >= totalRounds) {
+                            setTimeout(() => {
+                                alert(`Game over! ${player1Score > player2Score ? player1 : player2} wins the best out of ${totalRounds}!`);
+                                resetGame();
+                            }, 100);
+                        }
                     } else {
                         currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
                     }
                 }
             };
 
-            const resetGame = () => {
+            const resetBoard = () => {
                 board = ['', '', '', '', '', '', '', '', ''];
                 currentPlayer = 'X';
                 cells.forEach(cell => cell.textContent = '');
             };
 
+            const resetGame = () => {
+                player1Score = 0;
+                player2Score = 0;
+                roundsPlayed = 0;
+                updateScoreboard();
+                resetBoard();
+                gameBoard.style.display = 'none';
+                resetButton.style.display = 'none';
+                document.getElementById('setup').style.display = 'block';
+            };
+
             cells.forEach(cell => cell.addEventListener('click', handleClick));
             resetButton.addEventListener('click', resetGame);
+
+            startButton.addEventListener('click', () => {
+                totalRounds = parseInt(roundsInput.value);
+                player1 = player1Input.value || 'Player X';
+                player2 = player2Input.value || 'Player O';
+                updateScoreboard();
+                document.getElementById('setup').style.display = 'none';
+                gameBoard.style.display = 'grid';
+                resetButton.style.display = 'block';
+            });
         });
     </script>
 </body>
