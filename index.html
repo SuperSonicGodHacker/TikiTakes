@@ -30,6 +30,31 @@
             padding: 20px;
         }
 
+        #login-screen {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        #login-screen img {
+            width: 300px;
+            height: auto;
+            margin-bottom: 20px;
+        }
+
+        #login-screen button {
+            padding: 10px 20px;
+            font-size: 1.5em;
+            cursor: pointer;
+            background-color: #444;
+            border: none;
+            border-radius: 5px;
+            color: white;
+            margin-top: 10px;
+        }
+
         .team-selection, .game-play {
             display: none;
             margin: 20px;
@@ -112,6 +137,14 @@
     </header>
 
     <div id="main-content">
+        <!-- Login/Signup Screen with Soccer Image -->
+        <div id="login-screen">
+            <!-- Replace this with the direct link to your soccer image -->
+            <img https://www.google.com/search?q=soccer+picture&rlz=1C1ONGR_enUS1004US1004&oq=soccer+pi&gs_lcrp=EgZjaHJvbWUqDAgAECMYJxiABBiKBTIMCAAQIxgnGIAEGIoFMgYIARBFGDkyCggCEAAYsQMYgAQyCggDEAAYsQMYgAQyBwgEEAAYgAQyBwgFEAAYgAQyDQgGEAAYgwEYsQMYgAQyBggHEEUYPKgCALACAA&sourceid=chrome&ie=UTF-8#vhid=-AWu0ZMcYb-ldM&vssid=l "Soccer Image">
+            <button onclick="startChampionship()">Login</button>
+            <button onclick="startChampionship()">Sign Up</button>
+        </div>
+
         <div class="team-selection">
             <h2>Select Your Team</h2>
             <div id="teams">
@@ -119,21 +152,17 @@
                     <img src="https://upload.wikimedia.org/wikipedia/en/3/3c/Flag_of_Denmark.svg" alt="Denmark">
                     <p>Denmark</p>
                 </div>
-                <div class="team" onclick="startGame('Argentina')">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/1/1a/Flag_of_Argentina.svg" alt="Argentina">
-                    <p>Argentina</p>
-                </div>
                 <div class="team" onclick="startGame('Miami')">
-                    <img src="path-to-miami-image" alt="Miami">
+                    <img src="https://example.com/path-to-miami-image" alt="Miami">
                     <p>Miami</p>
                 </div>
                 <div class="team" onclick="startGame('Real Madrid')">
-                    <img src="path-to-real-madrid-image" alt="Real Madrid">
+                    <img src="https://example.com/path-to-real-madrid-image" alt="Real Madrid">
                     <p>Real Madrid</p>
                 </div>
-                <div class="team" onclick="startGame('Portugal')">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/5/5c/Flag_of_Portugal.svg" alt="Portugal">
-                    <p>Portugal</p>
+                <div class="team" onclick="startGame('Switzerland')">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/f/f3/Flag_of_Switzerland.svg" alt="Switzerland">
+                    <p>Switzerland</p>
                 </div>
             </div>
             <button onclick="startChampionship()">Start Championship</button>
@@ -156,7 +185,13 @@
     </div>
 
     <!-- Background Music -->
-    <audio id="backgroundMusic" src="https://example.com/path-to-background-music.mp3" loop></audio> <!-- Replace with an actual URL -->
+    <audio id="backgroundMusic" loop>
+        <!-- Add the direct links to your favorite songs here -->
+        <source src=https://www.youtube.com/watch?v=W0DM5lcj6mw">
+        <source src="https://example.com/hall-of-fame.mp3" type="audio/mpeg">
+        <source src="https://example.com/i-want-it-that-way.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
 
     <script>
         let gameInterval;
@@ -166,6 +201,7 @@
         const backgroundMusic = document.getElementById('backgroundMusic');
 
         function startChampionship() {
+            document.querySelector('#login-screen').style.display = 'none';
             document.querySelector('.team-selection').style.display = 'block';
             playMusic();
         }
