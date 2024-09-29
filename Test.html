@@ -19,27 +19,59 @@
         .team-option {
             margin: 10px;
             cursor: pointer;
+            display: inline-block;
         }
         .team-option img {
             width: 100px;
             height: 100px;
+        }
+        input[type="text"], input[type="password"] {
+            width: 300px;
+            padding: 10px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 5px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+        }
+        button {
+            padding: 10px 20px;
+            margin: 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: black;
+            color: white;
+            box-shadow: 0 0 10px rgba(0, 0, 255, 0.5);
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #333;
+        }
+        .toggle-password {
+            cursor: pointer;
+            margin-left: -30px;
+        }
+        .auth-image {
+            width: 200px;
+            height: auto;
+            margin-bottom: 20px;
         }
     </style>
 </head>
 <body>
     <div class="container" id="authContainer">
         <h1>Soccer Game</h1>
+        <img src="https://upload.wikimedia.org/wikipedia/commons/6/6e/Soccer_player.svg" alt="Soccer Player" class="auth-image">
         <div id="loginForm">
             <h2>Login</h2>
             <input type="text" id="loginUsername" placeholder="Username"><br>
-            <input type="password" id="loginPassword" placeholder="Password"><br>
+            <input type="password" id="loginPassword" placeholder="Password"><span class="toggle-password" onclick="togglePassword('loginPassword')">👁️</span><br>
             <button onclick="login()">Login</button>
             <p>Don't have an account? <a href="#" onclick="showSignup()">Sign up</a></p>
         </div>
         <div id="signupForm" class="hidden">
             <h2>Sign Up</h2>
             <input type="text" id="signupUsername" placeholder="Username"><br>
-            <input type="password" id="signupPassword" placeholder="Password"><br>
+            <input type="password" id="signupPassword" placeholder="Password"><span class="toggle-password" onclick="togglePassword('signupPassword')">👁️</span><br>
             <button onclick="signup()">Sign Up</button>
             <p>Already have an account? <a href="#" onclick="showLogin()">Login</a></p>
         </div>
@@ -106,6 +138,15 @@
         function selectTeam(team) {
             alert(`You have selected ${team}!`);
             // Here you can redirect to the game page or save the team selection
+        }
+
+        function togglePassword(fieldId) {
+            const field = document.getElementById(fieldId);
+            if (field.type === 'password') {
+                field.type = 'text';
+            } else {
+                field.type = 'password';
+            }
         }
     </script>
 </body>
