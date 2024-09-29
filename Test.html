@@ -1,8 +1,112 @@
-<html>
-    <head>
-        <title>This is a test for Vihaan</title>
-    </head>
-    <body>
-        <h1>Vihaan loves soccer</h1>
-    </body>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soccer Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f0f0f0;
+        }
+        .container {
+            margin-top: 50px;
+        }
+        .hidden {
+            display: none;
+        }
+        .team-option {
+            margin: 10px;
+            cursor: pointer;
+        }
+        .team-option img {
+            width: 100px;
+            height: 100px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="authContainer">
+        <h1>Soccer Game</h1>
+        <div id="loginForm">
+            <h2>Login</h2>
+            <input type="text" id="loginUsername" placeholder="Username"><br>
+            <input type="password" id="loginPassword" placeholder="Password"><br>
+            <button onclick="login()">Login</button>
+            <p>Don't have an account? <a href="#" onclick="showSignup()">Sign up</a></p>
+        </div>
+        <div id="signupForm" class="hidden">
+            <h2>Sign Up</h2>
+            <input type="text" id="signupUsername" placeholder="Username"><br>
+            <input type="password" id="signupPassword" placeholder="Password"><br>
+            <button onclick="signup()">Sign Up</button>
+            <p>Already have an account? <a href="#" onclick="showLogin()">Login</a></p>
+        </div>
+    </div>
+    <div class="container hidden" id="teamSelection">
+        <h2>Select Your Team</h2>
+        <div class="team-option" onclick="selectTeam('Real Madrid')">
+            <img src="https://upload.wikimedia.org/wikipedia/en/5/56/Real_Madrid_CF.svg" alt="Real Madrid">
+            <p>Real Madrid</p>
+        </div>
+        <div class="team-option" onclick="selectTeam('Portugal')">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/5/5c/Flag_of_Portugal.svg" alt="Portugal">
+            <p>Portugal</p>
+        </div>
+        <div class="team-option" onclick="selectTeam('Argentina')">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/1/1a/Flag_of_Argentina.svg" alt="Argentina">
+            <p>Argentina</p>
+        </div>
+        <div class="team-option" onclick="selectTeam('Miami')">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/f/f7/Flag_of_Miami%2C_Florida.svg" alt="Miami">
+            <p>Miami</p>
+        </div>
+    </div>
+    <script>
+        let users = [];
+        let currentUser = null;
+
+        function showSignup() {
+            document.getElementById('loginForm').classList.add('hidden');
+            document.getElementById('signupForm').classList.remove('hidden');
+        }
+
+        function showLogin() {
+            document.getElementById('signupForm').classList.add('hidden');
+            document.getElementById('loginForm').classList.remove('hidden');
+        }
+
+        function signup() {
+            const username = document.getElementById('signupUsername').value;
+            const password = document.getElementById('signupPassword').value;
+            if (username && password) {
+                users.push({ username, password, role: users.length === 0 ? 'owner' : 'player' });
+                alert('Signup successful! Please login.');
+                showLogin();
+            } else {
+                alert('Please enter a username and password.');
+            }
+        }
+
+        function login() {
+            const username = document.getElementById('loginUsername').value;
+            const password = document.getElementById('loginPassword').value;
+            const user = users.find(u => u.username === username && u.password === password);
+            if (user) {
+                currentUser = user;
+                alert(`Welcome ${user.username}!`);
+                document.getElementById('authContainer').classList.add('hidden');
+                document.getElementById('teamSelection').classList.remove('hidden');
+            } else {
+                alert('Invalid username or password.');
+            }
+        }
+
+        function selectTeam(team) {
+            alert(`You have selected ${team}!`);
+            // Here you can redirect to the game page or save the team selection
+        }
+    </script>
+</body>
 </html>
