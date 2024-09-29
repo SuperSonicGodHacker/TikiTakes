@@ -3,151 +3,119 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Soccer Game</title>
+    <title>Simple Soccer Game</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #4CAF50;
         }
-        .container {
-            margin-top: 50px;
-        }
-        .hidden {
-            display: none;
-        }
-        .team-option {
-            margin: 10px;
-            cursor: pointer;
-            display: inline-block;
-        }
-        .team-option img {
-            width: 100px;
-            height: 100px;
-        }
-        input[type="text"], input[type="password"] {
-            width: 300px;
-            padding: 10px;
-            margin: 10px 0;
-            border: none;
-            border-radius: 5px;
-            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-        }
-        button {
-            padding: 10px 20px;
-            margin: 10px;
-            border: none;
-            border-radius: 5px;
-            background-color: black;
-            color: white;
-            box-shadow: 0 0 10px rgba(0, 0, 255, 0.5);
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: #333;
-        }
-        .toggle-password {
-            cursor: pointer;
-            margin-left: -30px;
-        }
-        .auth-image {
-            width: 200px;
-            height: auto;
-            margin-bottom: 20px;
+
+        canvas {
+            border: 2px solid #000;
+            background-color: #fff;
         }
     </style>
 </head>
 <body>
-    <div class="container" id="authContainer">
-        <h1>Soccer Game</h1>
-        <img src="https://upload.wikimedia.org/wikipedia/commons/6/6e/Soccer_player.svg" alt="Soccer Player" class="auth-image">
-        <div id="loginForm">
-            <h2>Login</h2>
-            <input type="text" id="loginUsername" placeholder="Username"><br>
-            <input type="password" id="loginPassword" placeholder="Password"><span class="toggle-password" onclick="togglePassword('loginPassword')">👁️</span><br>
-            <button onclick="login()">Login</button>
-            <p>Don't have an account? <a href="#" onclick="showSignup()">Sign up</a></p>
-        </div>
-        <div id="signupForm" class="hidden">
-            <h2>Sign Up</h2>
-            <input type="text" id="signupUsername" placeholder="Username"><br>
-            <input type="password" id="signupPassword" placeholder="Password"><span class="toggle-password" onclick="togglePassword('signupPassword')">👁️</span><br>
-            <button onclick="signup()">Sign Up</button>
-            <p>Already have an account? <a href="#" onclick="showLogin()">Login</a></p>
-        </div>
-    </div>
-    <div class="container hidden" id="teamSelection">
-        <h2>Select Your Team</h2>
-        <div class="team-option" onclick="selectTeam('Real Madrid')">
-            <img src="https://upload.wikimedia.org/wikipedia/en/5/56/Real_Madrid_CF.svg" alt="Real Madrid">
-            <p>Real Madrid</p>
-        </div>
-        <div class="team-option" onclick="selectTeam('Portugal')">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/5/5c/Flag_of_Portugal.svg" alt="Portugal">
-            <p>Portugal</p>
-        </div>
-        <div class="team-option" onclick="selectTeam('Argentina')">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/1/1a/Flag_of_Argentina.svg" alt="Argentina">
-            <p>Argentina</p>
-        </div>
-        <div class="team-option" onclick="selectTeam('Miami')">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/f/f7/Flag_of_Miami%2C_Florida.svg" alt="Miami">
-            <p>Miami</p>
-        </div>
-    </div>
+    <canvas id="gameCanvas" width="800" height="400"></canvas>
     <script>
-        let users = [];
-        let currentUser = null;
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
 
-        function showSignup() {
-            document.getElementById('loginForm').classList.add('hidden');
-            document.getElementById('signupForm').classList.remove('hidden');
+        const player = {
+            x: 50,
+            y: canvas.height / 2 - 25,
+            width: 10,
+            height: 50,
+            color: 'blue',
+            dy: 0
+        };
+
+        const ball = {
+            x: canvas.width / 2,
+            y: canvas.height / 2,
+            radius: 10,
+            speed: 4,
+            dx: 4,
+            dy: 4,
+            color: 'red'
+        };
+
+        function drawPlayer() {
+            ctx.fillStyle = player.color;
+            ctx.fillRect(player.x, player.y, player.width, player.height);
         }
 
-        function showLogin() {
-            document.getElementById('signupForm').classList.add('hidden');
-            document.getElementById('loginForm').classList.remove('hidden');
+        function drawBall() {
+            ctx.beginPath();
+            ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
+            ctx.fillStyle = ball.color;
+            ctx.fill();
+            ctx.closePath();
         }
 
-        function signup() {
-            const username = document.getElementById('signupUsername').value;
-            const password = document.getElementById('signupPassword').value;
-            if (username && password) {
-                users.push({ username, password, role: users.length === 0 ? 'owner' : 'player' });
-                alert('Signup successful! Please login.');
-                showLogin();
-            } else {
-                alert('Please enter a username and password.');
+        function movePlayer() {
+            player.y += player.dy;
+
+            if (player.y < 0) {
+                player.y = 0;
+            }
+
+            if (player.y + player.height > canvas.height) {
+                player.y = canvas.height - player.height;
             }
         }
 
-        function login() {
-            const username = document.getElementById('loginUsername').value;
-            const password = document.getElementById('loginPassword').value;
-            const user = users.find(u => u.username === username && u.password === password);
-            if (user) {
-                currentUser = user;
-                alert(`Welcome ${user.username}!`);
-                document.getElementById('authContainer').classList.add('hidden');
-                document.getElementById('teamSelection').classList.remove('hidden');
-            } else {
-                alert('Invalid username or password.');
+        function moveBall() {
+            ball.x += ball.dx;
+            ball.y += ball.dy;
+
+            if (ball.y + ball.radius > canvas.height || ball.y - ball.radius < 0) {
+                ball.dy *= -1;
+            }
+
+            if (ball.x + ball.radius > canvas.width || ball.x - ball.radius < 0) {
+                ball.dx *= -1;
+            }
+
+            if (ball.x - ball.radius < player.x + player.width &&
+                ball.y > player.y &&
+                ball.y < player.y + player.height) {
+                ball.dx *= -1;
             }
         }
 
-        function selectTeam(team) {
-            alert(`You have selected ${team}!`);
-            // Here you can redirect to the game page or save the team selection
+        function update() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            drawPlayer();
+            drawBall();
+            movePlayer();
+            moveBall();
+            requestAnimationFrame(update);
         }
 
-        function togglePassword(fieldId) {
-            const field = document.getElementById(fieldId);
-            if (field.type === 'password') {
-                field.type = 'text';
-            } else {
-                field.type = 'password';
+        function keyDown(e) {
+            if (e.key === 'ArrowUp') {
+                player.dy = -5;
+            } else if (e.key === 'ArrowDown') {
+                player.dy = 5;
             }
         }
+
+        function keyUp(e) {
+            if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+                player.dy = 0;
+            }
+        }
+
+        document.addEventListener('keydown', keyDown);
+        document.addEventListener('keyup', keyUp);
+
+        update();
     </script>
 </body>
 </html>
