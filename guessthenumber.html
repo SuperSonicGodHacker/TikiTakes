@@ -7,10 +7,14 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #0a2e3d;
+            background-image: url('https://www.w3schools.com/w3images/forest.jpg'); /* Christmas-themed background */
+            background-size: cover;
+            background-position: center;
             color: white;
             text-align: center;
             padding: 50px;
+            background-attachment: fixed;
+            box-sizing: border-box;
         }
 
         h1 {
@@ -19,9 +23,11 @@
         }
 
         .container {
-            background-color: #1c4a5a;
+            background-color: rgba(0, 0, 0, 0.5); /* Darker background to make text stand out */
             border-radius: 15px;
             padding: 30px;
+            width: 300px;
+            margin: 0 auto;
             box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
         }
 
@@ -31,10 +37,12 @@
             border-radius: 5px;
             border: none;
             margin-top: 10px;
+            width: 100%;
+            box-sizing: border-box;
         }
 
         button {
-            padding: 10px 20px;
+            padding: 12px 20px;
             background-color: #ff3366;
             border: none;
             border-radius: 10px;
@@ -43,6 +51,8 @@
             cursor: pointer;
             box-shadow: 0 0 10px rgba(255, 51, 102, 0.5);
             transition: 0.3s;
+            width: 100%;
+            margin-top: 15px;
         }
 
         button:hover {
@@ -54,10 +64,28 @@
             font-size: 20px;
             margin-top: 20px;
             font-weight: bold;
+            color: #ffcc00;
         }
 
         .glow {
             text-shadow: 0 0 15px #ff3366, 0 0 25px #ff3366, 0 0 35px #ff3366, 0 0 50px #ff3366;
+        }
+
+        p {
+            font-size: 18px;
+        }
+
+        .warm-vibes {
+            font-size: 22px;
+            font-family: 'Courier New', monospace;
+            color: #ffffcc;
+            text-shadow: 0 0 10px rgba(255, 204, 0, 0.6);
+        }
+
+        #attempts {
+            font-size: 18px;
+            margin-top: 10px;
+            color: #ffcc00;
         }
     </style>
 </head>
@@ -65,9 +93,10 @@
     <h1 class="glow">Christmas Number Guessing Game</h1>
 
     <div class="container">
+        <p class="warm-vibes">Welcome to a cozy Christmas challenge! 🎄</p>
         <p>Guess the secret number between 1 and 100!</p>
         <input type="number" id="guess" min="1" max="100" placeholder="Enter your guess">
-        <button onclick="checkGuess()">Guess</button>
+        <button onclick="checkGuess()">Enter</button>
         <p class="message" id="message"></p>
         <p class="message" id="attempts"></p>
     </div>
