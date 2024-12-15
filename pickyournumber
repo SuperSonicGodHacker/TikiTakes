@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Christmas Number Guessing Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #0a2e3d;
+            color: white;
+            text-align: center;
+            padding: 50px;
+        }
+
+        h1 {
+            color: #ff3366;
+            text-shadow: 0 0 10px rgba(255, 51, 102, 0.7), 0 0 20px rgba(255, 51, 102, 0.5);
+        }
+
+        .container {
+            background-color: #1c4a5a;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+        }
+
+        input[type="number"] {
+            padding: 10px;
+            font-size: 18px;
+            border-radius: 5px;
+            border: none;
+            margin-top: 10px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #ff3366;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            color: white;
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(255, 51, 102, 0.5);
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background-color: #ff6699;
+            box-shadow: 0 0 15px rgba(255, 102, 153, 0.7);
+        }
+
+        .message {
+            font-size: 20px;
+            margin-top: 20px;
+            font-weight: bold;
+        }
+
+        .glow {
+            text-shadow: 0 0 15px #ff3366, 0 0 25px #ff3366, 0 0 35px #ff3366, 0 0 50px #ff3366;
+        }
+    </style>
+</head>
+<body>
+    <h1 class="glow">Christmas Number Guessing Game</h1>
+
+    <div class="container">
+        <p>Guess the secret number between 1 and 100!</p>
+        <input type="number" id="guess" min="1" max="100" placeholder="Enter your guess">
+        <button onclick="checkGuess()">Guess</button>
+        <p class="message" id="message"></p>
+        <p class="message" id="attempts"></p>
+    </div>
+
+    <script>
+        let secretNumber = Math.floor(Math.random() * 100) + 1;
+        let attempts = 0;
+
+        function checkGuess() {
+            const userGuess = document.getElementById("guess").value;
+            const message = document.getElementById("message");
+            const attemptsDisplay = document.getElementById("attempts");
+
+            if (userGuess < 1 || userGuess > 100) {
+                message.textContent = "Please enter a number between 1 and 100!";
+                return;
+            }
+
+            attempts++;
+            
+            if (userGuess < secretNumber) {
+                message.textContent = "Too low! Try again.";
+            } else if (userGuess > secretNumber) {
+                message.textContent = "Too high! Try again.";
+            } else {
+                message.textContent = "Congratulations! You guessed it right!";
+                message.classList.add("glow");
+            }
+
+            attemptsDisplay.textContent = "Attempts: " + attempts;
+        }
+    </script>
+</body>
+</html>
