@@ -7,7 +7,7 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-image: url('https://www.w3schools.com/w3images/forest.jpg'); /* Christmas-themed background */
+            background-image: url('https://www.w3schools.com/w3images/house.jpg'); /* Christmas tree inside a house */
             background-size: cover;
             background-position: center;
             color: white;
@@ -82,10 +82,16 @@
             text-shadow: 0 0 10px rgba(255, 204, 0, 0.6);
         }
 
-        #attempts {
+        #attempts, #turn {
             font-size: 18px;
             margin-top: 10px;
             color: #ffcc00;
+        }
+
+        .restart-btn {
+            background-color: #ffcc00;
+            color: #ff3366;
+            margin-top: 20px;
         }
     </style>
 </head>
@@ -95,20 +101,28 @@
     <div class="container">
         <p class="warm-vibes">Welcome to a cozy Christmas challenge! 🎄</p>
         <p>Guess the secret number between 1 and 100!</p>
+        <p id="turn">Player 1's turn. Attempts: 10</p>
         <input type="number" id="guess" min="1" max="100" placeholder="Enter your guess">
         <button onclick="checkGuess()">Enter</button>
         <p class="message" id="message"></p>
         <p class="message" id="attempts"></p>
+        <button class="restart-btn" onclick="restartGame()" style="display:none;">Restart Game</button>
     </div>
 
     <script>
         let secretNumber = Math.floor(Math.random() * 100) + 1;
+        let currentPlayer = 1;
+        let player1Attempts = 10;
+        let player2Attempts = 9;
+        let currentAttempts = player1Attempts;
         let attempts = 0;
 
+        // Start the game
         function checkGuess() {
             const userGuess = document.getElementById("guess").value;
             const message = document.getElementById("message");
             const attemptsDisplay = document.getElementById("attempts");
+            const turnDisplay = document.getElementById("turn");
 
             if (userGuess < 1 || userGuess > 100) {
                 message.textContent = "Please enter a number between 1 and 100!";
@@ -116,17 +130,60 @@
             }
 
             attempts++;
-            
+            currentAttempts--;
+
             if (userGuess < secretNumber) {
                 message.textContent = "Too low! Try again.";
             } else if (userGuess > secretNumber) {
                 message.textContent = "Too high! Try again.";
             } else {
-                message.textContent = "Congratulations! You guessed it right!";
+                message.textContent = `Player ${currentPlayer} guessed it right!`;
                 message.classList.add("glow");
+                endGame();
+                return;
             }
 
-            attemptsDisplay.textContent = "Attempts: " + attempts;
+            // Update attempts display
+            attemptsDisplay.textContent = `Attempts left: ${currentAttempts}`;
+
+            // Switch player if one runs out of attempts
+            if (currentAttempts === 0) {
+                switchPlayer();
+            }
+
+            // Update turn message
+            turnDisplay.textContent = `Player ${currentPlayer}'s turn. Attempts: ${currentAttempts}`;
+        }
+
+        // Switch player and reset attempts
+        function switchPlayer() {
+            if (currentPlayer === 1) {
+                currentPlayer = 2;
+                currentAttempts = player2Attempts;
+            } else {
+                currentPlayer = 1;
+                currentAttempts = player1Attempts;
+            }
+            attempts = 0;
+        }
+
+        // End the game and show restart button
+        function endGame() {
+            document.querySelector("button").style.display = "none";
+            document.querySelector(".restart-btn").style.display = "block";
+        }
+
+        // Restart the game
+        function restartGame() {
+            secretNumber = Math.floor(Math.random() * 100) + 1;
+            currentPlayer = 1;
+            currentAttempts = player1Attempts;
+            document.getElementById("guess").value = "";
+            document.getElementById("message").textContent = "";
+            document.getElementById("attempts").textContent = "";
+            document.getElementById("turn").textContent = `Player 1's turn. Attempts: ${currentAttempts}`;
+            document.querySelector("button").style.display = "block";
+            document.querySelector(".restart-btn").style.display = "none";
         }
     </script>
 </body>
