@@ -7,168 +7,166 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            text-align: center;
+            background-color: #f0f0f0;
             margin: 0;
             padding: 0;
-            background: #1e1e1e; /* Dark background */
-            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            background-color: white;
+            border-radius: 20px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            max-width: 1200px;
+            width: 90%;
         }
 
         header {
-            background: #333;
-            padding: 20px;
+            text-align: center;
+            margin-bottom: 40px;
         }
 
         header h1 {
-            margin: 0;
             font-size: 3em;
-            color: yellow;
-            text-shadow: 2px 2px 5px black;
-        }
-
-        #main-content {
-            padding: 20px;
-        }
-
-        #login-screen {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-        }
-
-        #login-screen img {
-            width: 300px;
-            height: auto;
+            color: #333;
             margin-bottom: 20px;
         }
 
-        #login-screen button {
-            padding: 10px 20px;
-            font-size: 1.5em;
-            cursor: pointer;
-            background-color: #444;
-            border: none;
-            border-radius: 5px;
-            color: white;
-            margin-top: 10px;
+        header p {
+            font-size: 1.2em;
+            color: #666;
         }
 
         .team-selection, .game-play {
             display: none;
-            margin: 20px;
+            margin-top: 40px;
         }
 
         .team {
-            display: inline-block;
-            margin: 20px;
-            padding: 10px;
-            background-color: #444;
+            background-color: #f4f4f4;
             border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
             cursor: pointer;
         }
 
         .team img {
             width: 80px;
             height: auto;
+            margin-right: 15px;
         }
 
         .team p {
-            margin-top: 10px;
-            font-size: 1.2em;
+            flex-grow: 1;
+            font-weight: bold;
         }
 
         #soccerField {
-            border: 2px solid #fff;
-            background: green;
-            width: 800px;
-            height: 400px;
-            position: relative;
-            margin: 0 auto;
+            border: 4px solid #333;
+            background-color: #e6e6e6;
+            width: 100%;
+            max-width: 800px;
+            margin-top: 30px;
+            padding: 20px;
+            box-sizing: border-box;
         }
 
         .goal {
             position: absolute;
-            width: 100px;
-            height: 30px;
-            background: #fff;
-            border: 2px solid black;
+            width: 200px;
+            height: 150px;
+            background-color: #333;
+            border-radius: 0 10px 10px 0;
         }
 
         .goal.left {
-            top: 50%;
             left: 0;
+            top: 50%;
             transform: translateY(-50%);
         }
 
         .goal.right {
-            top: 50%;
             right: 0;
+            top: 50%;
             transform: translateY(-50%);
         }
 
         .player {
-            width: 20px;
-            height: 20px;
-            background-color: yellow;
+            width: 40px;
+            height: 40px;
+            background-color: #ff6600;
             border-radius: 50%;
             position: absolute;
         }
 
         .ball {
-            width: 15px;
-            height: 15px;
-            background-color: white;
-            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            background-image: url('https://example.com/football.png');
+            background-size: cover;
             position: absolute;
         }
 
         #timer {
             font-size: 2em;
-            margin: 20px;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #45a049;
         }
     </style>
 </head>
 <body>
+    <div class="container">
+        <header>
+            <h1>Soccer Hut</h1>
+            <p>A soccer game for the web</p>
+        </header>
 
-    <header>
-        <h1>Soccer Hut</h1>
-    </header>
-
-    <div id="main-content">
-        <!-- Login/Signup Screen with Soccer Image -->
-        <div id="login-screen">
-            <!-- Replace this with the direct link to your soccer image -->
-            <img https://www.google.com/search?q=soccer+picture&rlz=1C1ONGR_enUS1004US1004&oq=soccer+pi&gs_lcrp=EgZjaHJvbWUqDAgAECMYJxiABBiKBTIMCAAQIxgnGIAEGIoFMgYIARBFGDkyCggCEAAYsQMYgAQyCggDEAAYsQMYgAQyBwgEEAAYgAQyBwgFEAAYgAQyDQgGEAAYgwEYsQMYgAQyBggHEEUYPKgCALACAA&sourceid=chrome&ie=UTF-8#vhid=-AWu0ZMcYb-ldM&vssid=l "Soccer Image">
-            <button onclick="startChampionship()">Login</button>
-            <button onclick="startChampionship()">Sign Up</button>
+        <div id="login-screen" class="team-selection">
+            <img src="https://upload.wikimedia.org/wikipedia/en/3c/3c-Flag_of_Denmark.svg" alt="Denmark">
+            <p>Cristiano Ronaldo</p>
         </div>
 
-        <div class="team-selection">
-            <h2>Select Your Team</h2>
-            <div id="teams">
-                <div class="team" onclick="startGame('Denmark')">
-                    <img src="https://upload.wikimedia.org/wikipedia/en/3/3c/Flag_of_Denmark.svg" alt="Denmark">
-                    <p>Denmark</p>
-                </div>
-                <div class="team" onclick="startGame('Miami')">
-                    <img src="https://example.com/path-to-miami-image" alt="Miami">
-                    <p>Miami</p>
-                </div>
-                <div class="team" onclick="startGame('Real Madrid')">
-                    <img src="https://example.com/path-to-real-madrid-image" alt="Real Madrid">
-                    <p>Real Madrid</p>
-                </div>
-                <div class="team" onclick="startGame('Switzerland')">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/f/f3/Flag_of_Switzerland.svg" alt="Switzerland">
-                    <p>Switzerland</p>
-                </div>
+        <div id="teams" class="team-selection">
+            <div class="team">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/f/f3/Flag_of_Switzerland.svg" alt="Switzerland">
+                <p>Lionel Messi</p>
             </div>
-            <button onclick="startChampionship()">Start Championship</button>
+            <div class="team">
+                <img src="https://upload.wikimedia.org/wikipedia/en/b/b8/Flag_of_England.svg" alt="England">
+                <p=Neymar Jr.</p>
+            </div>
+            <div class="team">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/9/98/Flag_of_Brazil.svg" alt="Brazil">
+                <p=Kylian Mbappé</p>
+            </div>
         </div>
 
-        <div class="game-play">
+        <button onclick="startGame()">Start Game</button>
+
+        <div id="game-play" class="team-selection">
             <h2>Game On!</h2>
             <div id="timer">Time: 90</div>
             <div id="soccerField">
@@ -180,30 +178,20 @@
                 <div class="player" id="player" style="left: 100px; top: 180px;"></div>
                 <div class="ball" id="ball" style="left: 390px; top: 190px;"></div>
             </div>
+
             <button onclick="endGame()">End Game</button>
         </div>
     </div>
-
-    <!-- Background Music -->
-    <audio id="backgroundMusic" loop>
-        <!-- Add the direct links to your favorite songs here -->
-        <source src=https://www.youtube.com/watch?v=W0DM5lcj6mw">
-        <source src="https://example.com/hall-of-fame.mp3" type="audio/mpeg">
-        <source src="https://example.com/i-want-it-that-way.mp3" type="audio/mpeg">
-        Your browser does not support the audio element.
-    </audio>
 
     <script>
         let gameInterval;
         let gameDuration = 90; // 90 seconds for the match
         const playerElement = document.getElementById('player');
         const ballElement = document.getElementById('ball');
-        const backgroundMusic = document.getElementById('backgroundMusic');
 
         function startChampionship() {
             document.querySelector('#login-screen').style.display = 'none';
             document.querySelector('.team-selection').style.display = 'block';
-            playMusic();
         }
 
         function startGame(team) {
@@ -232,43 +220,62 @@
         }
 
         // Player control logic
+        let playerSpeed = 5;
+        let acceleration = 0.5;
+        let deceleration = 0.3;
+
         document.addEventListener('keydown', function(event) {
-            const step = 5;
-            let playerX = playerElement.offsetLeft;
-            let playerY = playerElement.offsetTop;
+            let playerRect = playerElement.getBoundingClientRect();
 
             switch (event.key) {
                 case 'ArrowUp':
-                    playerY -= step;
+                    movePlayerVertically(playerRect, -1);
                     break;
                 case 'ArrowDown':
-                    playerY += step;
+                    movePlayerVertically(playerRect, 1);
                     break;
                 case 'ArrowLeft':
-                    playerX -= step;
+                    movePlayerHorizontally(playerRect, -1);
                     break;
                 case 'ArrowRight':
-                    playerX += step;
+                    movePlayerHorizontally(playerRect, 1);
                     break;
             }
-
-            // Keep player within field bounds
-            playerX = Math.max(0, Math.min(playerX, 780)); // Width constraint
-            playerY = Math.max(0, Math.min(playerY, 380)); // Height constraint
-
-            playerElement.style.left = playerX + 'px';
-            playerElement.style.top = playerY + 'px';
         });
 
-        // Background music control
-        function playMusic() {
-            backgroundMusic.play();
+        function movePlayerVertically(rect, direction) {
+            rect.y += direction * playerSpeed;
+            rect.x += Math.sin(rect.rotation) * direction * playerSpeed;
+
+            if (direction > 0 && rect.speed < playerSpeed) {
+                rect.speed += acceleration;
+            } else if (direction < 0 && rect.speed > 0) {
+                rect.speed -= deceleration;
+            }
+
+            rect.y = Math.max(0, Math.min(rect.y, window.innerHeight - rect.height));
         }
-    </script>
 
-    <footer>
-        <p>Vihaan Bhatt, Viaan Bahl, Aranya Chatterjee @ All Rights Reserved</p>
-    </footer>
+        function movePlayerHorizontally(rect, direction) {
+            rect.x += direction * playerSpeed;
 
-</body>
-</html>
+            if (direction !== 0 && rect.speed < playerSpeed) {
+                rect.rotation = Math.atan2(direction, 1);
+            }
+
+            rect.x = Math.max(0, Math.min(rect.x, window.innerWidth - rect.width));
+        }
+
+        function updateBallPosition() {
+            const ballRect = ballElement.getBoundingClientRect();
+            const playerRect = playerElement.getBoundingClientRect();
+
+            checkCollision(ballRect, playerRect);
+
+            ballElement.style.left = `${parseInt(ballElement.style.left) + ballSpeedX}px`;
+            ballElement.style.top = `${parseInt(ballElement.style.top) + ballSpeedY}px`;
+
+            if (ballRect.x + ballSpeedX < 0 || ballRect.x + ballSpeedX > window.innerWidth) {
+                ballSpeedX *= -1;
+            }
+            if (ballRect.y + ballSpeed```
