@@ -3,47 +3,55 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Soccer Game Loading Screen</title>
+    <title>Soccer Game Loading</title>
     <style>
         body {
             margin: 0;
-            font-family: Arial, sans-serif;
-            background: #000;
+            font-family: 'Arial', sans-serif;
             color: #fff;
+            text-align: center;
+            background: url('https://i.imgur.com/8ZQZz2L.jpg') no-repeat center center/cover; /* Replace this with your preferred image */
+            height: 100vh;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            height: 100vh;
         }
+
         .title {
-            font-size: 3em;
-            margin-bottom: 20px;
+            font-size: 4em;
+            font-weight: bold;
+            color: #FFD700; /* Gold color */
+            text-shadow: 3px 3px 5px rgba(0, 0, 0, 0.7);
+            margin-bottom: 30px;
         }
-        .image-container {
-            position: relative;
-            width: 300px;
-            height: 400px;
-        }
-        .image-container img {
-            width: 100%;
-            height: auto;
-        }
-        .loading-bar {
-            margin-top: 20px;
+
+        .loading-bar-container {
             width: 80%;
-            height: 20px;
-            background: #444;
-            border-radius: 10px;
+            max-width: 600px;
+            height: 25px;
+            background-color: #444;
+            border-radius: 15px;
             overflow: hidden;
+            margin-top: 20px;
         }
-        .loading-bar div {
+
+        .loading-bar {
             width: 0%;
             height: 100%;
-            background: #0f0;
-            animation: load 3s linear forwards;
+            background-color: #32CD32; /* Lime green */
+            border-radius: 15px;
         }
+
+        .loading-text {
+            margin-top: 10px;
+            font-size: 1.2em;
+        }
+
         @keyframes load {
+            from {
+                width: 0%;
+            }
             to {
                 width: 100%;
             }
@@ -51,12 +59,56 @@
     </style>
 </head>
 <body>
-    <div class="title">Soccer Stars</div>
-    <div class="image-container">
-        <img src="bellingham_kicking.jpg" alt="Jude Bellingham Kicking Ball">
+    <!-- Cool Soccer Title -->
+    <div class="title">Soccer</div>
+
+    <!-- Loading Bar -->
+    <div class="loading-bar-container">
+        <div class="loading-bar" id="loadingBar"></div>
     </div>
-    <div class="loading-bar">
-        <div></div>
-    </div>
+
+    <!-- Loading Percentage and Dynamic Messages -->
+    <div class="loading-text" id="loadingText">Loading... 0%</div>
+
+    <script>
+        // JavaScript for Loading Bar Animation and Dynamic Messages
+        const loadingBar = document.getElementById('loadingBar');
+        const loadingText = document.getElementById('loadingText');
+        
+        const messages = [
+            "Setting up headers...",
+            "Practicing free kicks...",
+            "Warming up players...",
+            "Preparing the stadium...",
+            "Finalizing the match..."
+        ];
+
+        let progress = 0;
+
+        const interval = setInterval(() => {
+            progress += 1;
+
+            // Update the loading bar width
+            loadingBar.style.width = progress + '%';
+
+            // Update the percentage text
+            loadingText.textContent = `Loading... ${progress}%`;
+
+            // Display a random message at specific intervals
+            if (progress % 20 === 0 && progress / 20 - 1 < messages.length) {
+                loadingText.textContent = messages[progress / 20 - 1];
+                setTimeout(() => {
+                    loadingText.textContent = `Loading... ${progress}%`;
+                }, 1500); // Show the message for a short time
+            }
+
+            // Stop the interval when loading is complete
+            if (progress >= 100) {
+                clearInterval(interval);
+                loadingText.textContent = "Ready to Play!";
+                setTimeout(() => alert("Game Loaded!"), 1000);
+            }
+        }, 50); // Adjust speed by changing the interval duration
+    </script>
 </body>
 </html>
