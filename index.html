@@ -3,279 +3,60 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Soccer Hut</title>
+    <title>Soccer Game Loading Screen</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
             margin: 0;
-            padding: 0;
+            font-family: Arial, sans-serif;
+            background: #000;
+            color: #fff;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
-            color: #333;
+            height: 100vh;
         }
-
-        .container {
-            background-color: white;
-            border-radius: 20px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-            padding: 30px;
-            max-width: 1200px;
-            width: 90%;
-        }
-
-        header {
-            text-align: center;
-            margin-bottom: 40px;
-        }
-
-        header h1 {
+        .title {
             font-size: 3em;
-            color: #333;
             margin-bottom: 20px;
         }
-
-        header p {
-            font-size: 1.2em;
-            color: #666;
+        .image-container {
+            position: relative;
+            width: 300px;
+            height: 400px;
         }
-
-        .team-selection, .game-play {
-            display: none;
-            margin-top: 40px;
-        }
-
-        .team {
-            background-color: #f4f4f4;
-            border-radius: 10px;
-            padding: 15px;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            cursor: pointer;
-        }
-
-        .team img {
-            width: 80px;
-            height: auto;
-            margin-right: 15px;
-        }
-
-        .team p {
-            flex-grow: 1;
-            font-weight: bold;
-        }
-
-        #soccerField {
-            border: 4px solid #333;
-            background-color: #e6e6e6;
+        .image-container img {
             width: 100%;
-            max-width: 800px;
-            margin-top: 30px;
-            padding: 20px;
-            box-sizing: border-box;
+            height: auto;
         }
-
-        .goal {
-            position: absolute;
-            width: 200px;
-            height: 150px;
-            background-color: #333;
-            border-radius: 0 10px 10px 0;
-        }
-
-        .goal.left {
-            left: 0;
-            top: 50%;
-            transform: translateY(-50%);
-        }
-
-        .goal.right {
-            right: 0;
-            top: 50%;
-            transform: translateY(-50%);
-        }
-
-        .player {
-            width: 40px;
-            height: 40px;
-            background-color: #ff6600;
-            border-radius: 50%;
-            position: absolute;
-        }
-
-        .ball {
-            width: 30px;
-            height: 30px;
-            background-image: url('https://example.com/football.png');
-            background-size: cover;
-            position: absolute;
-        }
-
-        #timer {
-            font-size: 2em;
+        .loading-bar {
             margin-top: 20px;
-            text-align: center;
+            width: 80%;
+            height: 20px;
+            background: #444;
+            border-radius: 10px;
+            overflow: hidden;
         }
-
-        button {
-            display: inline-block;
-            padding: 10px 20px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-            transition: background-color 0.3s ease;
+        .loading-bar div {
+            width: 0%;
+            height: 100%;
+            background: #0f0;
+            animation: load 3s linear forwards;
         }
-
-        button:hover {
-            background-color: #45a049;
+        @keyframes load {
+            to {
+                width: 100%;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>Soccer Hut</h1>
-            <p>A soccer game for the web</p>
-        </header>
-
-        <div id="login-screen" class="team-selection">
-            <img src="https://upload.wikimedia.org/wikipedia/en/3c/3c-Flag_of_Denmark.svg" alt="Denmark">
-            <p>Cristiano Ronaldo</p>
-        </div>
-
-        <div id="teams" class="team-selection">
-            <div class="team">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/f/f3/Flag_of_Switzerland.svg" alt="Switzerland">
-                <p>Lionel Messi</p>
-            </div>
-            <div class="team">
-                <img src="https://upload.wikimedia.org/wikipedia/en/b/b8/Flag_of_England.svg" alt="England">
-                <p=Neymar Jr.</p>
-            </div>
-            <div class="team">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/9/98/Flag_of_Brazil.svg" alt="Brazil">
-                <p=Kylian Mbappé</p>
-            </div>
-        </div>
-
-        <button onclick="startGame()">Start Game</button>
-
-        <div id="game-play" class="team-selection">
-            <h2>Game On!</h2>
-            <div id="timer">Time: 90</div>
-            <div id="soccerField">
-                <!-- Goals -->
-                <div class="goal left"></div>
-                <div class="goal right"></div>
-
-                <!-- Player and Ball -->
-                <div class="player" id="player" style="left: 100px; top: 180px;"></div>
-                <div class="ball" id="ball" style="left: 390px; top: 190px;"></div>
-            </div>
-
-            <button onclick="endGame()">End Game</button>
-        </div>
+    <div class="title">Soccer Stars</div>
+    <div class="image-container">
+        <img src="bellingham_kicking.jpg" alt="Jude Bellingham Kicking Ball">
     </div>
-
-    <script>
-        let gameInterval;
-        let gameDuration = 90; // 90 seconds for the match
-        const playerElement = document.getElementById('player');
-        const ballElement = document.getElementById('ball');
-
-        function startChampionship() {
-            document.querySelector('#login-screen').style.display = 'none';
-            document.querySelector('.team-selection').style.display = 'block';
-        }
-
-        function startGame(team) {
-            document.querySelector('.team-selection').style.display = 'none';
-            document.querySelector('.game-play').style.display = 'block';
-            startTimer();
-            console.log('Team selected:', team);
-        }
-
-        function startTimer() {
-            let timeRemaining = gameDuration;
-            gameInterval = setInterval(() => {
-                document.getElementById('timer').innerText = `Time: ${timeRemaining}`;
-                timeRemaining--;
-                if (timeRemaining < 0) {
-                    clearInterval(gameInterval);
-                    endGame();
-                }
-            }, 1000);
-        }
-
-        function endGame() {
-            clearInterval(gameInterval);
-            document.querySelector('.game-play').style.display = 'none';
-            alert('Game Over!');
-        }
-
-        // Player control logic
-        let playerSpeed = 5;
-        let acceleration = 0.5;
-        let deceleration = 0.3;
-
-        document.addEventListener('keydown', function(event) {
-            let playerRect = playerElement.getBoundingClientRect();
-
-            switch (event.key) {
-                case 'ArrowUp':
-                    movePlayerVertically(playerRect, -1);
-                    break;
-                case 'ArrowDown':
-                    movePlayerVertically(playerRect, 1);
-                    break;
-                case 'ArrowLeft':
-                    movePlayerHorizontally(playerRect, -1);
-                    break;
-                case 'ArrowRight':
-                    movePlayerHorizontally(playerRect, 1);
-                    break;
-            }
-        });
-
-        function movePlayerVertically(rect, direction) {
-            rect.y += direction * playerSpeed;
-            rect.x += Math.sin(rect.rotation) * direction * playerSpeed;
-
-            if (direction > 0 && rect.speed < playerSpeed) {
-                rect.speed += acceleration;
-            } else if (direction < 0 && rect.speed > 0) {
-                rect.speed -= deceleration;
-            }
-
-            rect.y = Math.max(0, Math.min(rect.y, window.innerHeight - rect.height));
-        }
-
-        function movePlayerHorizontally(rect, direction) {
-            rect.x += direction * playerSpeed;
-
-            if (direction !== 0 && rect.speed < playerSpeed) {
-                rect.rotation = Math.atan2(direction, 1);
-            }
-
-            rect.x = Math.max(0, Math.min(rect.x, window.innerWidth - rect.width));
-        }
-
-        function updateBallPosition() {
-            const ballRect = ballElement.getBoundingClientRect();
-            const playerRect = playerElement.getBoundingClientRect();
-
-            checkCollision(ballRect, playerRect);
-
-            ballElement.style.left = `${parseInt(ballElement.style.left) + ballSpeedX}px`;
-            ballElement.style.top = `${parseInt(ballElement.style.top) + ballSpeedY}px`;
-
-            if (ballRect.x + ballSpeedX < 0 || ballRect.x + ballSpeedX > window.innerWidth) {
-                ballSpeedX *= -1;
-            }
-            if (ballRect.y + ballSpeed```
+    <div class="loading-bar">
+        <div></div>
+    </div>
+</body>
+</html>
