@@ -3,112 +3,166 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Soccer Game Loading</title>
-    <style>
-        body {
-            margin: 0;
-            font-family: 'Arial', sans-serif;
-            color: #fff;
-            text-align: center;
-            background: url('https://i.imgur.com/8ZQZz2L.jpg') no-repeat center center/cover; /* Replace this with your preferred image */
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .title {
-            font-size: 4em;
-            font-weight: bold;
-            color: #FFD700; /* Gold color */
-            text-shadow: 3px 3px 5px rgba(0, 0, 0, 0.7);
-            margin-bottom: 30px;
-        }
-
-        .loading-bar-container {
-            width: 80%;
-            max-width: 600px;
-            height: 25px;
-            background-color: #444;
-            border-radius: 15px;
-            overflow: hidden;
-            margin-top: 20px;
-        }
-
-        .loading-bar {
-            width: 0%;
-            height: 100%;
-            background-color: #32CD32; /* Lime green */
-            border-radius: 15px;
-        }
-
-        .loading-text {
-            margin-top: 10px;
-            font-size: 1.2em;
-        }
-
-        @keyframes load {
-            from {
-                width: 0%;
-            }
-            to {
-                width: 100%;
-            }
-        }
-    </style>
+    <title>Tikitakes - Soccer Game</title>
 </head>
 <body>
-    <!-- Cool Soccer Title -->
-    <div class="title">Soccer</div>
+    <!-- Main Background Section -->
+    <div id="background">
+        <!-- Title Section -->
+        <header id="title-section">
+            <h1 id="game-title">Soccer</h1>
+            <p id="subtitle">The Ultimate Football Experience</p>
+        </header>
 
-    <!-- Loading Bar -->
-    <div class="loading-bar-container">
-        <div class="loading-bar" id="loadingBar"></div>
+        <!-- Loading Section -->
+        <section id="loading-section">
+            <!-- Loading Bar -->
+            <div id="loading-bar-container">
+                <div id="loading-bar">
+                    <div id="loading-progress">0%</div>
+                </div>
+            </div>
+            <!-- Loading Text -->
+            <div id="loading-text-container">
+                <p id="loading-text">Loading...</p>
+            </div>
+        </section>
+
+        <!-- Dynamic Messages Section -->
+        <section id="messages-section">
+            <p id="dynamic-message">Scoring free kicks...</p>
+        </section>
+
+        <!-- Player Images Section -->
+        <section id="player-images-section">
+            <div class="player-image-container">
+                <img src="lamine_yamal.jpg" alt="Lamine Yamal" class="player-image">
+                <p class="player-name">Lamine Yamal</p>
+            </div>
+            <div class="player-image-container">
+                <img src="david_beckham.jpg" alt="David Beckham" class="player-image">
+                <p class="player-name">David Beckham</p>
+            </div>
+            <div class="player-image-container">
+                <img src="jude_bellingham.jpg" alt="Jude Bellingham" class="player-image">
+                <p class="player-name">Jude Bellingham</p>
+            </div>
+        </section>
+
+        <!-- Navigation Section -->
+        <nav id="navigation-menu">
+            <ul>
+                <li><a href="#home">Home</a></li>
+                <li><a href="#features">Features</a></li>
+                <li><a href="#about">About Us</a></li>
+                <li><a href="#contact">Contact</a></li>
+                <li><a href="#blog">Blog</a></li>
+                <li><a href="#community">Community</a></li>
+            </ul>
+        </nav>
+
+        <!-- Feature Highlights Section -->
+        <section id="features-section">
+            <h2>Game Features</h2>
+            <ul>
+                <li>Realistic graphics and animations</li>
+                <li>Exciting challenges and tournaments</li>
+                <li>Multiplayer mode for playing with friends</li>
+                <li>Build your dream team and compete globally</li>
+                <li>Real-time soccer statistics and rankings</li>
+                <li>Customizable player avatars and kits</li>
+            </ul>
+        </section>
+
+        <!-- Testimonials Section -->
+        <section id="testimonials-section">
+            <h2>What Players Say</h2>
+            <blockquote>
+                <p>"Tikitakes is the most immersive soccer game I've ever played!" - Alex</p>
+            </blockquote>
+            <blockquote>
+                <p>"I love scoring free kicks and building my ultimate team!" - Jamie</p>
+            </blockquote>
+            <blockquote>
+                <p>"Best game for soccer fans, hands down!" - Chris</p>
+            </blockquote>
+        </section>
+
+        <!-- FAQ Section -->
+        <section id="faq-section">
+            <h2>Frequently Asked Questions</h2>
+            <div class="faq">
+                <h3>How do I play the game?</h3>
+                <p>Simply load the game, choose your team, and start playing!</p>
+            </div>
+            <div class="faq">
+                <h3>Is Tikitakes free to play?</h3>
+                <p>Yes, the game is completely free with optional in-app purchases.</p>
+            </div>
+            <div class="faq">
+                <h3>Can I play against my friends?</h3>
+                <p>Absolutely! You can challenge friends in multiplayer mode.</p>
+            </div>
+            <div class="faq">
+                <h3>Where can I download Tikitakes?</h3>
+                <p>You can download it from the App Store or Google Play Store.</p>
+            </div>
+        </section>
+
+        <!-- Placeholder for Future Features -->
+        <section id="future-section">
+            <h2>Coming Soon</h2>
+            <p>New challenges, multiplayer modes, and exciting updates are on their way!</p>
+        </section>
+
+        <!-- Accessibility Information -->
+        <section id="accessibility-section" aria-hidden="true">
+            <p>Loading soccer game content. Please wait.</p>
+            <p>Use arrow keys to navigate the game.</p>
+            <p>High contrast mode and screen reader support are available for better accessibility.</p>
+        </section>
+
+        <!-- Comments Section -->
+        <section id="comments">
+            <h2>Comments</h2>
+            <p>What do you think about Tikitakes?</p>
+            <textarea id="comment-box" placeholder="Write your comment here..."></textarea>
+            <button id="submit-comment">Submit</button>
+        </section>
+
+        <!-- Social Media Section -->
+        <section id="social-media">
+            <h2>Follow Us</h2>
+            <p>Stay connected with us on social media!</p>
+            <ul>
+                <li><a href="#facebook">Facebook</a></li>
+                <li><a href="#twitter">Twitter</a></li>
+                <li><a href="#instagram">Instagram</a></li>
+                <li><a href="#youtube">YouTube</a></li>
+            </ul>
+        </section>
+
+        <!-- Footer Section -->
+        <footer id="footer">
+            <p>© 2025 Tikitakes. All rights reserved.</p>
+            <p>Privacy Policy | Terms of Service | Cookie Policy</p>
+        </footer>
+
+        <!-- Newsletter Signup Section -->
+        <section id="newsletter">
+            <h2>Subscribe to our Newsletter</h2>
+            <p>Get the latest updates, news, and exclusive offers!</p>
+            <input type="email" id="email" placeholder="Enter your email">
+            <button id="subscribe">Subscribe</button>
+        </section>
+
+        <!-- Feedback Section -->
+        <section id="feedback-section">
+            <h2>Your Feedback Matters!</h2>
+            <p>Please tell us how we can improve your experience with Tikitakes.</p>
+            <textarea id="feedback-box" placeholder="Write your feedback here..."></textarea>
+            <button id="submit-feedback">Submit Feedback</button>
+        </section>
     </div>
-
-    <!-- Loading Percentage and Dynamic Messages -->
-    <div class="loading-text" id="loadingText">Loading... 0%</div>
-
-    <script>
-        // JavaScript for Loading Bar Animation and Dynamic Messages
-        const loadingBar = document.getElementById('loadingBar');
-        const loadingText = document.getElementById('loadingText');
-        
-        const messages = [
-            "Setting up headers...",
-            "Practicing free kicks...",
-            "Warming up players...",
-            "Preparing the stadium...",
-            "Finalizing the match..."
-        ];
-
-        let progress = 0;
-
-        const interval = setInterval(() => {
-            progress += 1;
-
-            // Update the loading bar width
-            loadingBar.style.width = progress + '%';
-
-            // Update the percentage text
-            loadingText.textContent = `Loading... ${progress}%`;
-
-            // Display a random message at specific intervals
-            if (progress % 20 === 0 && progress / 20 - 1 < messages.length) {
-                loadingText.textContent = messages[progress / 20 - 1];
-                setTimeout(() => {
-                    loadingText.textContent = `Loading... ${progress}%`;
-                }, 1500); // Show the message for a short time
-            }
-
-            // Stop the interval when loading is complete
-            if (progress >= 100) {
-                clearInterval(interval);
-                loadingText.textContent = "Ready to Play!";
-                setTimeout(() => alert("Game Loaded!"), 1000);
-            }
-        }, 50); // Adjust speed by changing the interval duration
-    </script>
 </body>
 </html>
