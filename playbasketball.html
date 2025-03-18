@@ -1,0 +1,88 @@
+/**
+ * Draw net effect behind the hoop
+ */
+function drawNet() {
+    ctx.strokeStyle = '#444';
+    ctx.lineWidth = 2;
+    // Draw vertical lines to simulate net effect
+    for(let i = -40; i <= 40; i += 10) {
+        ctx.beginPath();
+        ctx.moveTo(hoop.x - 5, hoop.y + i);
+        ctx.lineTo(hoop.x + 5, hoop.y + i);
+        ctx.stroke();
+    }
+}
+
+/**
+ * Update game state
+ */
+function update() {
+    // Move ball based on its velocity
+    ball.x += ball.dx;
+    ball.y += ball.dy;
+    
+    // Apply gravity to simulate realistic physics
+    ball.dy += 0.5;
+    
+    // Handle collision with floor
+    if(ball.y + ball.radius > canvas.height) {
+        ball.y = canvas.height - ball.radius;
+        ball.dy *= -0.7; // Bounce factor - makes ball lose energy
+    }
+    
+    // Check if ball went into the hoop
+    const dx = ball.x - hoop.x;
+    const dy = ball.y - hoop.y;
+    const distance = Math.sqrt(dx * dx + dy * dy);
+    
+    // Score point if ball enters hoop
+    if(distance < ball.radius + hoop.radius) {
+        score++;
+        resetBall();
+    }
+    
+    // Reset ball if it goes out of bounds
+    if(ball.x + ball.radius > canvas.width || ball.x - ball.radius < 0) {
+        resetBall();
+    }
+}
+
+/**
+ * Reset ball to starting position
+ */
+function resetBall() {
+    ball.x = 50;
+    ball.y = 300;
+    ball.dx = 0;
+    ball.dy = 0;
+}
+
+/**
+ * Main game loop
+ */
+function gameLoop() {
+    update();
+    draw();
+    requestAnimationFrame(gameLoop);
+}
+
+/**
+ * Handle mouse clicks for shooting
+ */
+canvas.addEventListener('click', (event) => {
+    const rect = canvas.getBoundingClientRect();
+    const mouseX = event.clientX - rect.left;
+    const mouseY = event.clientY - rect.top;
+    
+    // Calculate shot direction and power
+    const dx = mouseX - ball.x;
+    const dy = mouseY - ball.y;
+    const distance = Math.sqrt(dx * dx + dy * dy);
+    
+    // Normalize velocity vector and multiply by constant speed
+    ball.dx = (dx / distance) * 15;
+    ball.dy = (dy / distance) * 15;
+});
+
+// Start the game loop
+gameLoop();
