@@ -3,166 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tikitakes - Soccer Game</title>
+    <title>Basketball Hoop Practice</title>
+    <style>
+        body {
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #333;
+        }
+        canvas {
+            border: 2px solid #666;
+            background-color: #000;
+        }
+    </style>
 </head>
 <body>
-    <!-- Main Background Section -->
-    <div id="background">
-        <!-- Title Section -->
-        <header id="title-section">
-            <h1 id="game-title">Soccer</h1>
-            <p id="subtitle">The Ultimate Football Experience</p>
-        </header>
-
-        <!-- Loading Section -->
-        <section id="loading-section">
-            <!-- Loading Bar -->
-            <div id="loading-bar-container">
-                <div id="loading-bar">
-                    <div id="loading-progress">0%</div>
-                </div>
-            </div>
-            <!-- Loading Text -->
-            <div id="loading-text-container">
-                <p id="loading-text">Loading...</p>
-            </div>
-        </section>
-
-        <!-- Dynamic Messages Section -->
-        <section id="messages-section">
-            <p id="dynamic-message">Scoring free kicks...</p>
-        </section>
-
-        <!-- Player Images Section -->
-        <section id="player-images-section">
-            <div class="player-image-container">
-                <img src="lamine_yamal.jpg" alt="Lamine Yamal" class="player-image">
-                <p class="player-name">Lamine Yamal</p>
-            </div>
-            <div class="player-image-container">
-                <img src="david_beckham.jpg" alt="David Beckham" class="player-image">
-                <p class="player-name">David Beckham</p>
-            </div>
-            <div class="player-image-container">
-                <img src="jude_bellingham.jpg" alt="Jude Bellingham" class="player-image">
-                <p class="player-name">Jude Bellingham</p>
-            </div>
-        </section>
-
-        <!-- Navigation Section -->
-        <nav id="navigation-menu">
-            <ul>
-                <li><a href="#home">Home</a></li>
-                <li><a href="#features">Features</a></li>
-                <li><a href="#about">About Us</a></li>
-                <li><a href="#contact">Contact</a></li>
-                <li><a href="#blog">Blog</a></li>
-                <li><a href="#community">Community</a></li>
-            </ul>
-        </nav>
-
-        <!-- Feature Highlights Section -->
-        <section id="features-section">
-            <h2>Game Features</h2>
-            <ul>
-                <li>Realistic graphics and animations</li>
-                <li>Exciting challenges and tournaments</li>
-                <li>Multiplayer mode for playing with friends</li>
-                <li>Build your dream team and compete globally</li>
-                <li>Real-time soccer statistics and rankings</li>
-                <li>Customizable player avatars and kits</li>
-            </ul>
-        </section>
-
-        <!-- Testimonials Section -->
-        <section id="testimonials-section">
-            <h2>What Players Say</h2>
-            <blockquote>
-                <p>"Tikitakes is the most immersive soccer game I've ever played!" - Alex</p>
-            </blockquote>
-            <blockquote>
-                <p>"I love scoring free kicks and building my ultimate team!" - Jamie</p>
-            </blockquote>
-            <blockquote>
-                <p>"Best game for soccer fans, hands down!" - Chris</p>
-            </blockquote>
-        </section>
-
-        <!-- FAQ Section -->
-        <section id="faq-section">
-            <h2>Frequently Asked Questions</h2>
-            <div class="faq">
-                <h3>How do I play the game?</h3>
-                <p>Simply load the game, choose your team, and start playing!</p>
-            </div>
-            <div class="faq">
-                <h3>Is Tikitakes free to play?</h3>
-                <p>Yes, the game is completely free with optional in-app purchases.</p>
-            </div>
-            <div class="faq">
-                <h3>Can I play against my friends?</h3>
-                <p>Absolutely! You can challenge friends in multiplayer mode.</p>
-            </div>
-            <div class="faq">
-                <h3>Where can I download Tikitakes?</h3>
-                <p>You can download it from the App Store or Google Play Store.</p>
-            </div>
-        </section>
-
-        <!-- Placeholder for Future Features -->
-        <section id="future-section">
-            <h2>Coming Soon</h2>
-            <p>New challenges, multiplayer modes, and exciting updates are on their way!</p>
-        </section>
-
-        <!-- Accessibility Information -->
-        <section id="accessibility-section" aria-hidden="true">
-            <p>Loading soccer game content. Please wait.</p>
-            <p>Use arrow keys to navigate the game.</p>
-            <p>High contrast mode and screen reader support are available for better accessibility.</p>
-        </section>
-
-        <!-- Comments Section -->
-        <section id="comments">
-            <h2>Comments</h2>
-            <p>What do you think about Tikitakes?</p>
-            <textarea id="comment-box" placeholder="Write your comment here..."></textarea>
-            <button id="submit-comment">Submit</button>
-        </section>
-
-        <!-- Social Media Section -->
-        <section id="social-media">
-            <h2>Follow Us</h2>
-            <p>Stay connected with us on social media!</p>
-            <ul>
-                <li><a href="#facebook">Facebook</a></li>
-                <li><a href="#twitter">Twitter</a></li>
-                <li><a href="#instagram">Instagram</a></li>
-                <li><a href="#youtube">YouTube</a></li>
-            </ul>
-        </section>
-
-        <!-- Footer Section -->
-        <footer id="footer">
-            <p>© 2025 Tikitakes. All rights reserved.</p>
-            <p>Privacy Policy | Terms of Service | Cookie Policy</p>
-        </footer>
-
-        <!-- Newsletter Signup Section -->
-        <section id="newsletter">
-            <h2>Subscribe to our Newsletter</h2>
-            <p>Get the latest updates, news, and exclusive offers!</p>
-            <input type="email" id="email" placeholder="Enter your email">
-            <button id="subscribe">Subscribe</button>
-        </section>
-
-        <!-- Feedback Section -->
-        <section id="feedback-section">
-            <h2>Your Feedback Matters!</h2>
-            <p>Please tell us how we can improve your experience with Tikitakes.</p>
-            <textarea id="feedback-box" placeholder="Write your feedback here..."></textarea>
-            <button id="submit-feedback">Submit Feedback</button>
-        </section>
-    </div>
+    <canvas id="gameCanvas" width="800" height="600"></canvas>
+    <script src="game.js"></script>
 </body>
-</html>
+</html> 
