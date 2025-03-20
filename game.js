@@ -58,7 +58,9 @@ let gameState = {
     isGameOver: false,
     timeRemaining: GAME_TIME,
     difficulty: 1,
-    isPaused: false
+    isPaused: false,
+    isMenu: true, // Add menu state
+    controlMode: null // 'touch' or 'cursor'
 };
 
 // Input state
@@ -69,6 +71,15 @@ const keys = {
     down: false,
     space: false,
     r: false
+};
+
+// Touch controls
+const touchControls = {
+    leftButton: { x: 50, y: CANVAS_HEIGHT - 100, width: 60, height: 60 },
+    rightButton: { x: 120, y: CANVAS_HEIGHT - 100, width: 60, height: 60 },
+    upButton: { x: 190, y: CANVAS_HEIGHT - 100, width: 60, height: 60 },
+    downButton: { x: 260, y: CANVAS_HEIGHT - 100, width: 60, height: 60 },
+    shootButton: { x: CANVAS_WIDTH - 100, y: CANVAS_HEIGHT - 100, width: 80, height: 80 }
 };
 
 function drawHoop() {
@@ -370,7 +381,9 @@ function resetGame() {
         isGameOver: false,
         timeRemaining: GAME_TIME,
         difficulty: 1,
-        isPaused: false
+        isPaused: false,
+        isMenu: true,
+        controlMode: null
     };
     
     // Reset hoop position and size
@@ -382,7 +395,122 @@ function resetGame() {
     resetBall();
 }
 
+function drawMenu() {
+    // Draw title
+    ctx.fillStyle = YELLOW;
+    ctx.font = 'bold 48px Arial';
+    ctx.textAlign = 'center';
+    ctx.fillText('BASKET HUT', CANVAS_WIDTH / 2, 100);
+    
+    // Draw control options
+    ctx.fillStyle = WHITE;
+    ctx.font = '36px Arial';
+    
+    // Draw cursor option
+    ctx.fillStyle = gameState.controlMode === 'cursor' ? YELLOW : WHITE;
+    ctx.fillRect(CANVAS_WIDTH / 2 - 150, 200, 300, 60);
+    ctx.strokeStyle = WHITE;
+    ctx.strokeRect(CANVAS_WIDTH / 2 - 150, 200, 300, 60);
+    ctx.fillStyle = gameState.controlMode === 'cursor' ? BLACK : WHITE;
+    ctx.fillText('Cursor Controls', CANVAS_WIDTH / 2, 240);
+    
+    // Draw touchscreen option
+    ctx.fillStyle = gameState.controlMode === 'touch' ? YELLOW : WHITE;
+    ctx.fillRect(CANVAS_WIDTH / 2 - 150, 300, 300, 60);
+    ctx.strokeStyle = WHITE;
+    ctx.strokeRect(CANVAS_WIDTH / 2 - 150, 300, 300, 60);
+    ctx.fillStyle = gameState.controlMode === 'touch' ? BLACK : WHITE;
+    ctx.fillText('Touchscreen Controls', CANVAS_WIDTH / 2, 340);
+    
+    // Draw start button
+    ctx.fillStyle = GREEN;
+    ctx.fillRect(CANVAS_WIDTH / 2 - 100, 400, 200, 50);
+    ctx.fillStyle = WHITE;
+    ctx.font = '24px Arial';
+    ctx.fillText('Press SPACE to Start', CANVAS_WIDTH / 2, 435);
+}
+
+function drawTouchControls() {
+    if (!gameState.isMenu && gameState.controlMode === 'touch') {
+        // Draw movement buttons
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
+        ctx.fillRect(touchControls.leftButton.x, touchControls.leftButton.y, 
+                    touchControls.leftButton.width, touchControls.leftButton.height);
+        ctx.fillRect(touchControls.rightButton.x, touchControls.rightButton.y, 
+                    touchControls.rightButton.width, touchControls.rightButton.height);
+        ctx.fillRect(touchControls.upButton.x, touchControls.upButton.y, 
+                    touchControls.upButton.width, touchControls.upButton.height);
+        ctx.fillRect(touchControls.downButton.x, touchControls.downButton.y, 
+                    touchControls.downButton.width, touchControls.downButton.height);
+        
+        // Draw shoot button
+        ctx.fillStyle = 'rgba(255, 0, 0, 0.3)';
+        ctx.fillRect(touchControls.shootButton.x, touchControls.shootButton.y, 
+                    touchControls.shootButton.width, touchControls.shootButton.height);
+        
+        // Draw button labels
+        ctx.fillStyle = WHITE;
+        ctx.font = '24px Arial';
+        ctx.fillText('←', touchControls.leftButton.x + 25, touchControls.leftButton.y + 40);
+        ctx.fillText('→', touchControls.rightButton.x + 25, touchControls.rightButton.y + 40);
+        ctx.fillText('↑', touchControls.upButton.x + 25, touchControls.upButton.y + 40);
+        ctx.fillText('↓', touchControls.downButton.x + 25, touchControls.downButton.y + 40);
+        ctx.fillText('SHOOT', touchControls.shootButton.x + 15, touchControls.shootButton.y + 45);
+    }
+}
+
+function isPointInRect(point, rect) {
+    return point.x >= rect.x && point.x <= rect.x + rect.width &&
+           point.y >= rect.y && point.y <= rect.y + rect.height;
+}
+
+// Add touch event listeners
+canvas.addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    const touch = e.touches[0];
+    const rect = canvas.getBoundingClientRect();
+    const point = {
+        x: touch.clientX - rect.left,
+        y: touch.clientY - rect.top
+    };
+    
+    if (gameState.isMenu) {
+        // Check menu options
+        if (point.y >= 200 && point.y <= 260) {
+            gameState.controlMode = 'cursor';
+        } else if (point.y >= 300 && point.y <= 360) {
+            gameState.controlMode = 'touch';
+        }
+    } else if (gameState.controlMode === 'touch') {
+        // Check touch controls
+        if (isPointInRect(point, touchControls.leftButton)) keys.left = true;
+        if (isPointInRect(point, touchControls.rightButton)) keys.right = true;
+        if (isPointInRect(point, touchControls.upButton)) keys.up = true;
+        if (isPointInRect(point, touchControls.downButton)) keys.down = true;
+        if (isPointInRect(point, touchControls.shootButton)) keys.space = true;
+    }
+});
+
+canvas.addEventListener('touchend', (e) => {
+    e.preventDefault();
+    if (gameState.controlMode === 'touch') {
+        keys.left = false;
+        keys.right = false;
+        keys.up = false;
+        keys.down = false;
+        keys.space = false;
+    }
+});
+
 function handleInput() {
+    // Handle menu state
+    if (gameState.isMenu) {
+        if (keys.space && gameState.controlMode) {
+            gameState.isMenu = false;
+        }
+        return;
+    }
+
     // Handle restart key press regardless of game state
     if (keys.r) {
         resetGame();
@@ -463,36 +591,39 @@ function gameLoop() {
     ctx.fillStyle = BLACK;
     ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
     
-    // Update game state
-    if (!gameState.isPaused && !gameState.isGameOver) {
-        handleInput();
-        updateBall();
-        gameState.timeRemaining -= 1/60; // Assuming 60 FPS
-        updateDifficulty();
+    // Draw menu or game
+    if (gameState.isMenu) {
+        drawMenu();
+    } else {
+        // Update game state
+        if (!gameState.isPaused && !gameState.isGameOver) {
+            handleInput();
+            updateBall();
+            gameState.timeRemaining -= 1/60;
+            updateDifficulty();
+            
+            if (gameState.misses >= MAX_MISSES || gameState.timeRemaining <= 0) {
+                gameState.isGameOver = true;
+            }
+        }
         
-        // Check for game over conditions
-        if (gameState.misses >= MAX_MISSES || gameState.timeRemaining <= 0) {
-            gameState.isGameOver = true;
+        // Draw game elements
+        drawHoop();
+        if (!ball.isMoving) {
+            drawCharacter();
+        }
+        drawBall();
+        drawScore();
+        drawMessage();
+        drawTouchControls();
+        
+        if (gameState.isPaused) {
+            drawPauseScreen();
+        } else if (gameState.isGameOver) {
+            drawGameOver();
         }
     }
     
-    // Draw game elements
-    drawHoop();
-    if (!ball.isMoving) {
-        drawCharacter(); // Draw character only when ball is not moving
-    }
-    drawBall();
-    drawScore();
-    drawMessage();
-    
-    // Draw pause or game over screen
-    if (gameState.isPaused) {
-        drawPauseScreen();
-    } else if (gameState.isGameOver) {
-        drawGameOver();
-    }
-    
-    // Request the next frame
     requestAnimationFrame(gameLoop);
 }
 
