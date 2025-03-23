@@ -57,6 +57,13 @@ controlsDiv.appendChild(rightControls);
 // Add controls to document
 document.body.appendChild(controlsDiv);
 
+// Add after the other button creations (around line 40)
+const restartButton = document.createElement('button');
+restartButton.id = 'btn-restart';
+restartButton.textContent = '🔄 Restart';
+restartButton.style.cssText = 'position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%); width: 120px; height: 40px; font-size: 20px; background: rgba(255,255,255,0.3); border: 2px solid white; color: white; border-radius: 10px; cursor: pointer; display: none;';
+document.body.appendChild(restartButton);
+
 // Colors
 const WHITE = '#FFFFFF';
 const BLACK = '#000000';
@@ -170,6 +177,9 @@ function drawGameOver() {
     // Restart instructions
     ctx.font = '24px Arial';
     ctx.fillText('Press R to Restart', CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2 + 60);
+
+    // Show the restart button
+    document.getElementById('btn-restart').style.display = 'block';
 }
 
 function drawPauseScreen() {
@@ -417,6 +427,9 @@ function resetGame() {
     currentHoopWidth = HOOP_WIDTH;
     
     resetBall();
+
+    // Hide the restart button
+    document.getElementById('btn-restart').style.display = 'none';
 }
 
 function handleInput() {
@@ -561,6 +574,13 @@ document.getElementById('btn-shoot').addEventListener('touchstart', (e) => {
     keys.space = true;
 });
 document.getElementById('btn-shoot').addEventListener('touchend', () => keys.space = false);
+
+// Add restart button event listeners
+document.getElementById('btn-restart').addEventListener('click', resetGame);
+document.getElementById('btn-restart').addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    resetGame();
+});
 
 // Start the game
 gameLoop(); 
