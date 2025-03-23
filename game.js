@@ -124,10 +124,15 @@ const keys = {
 // Add player name variable near the top with other game state variables
 let playerName = '';
 
+// Add high score variable
+let highScore = parseInt(localStorage.getItem(`${playerName}_highScore`)) || 0;
+
 // Add name prompt function after the resetGame function
 function promptPlayerName() {
     const name = prompt("What's your name?", "Player");
-    playerName = name || "Player"; // Use "Player" if nothing is entered
+    playerName = name || "Player";
+    // Load high score for this player
+    highScore = parseInt(localStorage.getItem(`${playerName}_highScore`)) || 0;
     return playerName;
 }
 
@@ -171,6 +176,12 @@ function drawScore() {
     ctx.fillText(`Misses: ${gameState.misses}/${MAX_MISSES}`, 20, 160);
     ctx.fillText(`Time: ${Math.ceil(gameState.timeRemaining)}s`, 20, 190);
     ctx.fillText(`Difficulty: ${gameState.difficulty}`, 20, 220);
+    
+    // Add high score display (after the score display)
+    ctx.fillStyle = WHITE;
+    ctx.font = '24px Arial';
+    ctx.textAlign = 'left';
+    ctx.fillText(`High Score: ${highScore}`, 20, 250);
 }
 
 function drawGameOver() {
@@ -420,10 +431,6 @@ function updateDifficulty() {
 }
 
 function resetGame(askName = false) {
-    if (askName) {
-        promptPlayerName();
-    }
-    
     gameState = {
         isCharging: false,
         isShot: false,
@@ -509,6 +516,11 @@ function gameLoop() {
         
         if (gameState.misses >= MAX_MISSES || gameState.timeRemaining <= 0) {
             gameState.isGameOver = true;
+            // Update high score if current score is higher
+            if (gameState.score > highScore) {
+                highScore = gameState.score;
+                localStorage.setItem(`${playerName}_highScore`, highScore);
+            }
         }
     }
     
@@ -600,6 +612,5 @@ document.getElementById('btn-restart').addEventListener('touchstart', (e) => {
     resetGame();
 });
 
-// Start the game
 promptPlayerName();
-gameLoop(); 
+gameLoop();
