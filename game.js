@@ -6,15 +6,56 @@ const ctx = canvas.getContext('2d');
 const CANVAS_WIDTH = canvas.width;
 const CANVAS_HEIGHT = canvas.height;
 const GRAVITY = 0.5;
-const MAX_POWER = 20; // Increased max power
+const MAX_POWER = 20;
 const POWER_INCREMENT = 0.5;
 const MAX_MISSES = 5;
-const GAME_TIME = 60; // seconds
-const BOUNCE_FACTOR = 0.7; // Reduced bounce factor for more realistic physics
-const MIN_ANGLE = 0; // Allow full range from 0 to 180 degrees
-const MAX_ANGLE = Math.PI; // 180 degrees
-const BALL_SPEED = 5; // Speed of ball movement
-const CHARACTER_HEIGHT = 60; // Height of the character
+const GAME_TIME = 60;
+const BOUNCE_FACTOR = 0.7;
+const MIN_ANGLE = 0;
+const MAX_ANGLE = Math.PI;
+const BALL_SPEED = 5;
+const CHARACTER_HEIGHT = 60;
+
+// Add the HTML elements for controls
+const controlsDiv = document.createElement('div');
+controlsDiv.id = 'game-controls';
+controlsDiv.style.cssText = 'position: fixed; bottom: 20px; left: 0; right: 0; display: flex; justify-content: space-between; padding: 20px;';
+
+const leftControls = document.createElement('div');
+leftControls.style.cssText = 'display: flex; gap: 10px;';
+
+const rightControls = document.createElement('div');
+rightControls.style.cssText = 'display: flex; gap: 10px;';
+
+// Create buttons
+function createButton(text, id) {
+    const button = document.createElement('button');
+    button.id = id;
+    button.textContent = text;
+    button.style.cssText = 'width: 60px; height: 60px; font-size: 24px; background: rgba(255,255,255,0.3); border: 2px solid white; color: white; border-radius: 10px; cursor: pointer;';
+    return button;
+}
+
+const buttons = {
+    left: createButton('←', 'btn-left'),
+    right: createButton('→', 'btn-right'),
+    rotateLeft: createButton('↺', 'btn-rotate-left'),
+    rotateRight: createButton('↻', 'btn-rotate-right'),
+    shoot: createButton('🏀', 'btn-shoot')
+};
+
+// Add buttons to containers
+leftControls.appendChild(buttons.left);
+leftControls.appendChild(buttons.right);
+rightControls.appendChild(buttons.rotateLeft);
+rightControls.appendChild(buttons.rotateRight);
+rightControls.appendChild(buttons.shoot);
+
+controlsDiv.appendChild(leftControls);
+controlsDiv.appendChild(rightControls);
+
+// Add controls to document
+document.body.appendChild(controlsDiv);
 
 // Colors
 const WHITE = '#FFFFFF';
@@ -68,7 +109,9 @@ const keys = {
     up: false,
     down: false,
     space: false,
-    r: false
+    r: false,
+    rotateLeft: false,
+    rotateRight: false
 };
 
 function drawHoop() {
@@ -326,7 +369,7 @@ function updateBall() {
 
 function resetBall() {
     ball.x = CANVAS_WIDTH / 2;
-    ball.y = CANVAS_HEIGHT - 100 - CHARACTER_HEIGHT; // Adjust starting position to account for character height
+    ball.y = CANVAS_HEIGHT - 100 - CHARACTER_HEIGHT;
     ball.velocityX = 0;
     ball.velocityY = 0;
     ball.isMoving = false;
@@ -336,7 +379,6 @@ function resetBall() {
 
 function shootBall() {
     if (!ball.isMoving && !gameState.isShot) {
-        // Calculate velocity based on power and angle
         ball.velocityX = gameState.power * Math.cos(gameState.angle);
         ball.velocityY = -gameState.power * Math.sin(gameState.angle);
         ball.isMoving = true;
@@ -346,17 +388,14 @@ function shootBall() {
 }
 
 function updateDifficulty() {
-    // Increase difficulty every 30 seconds
     if (gameState.timeRemaining % 30 === 0) {
         gameState.difficulty++;
-        // Move hoop higher and make it narrower
         HOOP_Y = Math.max(50, HOOP_Y - 10);
         currentHoopWidth = Math.max(30, currentHoopWidth - 5);
     }
 }
 
 function resetGame() {
-    // Reset game state
     gameState = {
         isCharging: false,
         isShot: false,
@@ -373,17 +412,14 @@ function resetGame() {
         isPaused: false
     };
     
-    // Reset hoop position and size
     HOOP_X = CANVAS_WIDTH / 2 - HOOP_WIDTH / 2;
     HOOP_Y = 100;
     currentHoopWidth = HOOP_WIDTH;
     
-    // Reset ball
     resetBall();
 }
 
 function handleInput() {
-    // Handle restart key press regardless of game state
     if (keys.r) {
         resetGame();
         return;
@@ -401,7 +437,6 @@ function handleInput() {
     }
 
     if (!ball.isMoving && !gameState.isShot) {
-        // Handle ball movement
         if (keys.left) {
             ball.x = Math.max(BALL_RADIUS, ball.x - BALL_SPEED);
         }
@@ -409,26 +444,22 @@ function handleInput() {
             ball.x = Math.min(CANVAS_WIDTH - BALL_RADIUS, ball.x + BALL_SPEED);
         }
         
-        // Handle angle adjustment (now using Up/Down arrows)
-        if (keys.up) {
+        if (keys.rotateLeft || keys.up) {
             gameState.angle = Math.min(MAX_ANGLE, gameState.angle + 0.05);
         }
-        if (keys.down) {
+        if (keys.rotateRight || keys.down) {
             gameState.angle = Math.max(MIN_ANGLE, gameState.angle - 0.05);
         }
         
-        // Handle power charging
         if (keys.space && !gameState.isCharging) {
             gameState.isCharging = true;
             gameState.power = 0;
         }
         
-        // Increase power while charging
         if (gameState.isCharging && keys.space) {
             gameState.power = Math.min(MAX_POWER, gameState.power + POWER_INCREMENT);
         }
         
-        // Release shot when space is released
         if (!keys.space && gameState.isCharging) {
             shootBall();
         }
@@ -436,11 +467,9 @@ function handleInput() {
 }
 
 function gameLoop() {
-    // Clear the canvas
     ctx.fillStyle = BLACK;
     ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
     
-    // Update game state
     if (!gameState.isPaused && !gameState.isGameOver) {
         handleInput();
         updateBall();
@@ -452,7 +481,6 @@ function gameLoop() {
         }
     }
     
-    // Draw game elements
     drawHoop();
     if (!ball.isMoving) {
         drawCharacter();
@@ -470,7 +498,7 @@ function gameLoop() {
     requestAnimationFrame(gameLoop);
 }
 
-// Event listeners for input
+// Event listeners for keyboard input
 window.addEventListener('keydown', (e) => {
     if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') keys.left = true;
     if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') keys.right = true;
@@ -492,6 +520,47 @@ window.addEventListener('keyup', (e) => {
     if (e.key === ' ') keys.space = false;
     if (e.key === 'r' || e.key === 'R') keys.r = false;
 });
+
+// Add touch button event listeners
+document.getElementById('btn-left').addEventListener('mousedown', () => keys.left = true);
+document.getElementById('btn-left').addEventListener('mouseup', () => keys.left = false);
+document.getElementById('btn-left').addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    keys.left = true;
+});
+document.getElementById('btn-left').addEventListener('touchend', () => keys.left = false);
+
+document.getElementById('btn-right').addEventListener('mousedown', () => keys.right = true);
+document.getElementById('btn-right').addEventListener('mouseup', () => keys.right = false);
+document.getElementById('btn-right').addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    keys.right = true;
+});
+document.getElementById('btn-right').addEventListener('touchend', () => keys.right = false);
+
+document.getElementById('btn-rotate-left').addEventListener('mousedown', () => keys.rotateLeft = true);
+document.getElementById('btn-rotate-left').addEventListener('mouseup', () => keys.rotateLeft = false);
+document.getElementById('btn-rotate-left').addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    keys.rotateLeft = true;
+});
+document.getElementById('btn-rotate-left').addEventListener('touchend', () => keys.rotateLeft = false);
+
+document.getElementById('btn-rotate-right').addEventListener('mousedown', () => keys.rotateRight = true);
+document.getElementById('btn-rotate-right').addEventListener('mouseup', () => keys.rotateRight = false);
+document.getElementById('btn-rotate-right').addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    keys.rotateRight = true;
+});
+document.getElementById('btn-rotate-right').addEventListener('touchend', () => keys.rotateRight = false);
+
+document.getElementById('btn-shoot').addEventListener('mousedown', () => keys.space = true);
+document.getElementById('btn-shoot').addEventListener('mouseup', () => keys.space = false);
+document.getElementById('btn-shoot').addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    keys.space = true;
+});
+document.getElementById('btn-shoot').addEventListener('touchend', () => keys.space = false);
 
 // Start the game
 gameLoop(); 
