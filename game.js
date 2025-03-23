@@ -19,13 +19,13 @@ const CHARACTER_HEIGHT = 60;
 // Add the HTML elements for controls
 const controlsDiv = document.createElement('div');
 controlsDiv.id = 'game-controls';
-controlsDiv.style.cssText = 'position: fixed; bottom: 20px; left: 0; right: 0; display: flex; justify-content: space-between; padding: 20px;';
+controlsDiv.style.cssText = 'position: fixed; bottom: 20px; left: 0; right: 0; display: flex; justify-content: space-between; padding: 20px; pointer-events: none;';
 
 const leftControls = document.createElement('div');
-leftControls.style.cssText = 'display: flex; gap: 10px;';
+leftControls.style.cssText = 'display: flex; gap: 10px; pointer-events: auto;';
 
 const rightControls = document.createElement('div');
-rightControls.style.cssText = 'display: flex; gap: 10px;';
+rightControls.style.cssText = 'display: flex; gap: 10px; pointer-events: auto; margin-right: 20px;';
 
 // Create buttons
 function createButton(text, id) {
@@ -121,6 +121,16 @@ const keys = {
     rotateRight: false
 };
 
+// Add player name variable near the top with other game state variables
+let playerName = '';
+
+// Add name prompt function after the resetGame function
+function promptPlayerName() {
+    const name = prompt("What's your name?", "Player");
+    playerName = name || "Player"; // Use "Player" if nothing is entered
+    return playerName;
+}
+
 function drawHoop() {
     // Draw backboard
     ctx.fillStyle = WHITE;
@@ -148,9 +158,13 @@ function drawScore() {
     ctx.textAlign = 'center';
     ctx.fillText('BASKET HUT', CANVAS_WIDTH / 2, 60);
     
-    // Draw score info
+    // Draw player name in top right
     ctx.fillStyle = WHITE;
     ctx.font = '24px Arial';
+    ctx.textAlign = 'right';
+    ctx.fillText(`Player: ${playerName}`, CANVAS_WIDTH - 20, 40);
+    
+    // Draw score info
     ctx.textAlign = 'left';
     ctx.fillText(`Score: ${gameState.score}`, 20, 100);
     ctx.fillText(`Shots: ${gameState.shots}`, 20, 130);
@@ -405,7 +419,11 @@ function updateDifficulty() {
     }
 }
 
-function resetGame() {
+function resetGame(askName = false) {
+    if (askName) {
+        promptPlayerName();
+    }
+    
     gameState = {
         isCharging: false,
         isShot: false,
@@ -583,4 +601,5 @@ document.getElementById('btn-restart').addEventListener('touchstart', (e) => {
 });
 
 // Start the game
+promptPlayerName();
 gameLoop(); 
