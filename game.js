@@ -72,6 +72,7 @@ const RED = '#FF0000';
 const GREEN = '#00FF00';
 const YELLOW = '#FFFF00';
 const BLUE = '#0000FF';
+const PINK = '#FF69B4';
 
 // Hoop dimensions
 const HOOP_WIDTH = 60;
@@ -135,6 +136,8 @@ function promptPlayerName() {
     highScore = parseInt(localStorage.getItem(`${playerName}_highScore`)) || 0;
     return playerName;
 }
+
+let currentBallColor = ORANGE;
 
 function drawHoop() {
     // Draw backboard
@@ -269,7 +272,7 @@ function drawBall() {
     // Draw the main ball circle
     ctx.beginPath();
     ctx.arc(ball.x, ball.y, BALL_RADIUS, 0, Math.PI * 2);
-    ctx.fillStyle = ORANGE;
+    ctx.fillStyle = currentBallColor;
     ctx.fill();
     
     // Add basketball details
@@ -610,6 +613,37 @@ document.getElementById('btn-restart').addEventListener('click', resetGame);
 document.getElementById('btn-restart').addEventListener('touchstart', (e) => {
     e.preventDefault();
     resetGame();
+});
+
+// Add the color switcher button creation after the restart button
+const colorButton = document.createElement('button');
+colorButton.id = 'btn-color';
+colorButton.textContent = '🎨';
+colorButton.style.cssText = 'position: fixed; top: 20px; left: 20px; width: 40px; height: 40px; font-size: 20px; background: rgba(255,255,255,0.3); border: 2px solid white; color: white; border-radius: 10px; cursor: pointer;';
+document.body.appendChild(colorButton);
+
+// Add the color switching function
+function switchBallColor() {
+    switch(currentBallColor) {
+        case ORANGE:
+            currentBallColor = BLUE;
+            break;
+        case BLUE:
+            currentBallColor = RED;
+            break;
+        case RED:
+            currentBallColor = PINK;
+            break;
+        default:
+            currentBallColor = ORANGE;
+    }
+}
+
+// Add the event listener for the color button (add near the bottom with other event listeners)
+colorButton.addEventListener('click', switchBallColor);
+colorButton.addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    switchBallColor();
 });
 
 promptPlayerName();
