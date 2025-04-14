@@ -57,11 +57,11 @@ controlsDiv.appendChild(rightControls);
 // Add controls to document
 document.body.appendChild(controlsDiv);
 
-// Add after the other button creations (around line 40)
+// Update the restart button creation (around line 40)
 const restartButton = document.createElement('button');
 restartButton.id = 'btn-restart';
 restartButton.textContent = '🔄 Restart';
-restartButton.style.cssText = 'position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%); width: 120px; height: 40px; font-size: 20px; background: rgba(255,255,255,0.3); border: 2px solid white; color: white; border-radius: 10px; cursor: pointer; display: none;';
+restartButton.style.cssText = 'position: fixed; top: 20px; right: 20px; width: 120px; height: 40px; font-size: 20px; background: rgba(255,255,255,0.3); border: 2px solid white; color: white; border-radius: 10px; cursor: pointer; pointer-events: auto;';
 document.body.appendChild(restartButton);
 
 // Colors
@@ -434,6 +434,10 @@ function updateDifficulty() {
 }
 
 function resetGame(askName = false) {
+    if (!gameState.isGameOver && !confirm("Are you sure you want to restart the game?")) {
+        return;
+    }
+    
     gameState = {
         isCharging: false,
         isShot: false,
@@ -455,9 +459,6 @@ function resetGame(askName = false) {
     currentHoopWidth = HOOP_WIDTH;
     
     resetBall();
-
-    // Hide the restart button
-    document.getElementById('btn-restart').style.display = 'none';
 }
 
 function handleInput() {
