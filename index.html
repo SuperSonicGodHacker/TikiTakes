@@ -3,24 +3,1795 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Basketball Hoop Practice</title>
+    <title>🎮 Game Hub - Basketball & Soccer</title>
     <style>
-        body {
+        * {
             margin: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            background-color: #333;
+            padding: 0;
+            box-sizing: border-box;
         }
-        canvas {
-            border: 2px solid #666;
-            background-color: #000;
+
+        body {
+            font-family: Arial, sans-serif;
+            overflow: hidden;
+        }
+
+        .screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .menu-screen {
+            background: linear-gradient(135deg, #9333ea, #2563eb, #16a34a);
+        }
+
+        .name-input-container {
+            background: white;
+            padding: 2rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            text-align: center;
+            max-width: 28rem;
+        }
+
+        .name-input-container h1 {
+            font-size: 2.25rem;
+            font-weight: bold;
+            color: #374151;
+            margin-bottom: 1rem;
+        }
+
+        .name-input-container p {
+            font-size: 1.125rem;
+            margin-bottom: 1rem;
+            color: #6b7280;
+        }
+
+        .name-input {
+            border: 2px solid #d1d5db;
+            border-radius: 0.25rem;
+            padding: 0.5rem 1rem;
+            font-size: 1.125rem;
+            margin-bottom: 1rem;
+            width: 100%;
+            outline: none;
+        }
+
+        .name-input:focus {
+            border-color: #3b82f6;
+        }
+
+        .continue-btn {
+            background: #3b82f6;
+            color: white;
+            font-weight: bold;
+            padding: 0.5rem 1.5rem;
+            border-radius: 0.5rem;
+            font-size: 1.125rem;
+            width: 100%;
+            border: none;
+            cursor: pointer;
+        }
+
+        .continue-btn:hover {
+            background: #2563eb;
+        }
+
+        .game-selection {
+            text-align: center;
+        }
+
+        .game-selection h1 {
+            font-size: 3.75rem;
+            font-weight: bold;
+            color: white;
+            margin-bottom: 1rem;
+        }
+
+        .game-selection p {
+            font-size: 1.5rem;
+            color: white;
+            margin-bottom: 2rem;
+        }
+
+        .game-cards {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+            margin-bottom: 2rem;
+        }
+
+        .game-card {
+            background: white;
+            border-radius: 0.5rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            padding: 2rem;
+            cursor: pointer;
+            transform: scale(1);
+            transition: transform 0.2s;
+            max-width: 20rem;
+        }
+
+        .game-card:hover {
+            transform: scale(1.05);
+        }
+
+        .game-card .emoji {
+            font-size: 5rem;
+            margin-bottom: 1rem;
+        }
+
+        .game-card h2 {
+            font-size: 1.875rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+
+        .basketball-card h2 {
+            color: #ea580c;
+        }
+
+        .soccer-card h2 {
+            color: #16a34a;
+        }
+
+        .game-card p {
+            color: #6b7280;
+            margin-bottom: 1rem;
+        }
+
+        .game-features {
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+        }
+
+        .basketball-features {
+            background: #fed7aa;
+        }
+
+        .soccer-features {
+            background: #bbf7d0;
+        }
+
+        .game-features p {
+            font-size: 0.875rem;
+            margin: 0;
+        }
+
+        .basketball-features p {
+            color: #9a3412;
+        }
+
+        .soccer-features p {
+            color: #166534;
+        }
+
+        .change-name-btn {
+            background: #6b7280;
+            color: white;
+            font-weight: bold;
+            padding: 0.5rem 1.5rem;
+            border-radius: 0.5rem;
+            border: none;
+            cursor: pointer;
+            margin-top: 2rem;
+        }
+
+        .change-name-btn:hover {
+            background: #4b5563;
+        }
+
+        .game-screen {
+            flex-direction: column;
+        }
+
+        .basketball-screen {
+            background: black;
+        }
+
+        .soccer-screen {
+            background: linear-gradient(to bottom, #60a5fa, #4ade80);
+        }
+
+        .game-canvas {
+            border: 4px solid white;
+            border-radius: 0.5rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+
+        .soccer-canvas {
+            background: #87ceeb;
+        }
+
+        .controls {
+            position: fixed;
+            bottom: 1rem;
+            left: 1rem;
+            right: 1rem;
+            display: flex;
+            justify-content: space-between;
+            pointer-events: none;
+        }
+
+        .control-group {
+            display: flex;
+            gap: 0.5rem;
+            pointer-events: auto;
+        }
+
+        .control-btn {
+            width: 4rem;
+            height: 4rem;
+            font-size: 1.5rem;
+            color: white;
+            border: 2px solid white;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .basketball-move { background: #ea580c; }
+        .basketball-move:hover { background: #c2410c; }
+        .basketball-aim { background: #dc2626; }
+        .basketball-aim:hover { background: #b91c1c; }
+        .basketball-shoot { background: #eab308; }
+        .basketball-shoot:hover { background: #ca8a04; }
+
+        .soccer-move { background: #3b82f6; }
+        .soccer-move:hover { background: #2563eb; }
+        .soccer-aim { background: #16a34a; }
+        .soccer-aim:hover { background: #15803d; }
+        .soccer-kick { background: #dc2626; }
+        .soccer-kick:hover { background: #b91c1c; }
+
+        .top-btn {
+            position: fixed;
+            top: 1rem;
+            font-weight: bold;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            border: 2px solid white;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            pointer-events: auto;
+            cursor: pointer;
+            color: white;
+        }
+
+        .restart-btn {
+            right: 1rem;
+        }
+
+        .basketball-restart {
+            background: #ea580c;
+        }
+
+        .basketball-restart:hover {
+            background: #c2410c;
+        }
+
+        .soccer-restart {
+            background: #eab308;
+        }
+
+        .soccer-restart:hover {
+            background: #ca8a04;
+        }
+
+        .back-btn {
+            left: 1rem;
+            background: #6b7280;
+        }
+
+        .back-btn:hover {
+            background: #4b5563;
+        }
+
+        .instructions {
+            position: fixed;
+            bottom: 5rem;
+            right: 0.5rem;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 1rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            max-width: 18rem;
+            border: 2px solid #16a34a;
+        }
+
+        .instructions h3 {
+            font-weight: bold;
+            color: #16a34a;
+            margin-bottom: 0.5rem;
+            text-align: center;
+        }
+
+        .instructions ul {
+            font-size: 0.875rem;
+            list-style: none;
+        }
+
+        .instructions li {
+            margin-bottom: 0.25rem;
+        }
+
+        .green { color: #16a34a; }
+        .orange { color: #ea580c; }
+        .purple { color: #9333ea; }
+
+        .hidden {
+            display: none;
         }
     </style>
 </head>
 <body>
-    <canvas id="gameCanvas" width="800" height="600"></canvas>
-    <script src="game.js"></script>
+    <!-- Name Input Screen -->
+    <div id="nameInputScreen" class="screen menu-screen">
+        <div class="name-input-container">
+            <h1>🎮 Game Hub 🎮</h1>
+            <p>What's your name, champion?</p>
+            <input type="text" id="playerNameInput" class="name-input" placeholder="Enter your name">
+            <button id="continueBtn" class="continue-btn">Continue 🚀</button>
+        </div>
+    </div>
+
+    <!-- Game Selection Screen -->
+    <div id="gameSelectionScreen" class="screen menu-screen hidden">
+        <div class="game-selection">
+            <h1>🎮 Game Hub 🎮</h1>
+            <p id="welcomeText">Welcome! Choose your game:</p>
+            
+            <div class="game-cards">
+                <div id="basketballCard" class="game-card basketball-card">
+                    <div class="emoji">🏀</div>
+                    <h2>Basketball</h2>
+                    <p>Shoot hoops and score points! Aim for the basket and show off your skills.</p>
+                    <div class="game-features basketball-features">
+                        <p>• Move and aim your shots<br>• Score in the basketball hoop<br>• Beat your high score!</p>
+                    </div>
+                </div>
+
+                <div id="soccerCard" class="game-card soccer-card">
+                    <div class="emoji">⚽</div>
+                    <h2>Soccer</h2>
+                    <p>Kick the ball into pipes! Different pipes give different points.</p>
+                    <div class="game-features soccer-features">
+                        <p>• 3 different scoring pipes<br>• 1, 2, or 3 points each<br>• Don't miss 5 times!</p>
+                    </div>
+                </div>
+            </div>
+
+            <button id="changeNameBtn" class="change-name-btn">Change Name</button>
+        </div>
+    </div>
+
+    <!-- Basketball Game Screen -->
+    <div id="basketballScreen" class="screen game-screen basketball-screen hidden">
+        <canvas id="basketballCanvas" class="game-canvas" width="800" height="600"></canvas>
+        
+        <div class="controls">
+            <div class="control-group">
+                <button id="bball-left" class="control-btn basketball-move">←</button>
+                <button id="bball-right" class="control-btn basketball-move">→</button>
+            </div>
+            <div class="control-group">
+                <button id="bball-up" class="control-btn basketball-aim">↑</button>
+                <button id="bball-down" class="control-btn basketball-aim">↓</button>
+                <button id="bball-shoot" class="control-btn basketball-shoot">🏀</button>
+            </div>
+        </div>
+
+        <button id="basketballRestart" class="top-btn restart-btn basketball-restart">🔄 Restart</button>
+        <button id="basketballBack" class="top-btn back-btn">← Back to Menu</button>
+    </div>
+
+    <!-- Soccer Game Screen -->
+    <div id="soccerScreen" class="screen game-screen soccer-screen hidden">
+        <canvas id="soccerCanvas" class="game-canvas soccer-canvas" width="800" height="600"></canvas>
+        
+        <div class="controls">
+            <div class="control-group">
+                <button id="soccer-left" class="control-btn soccer-move">←</button>
+                <button id="soccer-right" class="control-btn soccer-move">→</button>
+            </div>
+            <div class="control-group">
+                <button id="soccer-up" class="control-btn soccer-aim">↑</button>
+                <button id="soccer-down" class="control-btn soccer-aim">↓</button>
+                <button id="soccer-kick" class="control-btn soccer-kick">⚽</button>
+            </div>
+        </div>
+
+        <button id="soccerRestart" class="top-btn restart-btn soccer-restart">🔄 Restart</button>
+        <button id="soccerBack" class="top-btn back-btn">← Back to Menu</button>
+
+        <div class="instructions">
+            <h3>How to Play:</h3>
+            <ul>
+                <li>• Use ← → to move</li>
+                <li>• Use ↑ ↓ to aim</li>
+                <li>• Hold SPACE/⚽ to charge power</li>
+                <li>• Release to kick!</li>
+                <li>• <span class="green">Low pipe: 1 pt</span></li>
+                <li>• <span class="orange">Mid pipe: 2 pts</span></li>
+                <li>• <span class="purple">High pipe: 3 pts</span></li>
+                <li>• Max 5 misses allowed!</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // Global game state
+        let currentScreen = 'nameInput';
+        let playerName = '';
+        let currentGame = null;
+
+        // Screen elements
+        const nameInputScreen = document.getElementById('nameInputScreen');
+        const gameSelectionScreen = document.getElementById('gameSelectionScreen');
+        const basketballScreen = document.getElementById('basketballScreen');
+        const soccerScreen = document.getElementById('soccerScreen');
+
+        // Input elements
+        const playerNameInput = document.getElementById('playerNameInput');
+        const continueBtn = document.getElementById('continueBtn');
+        const welcomeText = document.getElementById('welcomeText');
+        const basketballCard = document.getElementById('basketballCard');
+        const soccerCard = document.getElementById('soccerCard');
+        const changeNameBtn = document.getElementById('changeNameBtn');
+
+        // Game canvases
+        const basketballCanvas = document.getElementById('basketballCanvas');
+        const soccerCanvas = document.getElementById('soccerCanvas');
+
+        // Navigation functions
+        function showScreen(screenName) {
+            // Hide all screens
+            nameInputScreen.classList.add('hidden');
+            gameSelectionScreen.classList.add('hidden');
+            basketballScreen.classList.add('hidden');
+            soccerScreen.classList.add('hidden');
+
+            // Show selected screen
+            switch(screenName) {
+                case 'nameInput':
+                    nameInputScreen.classList.remove('hidden');
+                    break;
+                case 'gameSelection':
+                    gameSelectionScreen.classList.remove('hidden');
+                    welcomeText.textContent = `Welcome ${playerName}! Choose your game:`;
+                    break;
+                case 'basketball':
+                    basketballScreen.classList.remove('hidden');
+                    if (currentGame) currentGame.stop();
+                    currentGame = new BasketballGame();
+                    break;
+                case 'soccer':
+                    soccerScreen.classList.remove('hidden');
+                    if (currentGame) currentGame.stop();
+                    currentGame = new SoccerGame();
+                    break;
+            }
+            currentScreen = screenName;
+        }
+
+        // Event listeners for navigation
+        continueBtn.addEventListener('click', () => {
+            playerName = playerNameInput.value.trim();
+            if (playerName) {
+                showScreen('gameSelection');
+            }
+        });
+
+        playerNameInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                continueBtn.click();
+            }
+        });
+
+        changeNameBtn.addEventListener('click', () => {
+            showScreen('nameInput');
+        });
+
+        basketballCard.addEventListener('click', () => {
+            showScreen('basketball');
+        });
+
+        soccerCard.addEventListener('click', () => {
+            showScreen('soccer');
+        });
+
+        document.getElementById('basketballBack').addEventListener('click', () => {
+            showScreen('gameSelection');
+        });
+
+        document.getElementById('soccerBack').addEventListener('click', () => {
+            showScreen('gameSelection');
+        });
+
+        // Basketball Game Class
+        class BasketballGame {
+            constructor() {
+                this.canvas = basketballCanvas;
+                this.ctx = this.canvas.getContext('2d');
+                this.isRunning = false;
+                this.animationId = null;
+
+                // Constants
+                this.CANVAS_WIDTH = this.canvas.width;
+                this.CANVAS_HEIGHT = this.canvas.height;
+                this.GRAVITY = 0.5;
+                this.MAX_POWER = 20;
+                this.POWER_INCREMENT = 0.5;
+                this.MAX_MISSES = 5;
+                this.GAME_TIME = 60;
+                this.BOUNCE_FACTOR = 0.7;
+                this.MIN_ANGLE = 0;
+                this.MAX_ANGLE = Math.PI;
+                this.BALL_SPEED = 5;
+                this.CHARACTER_HEIGHT = 60;
+
+                // Colors
+                this.WHITE = '#FFFFFF';
+                this.BLACK = '#000000';
+                this.ORANGE = '#FFA500';
+                this.RED = '#FF0000';
+                this.GREEN = '#00FF00';
+                this.YELLOW = '#FFFF00';
+
+                // Hoop dimensions
+                this.HOOP_WIDTH = 60;
+                this.HOOP_HEIGHT = 40;
+                this.HOOP_X = this.CANVAS_WIDTH / 2 - this.HOOP_WIDTH / 2;
+                this.HOOP_Y = 100;
+                this.currentHoopWidth = this.HOOP_WIDTH;
+
+                // Ball properties
+                this.BALL_RADIUS = 20;
+                this.ball = {
+                    x: this.CANVAS_WIDTH / 2,
+                    y: this.CANVAS_HEIGHT - 100,
+                    velocityX: 0,
+                    velocityY: 0,
+                    isMoving: false
+                };
+
+                // Game state
+                this.gameState = {
+                    isCharging: false,
+                    isShot: false,
+                    power: 0,
+                    angle: 0,
+                    score: 0,
+                    shots: 0,
+                    misses: 0,
+                    message: '',
+                    messageTimer: 0,
+                    isGameOver: false,
+                    timeRemaining: this.GAME_TIME,
+                    difficulty: 1
+                };
+
+                // Input state
+                this.keys = {
+                    left: false,
+                    right: false,
+                    up: false,
+                    down: false,
+                    space: false,
+                    r: false
+                };
+
+                this.highScore = parseInt(localStorage.getItem(`${playerName}_basketballHighScore`)) || 0;
+
+                this.setupControls();
+                this.setupKeyboard();
+                this.resetGame();
+                this.start();
+            }
+
+            setupControls() {
+                const controls = {
+                    'bball-left': () => this.keys.left = true,
+                    'bball-right': () => this.keys.right = true,
+                    'bball-up': () => this.keys.up = true,
+                    'bball-down': () => this.keys.down = true,
+                    'bball-shoot': () => this.keys.space = true
+                };
+
+                Object.entries(controls).forEach(([id, action]) => {
+                    const btn = document.getElementById(id);
+                    btn.addEventListener('mousedown', action);
+                    btn.addEventListener('touchstart', (e) => {
+                        e.preventDefault();
+                        action();
+                    });
+                });
+
+                // Release events
+                const releaseControls = {
+                    'bball-left': () => this.keys.left = false,
+                    'bball-right': () => this.keys.right = false,
+                    'bball-up': () => this.keys.up = false,
+                    'bball-down': () => this.keys.down = false,
+                    'bball-shoot': () => this.keys.space = false
+                };
+
+                Object.entries(releaseControls).forEach(([id, action]) => {
+                    const btn = document.getElementById(id);
+                    btn.addEventListener('mouseup', action);
+                    btn.addEventListener('touchend', action);
+                });
+
+                document.getElementById('basketballRestart').addEventListener('click', () => {
+                    this.resetGame();
+                });
+            }
+
+            setupKeyboard() {
+                this.keyDownHandler = (e) => {
+                    if (currentScreen !== 'basketball') return;
+                    
+                    switch(e.key) {
+                        case 'ArrowLeft':
+                        case 'a':
+                        case 'A':
+                            this.keys.left = true;
+                            break;
+                        case 'ArrowRight':
+                        case 'd':
+                        case 'D':
+                            this.keys.right = true;
+                            break;
+                        case 'ArrowUp':
+                        case 'w':
+                        case 'W':
+                            this.keys.up = true;
+                            break;
+                        case 'ArrowDown':
+                        case 's':
+                        case 'S':
+                            this.keys.down = true;
+                            break;
+                        case ' ':
+                            e.preventDefault();
+                            this.keys.space = true;
+                            break;
+                        case 'r':
+                        case 'R':
+                            this.keys.r = true;
+                            break;
+                    }
+                };
+
+                this.keyUpHandler = (e) => {
+                    if (currentScreen !== 'basketball') return;
+                    
+                    switch(e.key) {
+                        case 'ArrowLeft':
+                        case 'a':
+                        case 'A':
+                            this.keys.left = false;
+                            break;
+                        case 'ArrowRight':
+                        case 'd':
+                        case 'D':
+                            this.keys.right = false;
+                            break;
+                        case 'ArrowUp':
+                        case 'w':
+                        case 'W':
+                            this.keys.up = false;
+                            break;
+                        case 'ArrowDown':
+                        case 's':
+                        case 'S':
+                            this.keys.down = false;
+                            break;
+                        case ' ':
+                            this.keys.space = false;
+                            break;
+                        case 'r':
+                        case 'R':
+                            this.keys.r = false;
+                            break;
+                    }
+                };
+
+                window.addEventListener('keydown', this.keyDownHandler);
+                window.addEventListener('keyup', this.keyUpHandler);
+            }
+
+            drawHoop() {
+                // Draw backboard
+                this.ctx.fillStyle = this.WHITE;
+                this.ctx.fillRect(this.HOOP_X - 10, this.HOOP_Y - 60, 20, 120);
+
+                // Draw rim
+                this.ctx.fillStyle = this.RED;
+                this.ctx.fillRect(this.HOOP_X, this.HOOP_Y, this.currentHoopWidth, this.HOOP_HEIGHT);
+
+                // Draw net
+                this.ctx.strokeStyle = this.WHITE;
+                this.ctx.lineWidth = 2;
+                for (let i = 0; i < 5; i++) {
+                    this.ctx.beginPath();
+                    this.ctx.moveTo(this.HOOP_X + i * 10, this.HOOP_Y + this.HOOP_HEIGHT);
+                    this.ctx.lineTo(this.HOOP_X + i * 10, this.HOOP_Y + this.HOOP_HEIGHT + 40);
+                    this.ctx.stroke();
+                }
+            }
+
+            drawScore() {
+                // Draw title
+                this.ctx.fillStyle = this.YELLOW;
+                this.ctx.font = 'bold 48px Arial';
+                this.ctx.textAlign = 'center';
+                this.ctx.fillText('🏀 BASKET HUT 🏀', this.CANVAS_WIDTH / 2, 60);
+
+                // Draw player name
+                this.ctx.fillStyle = this.WHITE;
+                this.ctx.font = '24px Arial';
+                this.ctx.textAlign = 'right';
+                this.ctx.fillText(`Player: ${playerName}`, this.CANVAS_WIDTH - 20, 40);
+
+                // Draw score info
+                this.ctx.textAlign = 'left';
+                this.ctx.fillText(`Score: ${this.gameState.score}`, 20, 100);
+                this.ctx.fillText(`Shots: ${this.gameState.shots}`, 20, 130);
+                this.ctx.fillText(`Misses: ${this.gameState.misses}/${this.MAX_MISSES}`, 20, 160);
+                this.ctx.fillText(`Time: ${Math.ceil(this.gameState.timeRemaining)}s`, 20, 190);
+                this.ctx.fillText(`Difficulty: ${this.gameState.difficulty}`, 20, 220);
+                this.ctx.fillText(`High Score: ${this.highScore}`, 20, 250);
+            }
+
+            drawGameOver() {
+                this.ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+                this.ctx.fillRect(0, 0, this.CANVAS_WIDTH, this.CANVAS_HEIGHT);
+
+                this.ctx.fillStyle = this.YELLOW;
+                this.ctx.font = '48px Arial';
+                this.ctx.textAlign = 'center';
+                this.ctx.fillText('GAME OVER', this.CANVAS_WIDTH / 2, this.CANVAS_HEIGHT / 2 - 50);
+
+                this.ctx.font = '36px Arial';
+                this.ctx.fillText(`Final Score: ${this.gameState.score}`, this.CANVAS_WIDTH / 2, this.CANVAS_HEIGHT / 2 + 10);
+
+                this.ctx.font = '24px Arial';
+                this.ctx.fillText('Press R to Restart', this.CANVAS_WIDTH / 2, this.CANVAS_HEIGHT / 2 + 60);
+            }
+
+            drawMessage() {
+                if (this.gameState.messageTimer > 0) {
+                    this.ctx.fillStyle = this.YELLOW;
+                    this.ctx.font = '36px Arial';
+                    this.ctx.textAlign = 'center';
+                    this.ctx.fillText(this.gameState.message, this.CANVAS_WIDTH / 2, this.CANVAS_HEIGHT / 2);
+                    this.gameState.messageTimer--;
+                }
+            }
+
+            drawCharacter() {
+                this.ctx.strokeStyle = this.WHITE;
+                this.ctx.lineWidth = 2;
+
+                // Draw body
+                this.ctx.beginPath();
+                this.ctx.moveTo(this.ball.x, this.ball.y + this.BALL_RADIUS);
+                this.ctx.lineTo(this.ball.x, this.ball.y + this.BALL_RADIUS + this.CHARACTER_HEIGHT);
+                this.ctx.stroke();
+
+                // Draw legs
+                this.ctx.beginPath();
+                this.ctx.moveTo(this.ball.x, this.ball.y + this.BALL_RADIUS + this.CHARACTER_HEIGHT);
+                this.ctx.lineTo(this.ball.x - 15, this.ball.y + this.BALL_RADIUS + this.CHARACTER_HEIGHT + 20);
+                this.ctx.moveTo(this.ball.x, this.ball.y + this.BALL_RADIUS + this.CHARACTER_HEIGHT);
+                this.ctx.lineTo(this.ball.x + 15, this.ball.y + this.BALL_RADIUS + this.CHARACTER_HEIGHT + 20);
+                this.ctx.stroke();
+
+                // Draw arms
+                this.ctx.beginPath();
+                this.ctx.moveTo(this.ball.x, this.ball.y + this.BALL_RADIUS + 10);
+                this.ctx.lineTo(this.ball.x - 20, this.ball.y + this.BALL_RADIUS + 30);
+                this.ctx.moveTo(this.ball.x, this.ball.y + this.BALL_RADIUS + 10);
+                this.ctx.lineTo(this.ball.x + 20, this.ball.y + this.BALL_RADIUS + 30);
+                this.ctx.stroke();
+
+                // Draw head
+                this.ctx.beginPath();
+                this.ctx.arc(this.ball.x, this.ball.y + this.BALL_RADIUS - 5, 8, 0, Math.PI * 2);
+                this.ctx.stroke();
+            }
+
+            drawBall() {
+                // Draw the main ball circle
+                this.ctx.beginPath();
+                this.ctx.arc(this.ball.x, this.ball.y, this.BALL_RADIUS, 0, Math.PI * 2);
+                this.ctx.fillStyle = this.ORANGE;
+                this.ctx.fill();
+
+                // Add basketball details
+                this.ctx.strokeStyle = this.BLACK;
+                this.ctx.lineWidth = 2;
+                this.ctx.stroke();
+
+                // Draw the ball's lines
+                this.ctx.beginPath();
+                this.ctx.moveTo(this.ball.x - this.BALL_RADIUS, this.ball.y);
+                this.ctx.lineTo(this.ball.x + this.BALL_RADIUS, this.ball.y);
+                this.ctx.moveTo(this.ball.x, this.ball.y - this.BALL_RADIUS);
+                this.ctx.lineTo(this.ball.x, this.ball.y + this.BALL_RADIUS);
+                this.ctx.stroke();
+
+                // Draw power meter when charging
+                if (this.gameState.isCharging) {
+                    const powerBarWidth = 100;
+                    const powerBarHeight = 10;
+                    const powerBarX = this.ball.x - powerBarWidth / 2;
+                    const powerBarY = this.ball.y - 40;
+
+                    this.ctx.fillStyle = this.WHITE;
+                    this.ctx.fillRect(powerBarX, powerBarY, powerBarWidth, powerBarHeight);
+
+                    this.ctx.fillStyle = this.GREEN;
+                    this.ctx.fillRect(powerBarX, powerBarY, (this.gameState.power / this.MAX_POWER) * powerBarWidth, powerBarHeight);
+                }
+
+                // Draw shooting line
+                if (!this.ball.isMoving && !this.gameState.isShot) {
+                    this.ctx.strokeStyle = 'rgba(255, 255, 255, 0.5)';
+                    this.ctx.beginPath();
+                    this.ctx.moveTo(this.ball.x, this.ball.y);
+                    const lineLength = 100;
+                    const endX = this.ball.x + Math.cos(this.gameState.angle) * lineLength;
+                    const endY = this.ball.y - Math.sin(this.gameState.angle) * lineLength;
+                    this.ctx.lineTo(endX, endY);
+                    this.ctx.stroke();
+                }
+            }
+
+            checkCollision() {
+                // Check collision with backboard
+                if (this.ball.x + this.BALL_RADIUS > this.HOOP_X - 10 && 
+                    this.ball.x - this.BALL_RADIUS < this.HOOP_X + 10 && 
+                    this.ball.y + this.BALL_RADIUS > this.HOOP_Y - 60 && 
+                    this.ball.y - this.BALL_RADIUS < this.HOOP_Y + 60) {
+                    if (this.ball.x < this.HOOP_X) {
+                        this.ball.x = this.HOOP_X - 10 - this.BALL_RADIUS;
+                    } else {
+                        this.ball.x = this.HOOP_X + 10 + this.BALL_RADIUS;
+                    }
+                    this.ball.velocityX = -this.ball.velocityX * this.BOUNCE_FACTOR;
+                    return false;
+                }
+
+                // Check collision with rim
+                if (this.ball.x + this.BALL_RADIUS > this.HOOP_X && 
+                    this.ball.x - this.BALL_RADIUS < this.HOOP_X + this.currentHoopWidth && 
+                    this.ball.y + this.BALL_RADIUS > this.HOOP_Y && 
+                    this.ball.y - this.BALL_RADIUS < this.HOOP_Y + this.HOOP_HEIGHT) {
+                    
+                    // Check if ball is going through the hoop
+                    if (this.ball.velocityY > 0 && 
+                        this.ball.x + this.BALL_RADIUS > this.HOOP_X + 5 && 
+                        this.ball.x - this.BALL_RADIUS < this.HOOP_X + this.currentHoopWidth - 5) {
+                        this.gameState.score++;
+                        this.gameState.message = 'SCORE! 🏀';
+                        this.gameState.messageTimer = 60;
+                        return true;
+                    } else {
+                        // Bounce off the rim
+                        if (this.ball.y < this.HOOP_Y) {
+                            this.ball.y = this.HOOP_Y - this.BALL_RADIUS;
+                            this.ball.velocityY = -this.ball.velocityY * this.BOUNCE_FACTOR;
+                        } else if (this.ball.y > this.HOOP_Y + this.HOOP_HEIGHT) {
+                            this.ball.y = this.HOOP_Y + this.HOOP_HEIGHT + this.BALL_RADIUS;
+                            this.ball.velocityY = -this.ball.velocityY * this.BOUNCE_FACTOR;
+                        }
+                        if (this.ball.x < this.HOOP_X) {
+                            this.ball.x = this.HOOP_X - this.BALL_RADIUS;
+                            this.ball.velocityX = -this.ball.velocityX * this.BOUNCE_FACTOR;
+                        } else if (this.ball.x > this.HOOP_X + this.currentHoopWidth) {
+                            this.ball.x = this.HOOP_X + this.currentHoopWidth + this.BALL_RADIUS;
+                            this.ball.velocityX = -this.ball.velocityX * this.BOUNCE_FACTOR;
+                        }
+                        return false;
+                    }
+                }
+
+                return false;
+            }
+
+            updateBall() {
+                if (this.ball.isMoving) {
+                    this.ball.x += this.ball.velocityX;
+                    this.ball.y += this.ball.velocityY;
+                    this.ball.velocityY += this.GRAVITY;
+
+                    if (this.checkCollision()) {
+                        this.resetBall();
+                        return;
+                    }
+
+                    if (this.ball.y > this.CANVAS_HEIGHT + this.BALL_RADIUS || 
+                        this.ball.x < -this.BALL_RADIUS || 
+                        this.ball.x > this.CANVAS_WIDTH + this.BALL_RADIUS) {
+                        this.gameState.message = 'MISS!';
+                        this.gameState.messageTimer = 60;
+                        this.gameState.misses++;
+                        this.resetBall();
+                    }
+                }
+            }
+
+            resetBall() {
+                this.ball.x = this.CANVAS_WIDTH / 2;
+                this.ball.y = this.CANVAS_HEIGHT - 100 - this.CHARACTER_HEIGHT;
+                this.ball.velocityX = 0;
+                this.ball.velocityY = 0;
+                this.ball.isMoving = false;
+                this.gameState.isShot = false;
+                this.gameState.shots++;
+            }
+
+            shootBall() {
+                if (!this.ball.isMoving && !this.gameState.isShot) {
+                    this.ball.velocityX = this.gameState.power * Math.cos(this.gameState.angle);
+                    this.ball.velocityY = -this.gameState.power * Math.sin(this.gameState.angle);
+                    this.ball.isMoving = true;
+                    this.gameState.isShot = true;
+                    this.gameState.isCharging = false;
+                }
+            }
+
+            updateDifficulty() {
+                if (this.gameState.timeRemaining % 30 === 0) {
+                    this.gameState.difficulty++;
+                    this.HOOP_Y = Math.max(50, this.HOOP_Y - 10);
+                    this.currentHoopWidth = Math.max(30, this.currentHoopWidth - 5);
+                }
+            }
+
+            resetGame() {
+                this.gameState = {
+                    isCharging: false,
+                    isShot: false,
+                    power: 0,
+                    angle: 0,
+                    score: 0,
+                    shots: 0,
+                    misses: 0,
+                    message: '',
+                    messageTimer: 0,
+                    isGameOver: false,
+                    timeRemaining: this.GAME_TIME,
+                    difficulty: 1
+                };
+
+                this.HOOP_X = this.CANVAS_WIDTH / 2 - this.HOOP_WIDTH / 2;
+                this.HOOP_Y = 100;
+                this.currentHoopWidth = this.HOOP_WIDTH;
+
+                this.resetBall();
+            }
+
+            handleInput() {
+                if (this.keys.r) {
+                    this.resetGame();
+                    return;
+                }
+
+                if (this.gameState.isGameOver) return;
+
+                if (!this.ball.isMoving && !this.gameState.isShot) {
+                    if (this.keys.left) {
+                        this.ball.x = Math.max(this.BALL_RADIUS, this.ball.x - this.BALL_SPEED);
+                    }
+                    if (this.keys.right) {
+                        this.ball.x = Math.min(this.CANVAS_WIDTH - this.BALL_RADIUS, this.ball.x + this.BALL_SPEED);
+                    }
+
+                    if (this.keys.up) {
+                        this.gameState.angle = Math.min(this.MAX_ANGLE, this.gameState.angle + 0.05);
+                    }
+                    if (this.keys.down) {
+                        this.gameState.angle = Math.max(this.MIN_ANGLE, this.gameState.angle - 0.05);
+                    }
+
+                    if (this.keys.space && !this.gameState.isCharging) {
+                        this.gameState.isCharging = true;
+                        this.gameState.power = 0;
+                    }
+
+                    if (this.gameState.isCharging && this.keys.space) {
+                        this.gameState.power = Math.min(this.MAX_POWER, this.gameState.power + this.POWER_INCREMENT);
+                    }
+
+                    if (!this.keys.space && this.gameState.isCharging) {
+                        this.shootBall();
+                    }
+                }
+            }
+
+            gameLoop() {
+                if (!this.isRunning) return;
+
+                this.ctx.fillStyle = this.BLACK;
+                this.ctx.fillRect(0, 0, this.CANVAS_WIDTH, this.CANVAS_HEIGHT);
+
+                if (!this.gameState.isGameOver) {
+                    this.handleInput();
+                    this.updateBall();
+                    this.gameState.timeRemaining -= 1/60;
+                    this.updateDifficulty();
+
+                    if (this.gameState.misses >= this.MAX_MISSES || this.gameState.timeRemaining <= 0) {
+                        this.gameState.isGameOver = true;
+                        if (this.gameState.score > this.highScore) {
+                            this.highScore = this.gameState.score;
+                            localStorage.setItem(`${playerName}_basketballHighScore`, this.highScore);
+                        }
+                    }
+                }
+
+                this.drawHoop();
+                if (!this.ball.isMoving) {
+                    this.drawCharacter();
+                }
+                this.drawBall();
+                this.drawScore();
+                this.drawMessage();
+
+                if (this.gameState.isGameOver) {
+                    this.drawGameOver();
+                }
+
+                this.animationId = requestAnimationFrame(() => this.gameLoop());
+            }
+
+            start() {
+                this.isRunning = true;
+                this.gameLoop();
+            }
+
+            stop() {
+                this.isRunning = false;
+                if (this.animationId) {
+                    cancelAnimationFrame(this.animationId);
+                }
+                window.removeEventListener('keydown', this.keyDownHandler);
+                window.removeEventListener('keyup', this.keyUpHandler);
+            }
+        }
+
+        // Soccer Game Class
+        class SoccerGame {
+            constructor() {
+                this.canvas = soccerCanvas;
+                this.ctx = this.canvas.getContext('2d');
+                this.isRunning = false;
+                this.animationId = null;
+
+                // Constants
+                this.CANVAS_WIDTH = this.canvas.width;
+                this.CANVAS_HEIGHT = this.canvas.height;
+                this.GRAVITY = 0.4;
+                this.MAX_POWER = 18;
+                this.POWER_INCREMENT = 0.4;
+                this.MAX_MISSES = 5;
+                this.GAME_TIME = 60;
+                this.BOUNCE_FACTOR = 0.8;
+                this.MIN_ANGLE = 0;
+                this.MAX_ANGLE = Math.PI;
+                this.BALL_SPEED = 5;
+                this.CHARACTER_HEIGHT = 60;
+
+                // Colors
+                this.WHITE = '#FFFFFF';
+                this.BLACK = '#000000';
+                this.GREEN = '#00AA00';
+                this.RED = '#FF0000';
+                this.YELLOW = '#FFFF00';
+                this.BLUE = '#0066FF';
+                this.GRAY = '#808080';
+                this.ORANGE = '#FF8800';
+                this.PURPLE = '#8800FF';
+
+                // Three pipes with different point values
+                this.pipes = [
+                    {
+                        x: this.CANVAS_WIDTH / 2 - 120,
+                        y: this.CANVAS_HEIGHT - 250,
+                        width: 60,
+                        height: 50,
+                        points: 1,
+                        color: this.GREEN,
+                        label: '1 PT'
+                    },
+                    {
+                        x: this.CANVAS_WIDTH / 2 - 30,
+                        y: this.CANVAS_HEIGHT - 350,
+                        width: 60,
+                        height: 50,
+                        points: 2,
+                        color: this.ORANGE,
+                        label: '2 PTS'
+                    },
+                    {
+                        x: this.CANVAS_WIDTH / 2 + 60,
+                        y: this.CANVAS_HEIGHT - 450,
+                        width: 60,
+                        height: 50,
+                        points: 3,
+                        color: this.PURPLE,
+                        label: '3 PTS'
+                    }
+                ];
+
+                // Ball properties
+                this.BALL_RADIUS = 15;
+                this.ball = {
+                    x: this.CANVAS_WIDTH / 4,
+                    y: this.CANVAS_HEIGHT - 150 - this.BALL_RADIUS,
+                    velocityX: 0,
+                    velocityY: 0,
+                    spin: 0,
+                    isMoving: false
+                };
+
+                // Game state
+                this.gameState = {
+                    isCharging: false,
+                    isShot: false,
+                    power: 0,
+                    angle: Math.PI / 4,
+                    score: 0,
+                    shots: 0,
+                    misses: 0,
+                    message: '',
+                    messageTimer: 0,
+                    isGameOver: false,
+                    timeRemaining: this.GAME_TIME,
+                    difficulty: 1
+                };
+
+                // Input state
+                this.keys = {
+                    left: false,
+                    right: false,
+                    up: false,
+                    down: false,
+                    space: false,
+                    r: false
+                };
+
+                this.highScore = parseInt(localStorage.getItem(`${playerName}_soccerHighScore`)) || 0;
+
+                this.setupControls();
+                this.setupKeyboard();
+                this.resetGame();
+                this.start();
+            }
+
+            setupControls() {
+                const controls = {
+                    'soccer-left': () => this.keys.left = true,
+                    'soccer-right': () => this.keys.right = true,
+                    'soccer-up': () => this.keys.up = true,
+                    'soccer-down': () => this.keys.down = true,
+                    'soccer-kick': () => this.keys.space = true
+                };
+
+                Object.entries(controls).forEach(([id, action]) => {
+                    const btn = document.getElementById(id);
+                    btn.addEventListener('mousedown', action);
+                    btn.addEventListener('touchstart', (e) => {
+                        e.preventDefault();
+                        action();
+                    });
+                });
+
+                // Release events
+                const releaseControls = {
+                    'soccer-left': () => this.keys.left = false,
+                    'soccer-right': () => this.keys.right = false,
+                    'soccer-up': () => this.keys.up = false,
+                    'soccer-down': () => this.keys.down = false,
+                    'soccer-kick': () => this.keys.space = false
+                };
+
+                Object.entries(releaseControls).forEach(([id, action]) => {
+                    const btn = document.getElementById(id);
+                    btn.addEventListener('mouseup', action);
+                    btn.addEventListener('touchend', action);
+                });
+
+                document.getElementById('soccerRestart').addEventListener('click', () => {
+                    this.resetGame();
+                });
+            }
+
+            setupKeyboard() {
+                this.keyDownHandler = (e) => {
+                    if (currentScreen !== 'soccer') return;
+                    
+                    switch(e.key) {
+                        case 'ArrowLeft':
+                        case 'a':
+                        case 'A':
+                            this.keys.left = true;
+                            break;
+                        case 'ArrowRight':
+                        case 'd':
+                        case 'D':
+                            this.keys.right = true;
+                            break;
+                        case 'ArrowUp':
+                        case 'w':
+                        case 'W':
+                            this.keys.up = true;
+                            break;
+                        case 'ArrowDown':
+                        case 's':
+                        case 'S':
+                            this.keys.down = true;
+                            break;
+                        case ' ':
+                            e.preventDefault();
+                            this.keys.space = true;
+                            break;
+                        case 'r':
+                        case 'R':
+                            this.keys.r = true;
+                            break;
+                    }
+                };
+
+                this.keyUpHandler = (e) => {
+                    if (currentScreen !== 'soccer') return;
+                    
+                    switch(e.key) {
+                        case 'ArrowLeft':
+                        case 'a':
+                        case 'A':
+                            this.keys.left = false;
+                            break;
+                        case 'ArrowRight':
+                        case 'd':
+                        case 'D':
+                            this.keys.right = false;
+                            break;
+                        case 'ArrowUp':
+                        case 'w':
+                        case 'W':
+                            this.keys.up = false;
+                            break;
+                        case 'ArrowDown':
+                        case 's':
+                        case 'S':
+                            this.keys.down = false;
+                            break;
+                        case ' ':
+                            this.keys.space = false;
+                            break;
+                        case 'r':
+                        case 'R':
+                            this.keys.r = false;
+                            break;
+                    }
+                };
+
+                window.addEventListener('keydown', this.keyDownHandler);
+                window.addEventListener('keyup', this.keyUpHandler);
+            }
+
+            drawPipes() {
+                this.pipes.forEach((pipe) => {
+                    // Draw pipe walls
+                    this.ctx.fillStyle = this.GRAY;
+                    this.ctx.fillRect(pipe.x - 8, pipe.y, 8, pipe.height + 40); // Left wall
+                    this.ctx.fillRect(pipe.x + pipe.width, pipe.y, 8, pipe.height + 40); // Right wall
+
+                    // Draw pipe opening (dark inside)
+                    this.ctx.fillStyle = this.BLACK;
+                    this.ctx.fillRect(pipe.x, pipe.y, pipe.width, pipe.height + 40);
+
+                    // Draw pipe rim with point color
+                    this.ctx.fillStyle = pipe.color;
+                    this.ctx.fillRect(pipe.x, pipe.y, pipe.width, 6); // Top rim
+
+                    // Draw pipe depth lines for 3D effect
+                    this.ctx.strokeStyle = this.GRAY;
+                    this.ctx.lineWidth = 2;
+                    for (let i = 1; i < 4; i++) {
+                        this.ctx.beginPath();
+                        this.ctx.moveTo(pipe.x, pipe.y + i * 10);
+                        this.ctx.lineTo(pipe.x + pipe.width, pipe.y + i * 10);
+                        this.ctx.stroke();
+                    }
+
+                    // Draw point value label
+                    this.ctx.fillStyle = pipe.color;
+                    this.ctx.font = 'bold 16px Arial';
+                    this.ctx.textAlign = 'center';
+                    this.ctx.fillText(pipe.label, pipe.x + pipe.width / 2, pipe.y - 10);
+
+                    // Draw glow effect around high-value pipes
+                    if (pipe.points > 1) {
+                        this.ctx.shadowColor = pipe.color;
+                        this.ctx.shadowBlur = 10;
+                        this.ctx.strokeStyle = pipe.color;
+                        this.ctx.lineWidth = 3;
+                        this.ctx.strokeRect(pipe.x - 2, pipe.y - 2, pipe.width + 4, pipe.height + 44);
+                        this.ctx.shadowBlur = 0;
+                    }
+                });
+            }
+
+            drawField() {
+                // Draw grass field
+                this.ctx.fillStyle = this.GREEN;
+                this.ctx.fillRect(0, this.CANVAS_HEIGHT - 150, this.CANVAS_WIDTH, 150);
+
+                // Draw field lines
+                this.ctx.strokeStyle = this.WHITE;
+                this.ctx.lineWidth = 3;
+
+                // Center line
+                this.ctx.beginPath();
+                this.ctx.moveTo(0, this.CANVAS_HEIGHT - 75);
+                this.ctx.lineTo(this.CANVAS_WIDTH, this.CANVAS_HEIGHT - 75);
+                this.ctx.stroke();
+
+                // Draw platforms for pipes
+                this.pipes.forEach((pipe) => {
+                    this.ctx.fillStyle = this.GRAY;
+                    this.ctx.fillRect(pipe.x - 20, pipe.y + pipe.height + 40, pipe.width + 40, 15);
+                });
+            }
+
+            drawScore() {
+                // Draw title
+                this.ctx.fillStyle = this.YELLOW;
+                this.ctx.font = 'bold 48px Arial';
+                this.ctx.textAlign = 'center';
+                this.ctx.fillText('⚽ SOCCER KICK ⚽', this.CANVAS_WIDTH / 2, 60);
+
+                // Draw player name
+                this.ctx.fillStyle = this.WHITE;
+                this.ctx.font = '24px Arial';
+                this.ctx.textAlign = 'right';
+                this.ctx.fillText(`Player: ${playerName}`, this.CANVAS_WIDTH - 20, 40);
+
+                // Draw score info - moved to LEFT corner
+                this.ctx.textAlign = 'left';
+                this.ctx.fillStyle = this.WHITE;
+                this.ctx.font = '24px Arial';
+                this.ctx.fillText(`SCORE: ${this.gameState.score}`, 20, 100);
+
+                this.ctx.font = '18px Arial';
+                this.ctx.fillText(`Shots: ${this.gameState.shots}`, 20, 130);
+                this.ctx.fillText(`Misses: ${this.gameState.misses}/${this.MAX_MISSES}`, 20, 155);
+                this.ctx.fillText(`Time: ${Math.ceil(this.gameState.timeRemaining)}s`, 20, 180);
+                this.ctx.fillText(`Level: ${this.gameState.difficulty}`, 20, 205);
+                this.ctx.fillText(`High Score: ${this.highScore}`, 20, 230);
+            }
+
+            drawGameOver() {
+                this.ctx.fillStyle = 'rgba(0, 0, 0, 0.8)';
+                this.ctx.fillRect(0, 0, this.CANVAS_WIDTH, this.CANVAS_HEIGHT);
+
+                this.ctx.fillStyle = this.YELLOW;
+                this.ctx.font = '48px Arial';
+                this.ctx.textAlign = 'center';
+                this.ctx.fillText('GAME OVER!', this.CANVAS_WIDTH / 2, this.CANVAS_HEIGHT / 2 - 50);
+
+                this.ctx.font = '36px Arial';
+                this.ctx.fillText(`Final Score: ${this.gameState.score}`, this.CANVAS_WIDTH / 2, this.CANVAS_HEIGHT / 2 + 10);
+
+                this.ctx.font = '24px Arial';
+                this.ctx.fillText('Press R to Play Again', this.CANVAS_WIDTH / 2, this.CANVAS_HEIGHT / 2 + 60);
+            }
+
+            drawMessage() {
+                if (this.gameState.messageTimer > 0) {
+                    // Draw message with better background and spacing
+                    this.ctx.font = '48px Arial';
+                    this.ctx.textAlign = 'center';
+
+                    const messageWidth = this.ctx.measureText(this.gameState.message).width;
+                    const messageHeight = 60;
+
+                    // Draw solid background
+                    this.ctx.fillStyle = 'rgba(0, 0, 0, 0.8)';
+                    this.ctx.fillRect(
+                        this.CANVAS_WIDTH / 2 - messageWidth / 2 - 30,
+                        this.CANVAS_HEIGHT / 2 - 35,
+                        messageWidth + 60,
+                        messageHeight + 10
+                    );
+
+                    // Draw border
+                    this.ctx.strokeStyle = this.YELLOW;
+                    this.ctx.lineWidth = 3;
+                    this.ctx.strokeRect(
+                        this.CANVAS_WIDTH / 2 - messageWidth / 2 - 30,
+                        this.CANVAS_HEIGHT / 2 - 35,
+                        messageWidth + 60,
+                        messageHeight + 10
+                    );
+
+                    // Draw message text
+                    this.ctx.fillStyle = this.YELLOW;
+                    this.ctx.fillText(this.gameState.message, this.CANVAS_WIDTH / 2, this.CANVAS_HEIGHT / 2);
+                    this.gameState.messageTimer--;
+                }
+            }
+
+            drawPlayer() {
+                this.ctx.strokeStyle = this.BLUE;
+                this.ctx.lineWidth = 3;
+
+                // Draw body
+                this.ctx.beginPath();
+                this.ctx.moveTo(this.ball.x, this.ball.y - this.CHARACTER_HEIGHT);
+                this.ctx.lineTo(this.ball.x, this.ball.y);
+                this.ctx.stroke();
+
+                // Draw legs
+                this.ctx.beginPath();
+                this.ctx.moveTo(this.ball.x, this.ball.y);
+                this.ctx.lineTo(this.ball.x - 15, this.ball.y + 25);
+                this.ctx.moveTo(this.ball.x, this.ball.y);
+                this.ctx.lineTo(this.ball.x + 15, this.ball.y);
+                this.ctx.stroke();
+
+                // Draw arms
+                this.ctx.beginPath();
+                this.ctx.moveTo(this.ball.x, this.ball.y - this.CHARACTER_HEIGHT + 15);
+                this.ctx.lineTo(this.ball.x - 25, this.ball.y - this.CHARACTER_HEIGHT + 35);
+                this.ctx.moveTo(this.ball.x, this.ball.y - this.CHARACTER_HEIGHT + 15);
+                this.ctx.lineTo(this.ball.x + 25, this.ball.y - this.CHARACTER_HEIGHT + 35);
+                this.ctx.stroke();
+
+                // Draw head
+                this.ctx.beginPath();
+                this.ctx.arc(this.ball.x, this.ball.y - this.CHARACTER_HEIGHT - 8, 10, 0, Math.PI * 2);
+                this.ctx.stroke();
+
+                // Draw soccer jersey number
+                this.ctx.fillStyle = this.BLUE;
+                this.ctx.font = '12px Arial';
+                this.ctx.textAlign = 'center';
+                this.ctx.fillText('10', this.ball.x, this.ball.y - this.CHARACTER_HEIGHT + 25);
+            }
+
+            drawSoccerBall() {
+                // Draw the main ball circle
+                this.ctx.beginPath();
+                this.ctx.arc(this.ball.x, this.ball.y, this.BALL_RADIUS, 0, Math.PI * 2);
+                this.ctx.fillStyle = this.WHITE;
+                this.ctx.fill();
+
+                // Draw soccer ball pattern
+                this.ctx.strokeStyle = this.BLACK;
+                this.ctx.lineWidth = 2;
+                this.ctx.stroke();
+
+                // Draw pentagon pattern
+                this.ctx.fillStyle = this.BLACK;
+                this.ctx.beginPath();
+                this.ctx.moveTo(this.ball.x, this.ball.y - 8);
+                this.ctx.lineTo(this.ball.x + 6, this.ball.y - 3);
+                this.ctx.lineTo(this.ball.x + 4, this.ball.y + 5);
+                this.ctx.lineTo(this.ball.x - 4, this.ball.y + 5);
+                this.ctx.lineTo(this.ball.x - 6, this.ball.y - 3);
+                this.ctx.closePath();
+                this.ctx.fill();
+
+                // Draw hexagon lines
+                this.ctx.strokeStyle = this.BLACK;
+                this.ctx.lineWidth = 1;
+                for (let i = 0; i < 6; i++) {
+                    const angle = (i * Math.PI) / 3;
+                    this.ctx.beginPath();
+                    this.ctx.moveTo(this.ball.x, this.ball.y);
+                    this.ctx.lineTo(this.ball.x + Math.cos(angle) * this.BALL_RADIUS * 0.7, this.ball.y + Math.sin(angle) * this.BALL_RADIUS * 0.7);
+                    this.ctx.stroke();
+                }
+
+                // Draw power meter when charging
+                if (this.gameState.isCharging) {
+                    const powerBarWidth = 120;
+                    const powerBarHeight = 12;
+                    const powerBarX = this.ball.x - powerBarWidth / 2;
+                    const powerBarY = this.ball.y - 45;
+
+                    this.ctx.fillStyle = this.WHITE;
+                    this.ctx.fillRect(powerBarX, powerBarY, powerBarWidth, powerBarHeight);
+
+                    this.ctx.fillStyle = this.gameState.power > this.MAX_POWER * 0.7 ? this.RED : this.GREEN;
+                    this.ctx.fillRect(powerBarX, powerBarY, (this.gameState.power / this.MAX_POWER) * powerBarWidth, powerBarHeight);
+
+                    this.ctx.strokeStyle = this.BLACK;
+                    this.ctx.strokeRect(powerBarX, powerBarY, powerBarWidth, powerBarHeight);
+                }
+
+                // Draw trajectory line
+                if (!this.ball.isMoving && !this.gameState.isShot) {
+                    this.ctx.strokeStyle = 'rgba(255, 255, 255, 0.6)';
+                    this.ctx.lineWidth = 2;
+                    this.ctx.setLineDash([5, 5]);
+                    this.ctx.beginPath();
+                    this.ctx.moveTo(this.ball.x, this.ball.y);
+                    const lineLength = 120;
+                    const endX = this.ball.x + Math.cos(this.gameState.angle) * lineLength;
+                    const endY = this.ball.y - Math.sin(this.gameState.angle) * lineLength;
+                    this.ctx.lineTo(endX, endY);
+                    this.ctx.stroke();
+                    this.ctx.setLineDash([]);
+                }
+            }
+
+            checkPipeCollisions() {
+                for (const pipe of this.pipes) {
+                    // Check if ball goes into the pipe from the top
+                    if (this.ball.x + this.BALL_RADIUS > pipe.x &&
+                        this.ball.x - this.BALL_RADIUS < pipe.x + pipe.width &&
+                        this.ball.y + this.BALL_RADIUS > pipe.y &&
+                        this.ball.y - this.BALL_RADIUS < pipe.y + pipe.height + 40) {
+                        // Ball must be falling down into the pipe
+                        if (this.ball.velocityY > 0 && this.ball.y < pipe.y + 20) {
+                            this.gameState.score += pipe.points;
+                            this.gameState.message = `${pipe.points} POINT${pipe.points > 1 ? 'S' : ''}! 🎯⚽`;
+                            this.gameState.messageTimer = 90;
+                            return true;
+                        }
+                    }
+
+                    // Check collision with pipe walls
+                    if ((this.ball.x + this.BALL_RADIUS > pipe.x - 8 &&
+                         this.ball.x - this.BALL_RADIUS < pipe.x &&
+                         this.ball.y + this.BALL_RADIUS > pipe.y &&
+                         this.ball.y - this.BALL_RADIUS < pipe.y + pipe.height + 40) ||
+                        (this.ball.x + this.BALL_RADIUS > pipe.x + pipe.width &&
+                         this.ball.x - this.BALL_RADIUS < pipe.x + pipe.width + 8 &&
+                         this.ball.y + this.BALL_RADIUS > pipe.y &&
+                         this.ball.y - this.BALL_RADIUS < pipe.y + pipe.height + 40)) {
+                        this.ball.velocityX = -this.ball.velocityX * this.BOUNCE_FACTOR;
+                        this.ball.spin = -this.ball.spin * 0.5;
+                    }
+                }
+                return false;
+            }
+
+            updateBall() {
+                if (this.ball.isMoving) {
+                    // Update position
+                    this.ball.x += this.ball.velocityX;
+                    this.ball.y += this.ball.velocityY;
+
+                    // Apply gravity
+                    this.ball.velocityY += this.GRAVITY;
+
+                    // Apply air resistance
+                    this.ball.velocityX *= 0.999;
+
+                    // Check for pipe collisions
+                    if (this.checkPipeCollisions()) {
+                        this.resetBall();
+                        return;
+                    }
+
+                    // Check ground collision - NO BOUNCING
+                    if (this.ball.y + this.BALL_RADIUS > this.CANVAS_HEIGHT - 150) {
+                        this.ball.y = this.CANVAS_HEIGHT - 150 - this.BALL_RADIUS;
+                        this.ball.velocityX = 0;
+                        this.ball.velocityY = 0;
+
+                        // Trigger miss immediately when ball hits ground
+                        this.gameState.message = 'MISS! Try again! 😅';
+                        this.gameState.messageTimer = 90;
+                        this.gameState.misses++;
+
+                        // Reset for next shot
+                        this.ball.x = this.CANVAS_WIDTH / 4;
+                        this.ball.y = this.CANVAS_HEIGHT - 150 - this.BALL_RADIUS;
+                        this.ball.velocityX = 0;
+                        this.ball.velocityY = 0;
+                        this.ball.spin = 0;
+                        this.ball.isMoving = false;
+                        this.gameState.isShot = false;
+                        this.gameState.shots++;
+                        return;
+                    }
+
+                    // Check side boundaries
+                    if (this.ball.x - this.BALL_RADIUS < 0 || this.ball.x + this.BALL_RADIUS > this.CANVAS_WIDTH) {
+                        this.ball.velocityX = -this.ball.velocityX * this.BOUNCE_FACTOR;
+                    }
+
+                    // Check if ball is out of bounds (top or stopped)
+                    if (this.ball.y < -this.BALL_RADIUS ||
+                        (Math.abs(this.ball.velocityX) < 0.5 &&
+                         Math.abs(this.ball.velocityY) < 0.5 &&
+                         this.ball.y + this.BALL_RADIUS >= this.CANVAS_HEIGHT - 150)) {
+                        if (this.ball.y < -this.BALL_RADIUS) {
+                            this.gameState.message = 'MISS! Too high! 😅';
+                        } else {
+                            this.gameState.message = 'MISS! Try again! 😅';
+                        }
+                        this.gameState.messageTimer = 90;
+                        this.gameState.misses++;
+
+                        // Automatically reset for next shot without stopping the game
+                        this.ball.x = this.CANVAS_WIDTH / 4;
+                        this.ball.y = this.CANVAS_HEIGHT - 150 - this.BALL_RADIUS;
+                        this.ball.velocityX = 0;
+                        this.ball.velocityY = 0;
+                        this.ball.spin = 0;
+                        this.ball.isMoving = false;
+                        this.gameState.isShot = false;
+                        this.gameState.shots++;
+
+                        return;
+                    }
+                }
+            }
+
+            resetBall() {
+                // Reset ball to starting position (used after scoring)
+                this.ball.x = this.CANVAS_WIDTH / 4;
+                this.ball.y = this.CANVAS_HEIGHT - 150 - this.BALL_RADIUS;
+                this.ball.velocityX = 0;
+                this.ball.velocityY = 0;
+                this.ball.spin = 0;
+                this.ball.isMoving = false;
+                this.gameState.isShot = false;
+                this.gameState.shots++;
+            }
+
+            shootBall() {
+                if (!this.ball.isMoving && !this.gameState.isShot) {
+                    this.ball.velocityX = this.gameState.power * Math.cos(this.gameState.angle);
+                    this.ball.velocityY = -this.gameState.power * Math.sin(this.gameState.angle);
+                    this.ball.isMoving = true;
+                    this.gameState.isShot = true;
+                    this.gameState.isCharging = false;
+                }
+            }
+
+            updateDifficulty() {
+                if (this.gameState.timeRemaining % 20 === 0 && this.gameState.timeRemaining !== this.GAME_TIME) {
+                    this.gameState.difficulty++;
+                    // Make pipes slightly smaller as difficulty increases
+                    this.pipes.forEach((pipe) => {
+                        pipe.width = Math.max(40, pipe.width - 2);
+                    });
+                }
+            }
+
+            resetGame() {
+                this.gameState = {
+                    isCharging: false,
+                    isShot: false,
+                    power: 0,
+                    angle: Math.PI / 4,
+                    score: 0,
+                    shots: 0,
+                    misses: 0,
+                    message: '',
+                    messageTimer: 0,
+                    isGameOver: false,
+                    timeRemaining: this.GAME_TIME,
+                    difficulty: 1
+                };
+
+                // Reset pipe sizes
+                this.pipes[0].width = 60;
+                this.pipes[1].width = 60;
+                this.pipes[2].width = 60;
+
+                this.resetBall();
+            }
+
+            handleInput() {
+                if (this.keys.r) {
+                    this.resetGame();
+                    return;
+                }
+
+                if (this.gameState.isGameOver) return;
+
+                if (!this.ball.isMoving && !this.gameState.isShot) {
+                    if (this.keys.left) {
+                        this.ball.x = Math.max(this.BALL_RADIUS, this.ball.x - this.BALL_SPEED);
+                    }
+                    if (this.keys.right) {
+                        this.ball.x = Math.min(this.CANVAS_WIDTH - this.BALL_RADIUS, this.ball.x + this.BALL_SPEED);
+                    }
+
+                    if (this.keys.up) {
+                        this.gameState.angle = Math.min(this.MAX_ANGLE, this.gameState.angle + 0.03);
+                    }
+                    if (this.keys.down) {
+                        this.gameState.angle = Math.max(this.MIN_ANGLE, this.gameState.angle - 0.03);
+                    }
+
+                    if (this.keys.space && !this.gameState.isCharging) {
+                        this.gameState.isCharging = true;
+                        this.gameState.power = 0;
+                    }
+
+                    if (this.gameState.isCharging && this.keys.space) {
+                        this.gameState.power = Math.min(this.MAX_POWER, this.gameState.power + this.POWER_INCREMENT);
+                    }
+
+                    if (!this.keys.space && this.gameState.isCharging) {
+                        this.shootBall();
+                    }
+                }
+            }
+
+            gameLoop() {
+                if (!this.isRunning) return;
+
+                // Clear canvas with sky blue background
+                this.ctx.fillStyle = '#87CEEB';
+                this.ctx.fillRect(0, 0, this.CANVAS_WIDTH, this.CANVAS_HEIGHT);
+
+                if (!this.gameState.isGameOver) {
+                    this.handleInput();
+                    this.updateBall();
+                    this.gameState.timeRemaining -= 1/60;
+                    this.updateDifficulty();
+
+                    if (this.gameState.misses >= this.MAX_MISSES || this.gameState.timeRemaining <= 0) {
+                        this.gameState.isGameOver = true;
+                        if (this.gameState.score > this.highScore) {
+                            this.highScore = this.gameState.score;
+                            localStorage.setItem(`${playerName}_soccerHighScore`, this.highScore);
+                        }
+                    }
+                }
+
+                this.drawField();
+                this.drawPipes();
+                if (!this.ball.isMoving) {
+                    this.drawPlayer();
+                }
+                this.drawSoccerBall();
+                this.drawScore();
+                this.drawMessage();
+
+                if (this.gameState.isGameOver) {
+                    this.drawGameOver();
+                }
+
+                this.animationId = requestAnimationFrame(() => this.gameLoop());
+            }
+
+            start() {
+                this.isRunning = true;
+                this.gameLoop();
+            }
+
+            stop() {
+                this.isRunning = false;
+                if (this.animationId) {
+                    cancelAnimationFrame(this.animationId);
+                }
+                window.removeEventListener('keydown', this.keyDownHandler);
+                window.removeEventListener('keyup', this.keyUpHandler);
+            }
+        }
+
+        // Initialize the game
+        showScreen('nameInput');
+    </script>
 </body>
-</html> 
+</html>
