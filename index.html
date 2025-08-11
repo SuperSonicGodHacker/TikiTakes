@@ -23,7 +23,6 @@
             padding: 0 20px;
         }
 
-        /* Header */
         header {
             background: white;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
@@ -73,7 +72,6 @@
             color: #eab308;
         }
 
-        /* Hero Section */
         .hero {
             background: linear-gradient(to bottom, #fefce8, #f0fdf4);
             padding: 5rem 0;
@@ -138,7 +136,6 @@
             background: #fefce8;
         }
 
-        /* Menu Section */
         .menu {
             padding: 5rem 0;
             background: white;
@@ -228,24 +225,6 @@
             margin-bottom: 1rem;
         }
 
-        .rating {
-            display: flex;
-            align-items: center;
-            gap: 0.25rem;
-        }
-
-        .star {
-            color: #fbbf24;
-            font-size: 1rem;
-        }
-
-        .rating-text {
-            color: #6b7280;
-            font-size: 0.875rem;
-            margin-left: 0.5rem;
-        }
-
-        /* About Section */
         .about {
             padding: 5rem 0;
             background: linear-gradient(to right, #fefce8, #f0fdf4);
@@ -287,7 +266,6 @@
             color: #6b7280;
         }
 
-        /* Contact Section */
         .contact {
             padding: 5rem 0;
             background: white;
@@ -325,7 +303,6 @@
             color: #6b7280;
         }
 
-        /* Feedback Section */
         .feedback {
             padding: 5rem 0;
             background: #fefce8;
@@ -350,7 +327,12 @@
             margin-bottom: 1.5rem;
         }
 
-        /* Footer */
+        .response-counter {
+            margin-top: 1rem;
+            font-size: 0.9rem;
+            color: #6b7280;
+        }
+
         footer {
             background: #1f2937;
             color: white;
@@ -394,7 +376,6 @@
             color: #9ca3af;
         }
 
-        /* Responsive */
         @media (max-width: 768px) {
             .hero h2 {
                 font-size: 2.5rem;
@@ -411,7 +392,6 @@
     </style>
 </head>
 <body>
-     Header 
     <header>
         <div class="container">
             <div class="header-content">
@@ -429,7 +409,6 @@
         </div>
     </header>
 
-     Hero Section 
     <section class="hero">
         <div class="container">
             <h2>Fresh <span class="highlight">Lemonade</span><br>Made with Love</h2>
@@ -441,7 +420,6 @@
         </div>
     </section>
 
-     Menu Section 
     <section id="menu" class="menu">
         <div class="container">
             <div class="section-header">
@@ -449,7 +427,6 @@
                 <p>Simple, fresh, and delicious</p>
             </div>
             <div class="menu-grid">
-                 Classic Lemonade 
                 <div class="menu-card">
                     <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/IMG_1146-Jo1Y4srOss9iRC8hiYPwo4XvSNkPsv.jpeg" alt="Classic Lemonade">
                     <div class="card-content">
@@ -460,14 +437,9 @@
                             <span class="price">$1.50</span>
                         </div>
                         <p class="card-description">Our classic fresh-squeezed lemonade made with real lemons and pure cane sugar.</p>
-                        <div class="rating">
-                            <span class="star">★★★★★</span>
-                            <span class="rating-text">(4.9)</span>
-                        </div>
                     </div>
                 </div>
 
-                 Pink Lemonade 
                 <div class="menu-card">
                     <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/IMG_1147-Uu5zomtFnVDR7XVQXkL3Yn6w2ostGS.jpeg" alt="Pink Lemonade">
                     <div class="card-content">
@@ -478,14 +450,9 @@
                             <span class="price">$2.00</span>
                         </div>
                         <p class="card-description">Sweet and tangy pink lemonade with a beautiful rosy color and fruity flavor.</p>
-                        <div class="rating">
-                            <span class="star">★★★★★</span>
-                            <span class="rating-text">(4.8)</span>
-                        </div>
                     </div>
                 </div>
 
-                 Sugar Cookies 
                 <div class="menu-card">
                     <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/IMG_1149-27PMRMDJKJT1w1SWnWTdODg7aTaCDY.jpeg" alt="Sugar Cookies">
                     <div class="card-content">
@@ -496,14 +463,9 @@
                             <span class="price">$1.25</span>
                         </div>
                         <p class="card-description">Soft and chewy homemade sugar cookies, perfect to pair with our fresh lemonade.</p>
-                        <div class="rating">
-                            <span class="star">★★★★★</span>
-                            <span class="rating-text">(4.7)</span>
-                        </div>
                     </div>
                 </div>
 
-                 Orange Lemonade 
                 <div class="menu-card">
                     <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/IMG_1150-uKb3n3uUsJflr4nwVPdCuzC3OKTCY5.jpeg" alt="Orange Lemonade">
                     <div class="card-content">
@@ -515,17 +477,12 @@
                             <span class="price">$2.30</span>
                         </div>
                         <p class="card-description">A citrusy twist combining fresh orange juice with our classic lemonade for a zesty flavor.</p>
-                        <div class="rating">
-                            <span class="star">★★★★★</span>
-                            <span class="rating-text">(4.6)</span>
-                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-     About Section 
     <section id="about" class="about">
         <div class="container">
             <div class="about-content">
@@ -548,7 +505,6 @@
         </div>
     </section>
 
-     Contact Section 
     <section id="contact" class="contact">
         <div class="container">
             <div class="section-header">
@@ -575,7 +531,6 @@
         </div>
     </section>
 
-     Feedback Section 
     <section id="feedback" class="feedback">
         <div class="container">
             <div class="feedback-content">
@@ -583,13 +538,15 @@
                 <p style="font-size: 1.25rem; color: #6b7280; margin-bottom: 2rem;">Help us improve by sharing your thoughts about our lemonades and service.</p>
                 <div class="feedback-card">
                     <p>Your feedback is important to us! Let us know what you think about our drinks, service, or any suggestions you might have.</p>
-                    <a href="https://docs.google.com/forms/d/e/1FAIpQLSeNONRdEIv3fKMVrykbCUfUaXQQi8-J5E9O75LrLd8M-a8TTQ/viewform?usp=sharing&ouid=105756255451456152374" target="_blank" class="btn btn-primary">Share Your Feedback</a>
+                    <a href="https://docs.google.com/forms/d/e/1FAIpQLSeNONRdEIv3fKMVrykbCUfUaXQQi8-J5E9O75LrLd8M-a8TTQ/viewform?usp=sharing&ouid=105756255451456152374" target="_blank" class="btn btn-primary" onclick="incrementCounter()">Share Your Feedback</a>
+                    <div class="response-counter" id="responseCounter">
+                        <span id="clickCount">0</span> people have clicked to share feedback
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
-     Footer 
     <footer>
         <div class="container">
             <div class="footer-content">
@@ -626,9 +583,24 @@
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2025 Tikitakes . All rights reserved.</p>
+                <p>&copy; 2024 Tikitakes. All rights reserved.</p>
             </div>
         </div>
     </footer>
+
+    <script>
+        function incrementCounter() {
+            let count = localStorage.getItem('feedbackClicks') || 0;
+            count = parseInt(count) + 1;
+            localStorage.setItem('feedbackClicks', count);
+            document.getElementById('clickCount').textContent = count;
+        }
+
+        // Load the counter on page load
+        window.onload = function() {
+            let count = localStorage.getItem('feedbackClicks') || 0;
+            document.getElementById('clickCount').textContent = count;
+        }
+    </script>
 </body>
 </html>
