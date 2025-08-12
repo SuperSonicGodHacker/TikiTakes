@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tikitakes - Fresh Lemonade Made with Love</title>
+    <title>Tikitakes - Fresh Lemonade & Cookies</title>
     <style>
         * {
             margin: 0;
@@ -23,15 +23,16 @@
             padding: 0 20px;
         }
 
+        /* Header */
         header {
-            background: white;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
             position: sticky;
             top: 0;
             z-index: 100;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
 
-        .header-content {
+        nav {
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -47,138 +48,130 @@
         .logo img {
             width: 50px;
             height: 50px;
-            border-radius: 50%;
         }
 
         .logo h1 {
-            font-size: 1.5rem;
+            font-size: 1.8rem;
             font-weight: bold;
-            color: #1f2937;
+            color: #7c2d12;
         }
 
-        nav {
+        .nav-links {
             display: flex;
+            list-style: none;
             gap: 2rem;
         }
 
-        nav a {
+        .nav-links a {
             text-decoration: none;
-            color: #374151;
+            color: #7c2d12;
             font-weight: 500;
             transition: color 0.3s;
         }
 
-        nav a:hover {
-            color: #eab308;
+        .nav-links a:hover {
+            color: #92400e;
         }
 
+        /* Hero Section */
         .hero {
-            background: linear-gradient(to bottom, #fefce8, #f0fdf4);
-            padding: 5rem 0;
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 50%, #fbbf24 100%);
+            padding: 4rem 0;
             text-align: center;
         }
 
         .hero h2 {
-            font-size: 3.5rem;
+            font-size: 3rem;
             font-weight: bold;
-            margin-bottom: 1.5rem;
-            color: #1f2937;
-        }
-
-        .hero .highlight {
-            color: #eab308;
+            color: #7c2d12;
+            margin-bottom: 1rem;
         }
 
         .hero p {
-            font-size: 1.25rem;
-            color: #6b7280;
+            font-size: 1.2rem;
+            color: #92400e;
             margin-bottom: 2rem;
             max-width: 600px;
             margin-left: auto;
             margin-right: auto;
         }
 
-        .hero-buttons {
+        .cta-buttons {
             display: flex;
             gap: 1rem;
             justify-content: center;
             flex-wrap: wrap;
-            margin-bottom: 3rem;
         }
 
         .btn {
-            padding: 12px 32px;
-            border-radius: 6px;
-            text-decoration: none;
-            font-weight: 600;
-            transition: all 0.3s;
+            padding: 12px 24px;
             border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s;
             cursor: pointer;
-            font-size: 1rem;
         }
 
         .btn-primary {
-            background: #eab308;
+            background: #7c2d12;
             color: white;
         }
 
         .btn-primary:hover {
-            background: #ca8a04;
+            background: #92400e;
+            transform: translateY(-2px);
         }
 
-        .btn-outline {
-            background: transparent;
-            color: #eab308;
-            border: 2px solid #eab308;
-        }
-
-        .btn-outline:hover {
-            background: #fefce8;
-        }
-
-        .menu {
-            padding: 5rem 0;
+        .btn-secondary {
             background: white;
+            color: #7c2d12;
+            border: 2px solid #7c2d12;
         }
 
-        .section-header {
+        .btn-secondary:hover {
+            background: #7c2d12;
+            color: white;
+        }
+
+        /* Menu Section */
+        .menu {
+            padding: 4rem 0;
+            background: #fefefe;
+        }
+
+        .section-title {
             text-align: center;
-            margin-bottom: 4rem;
-        }
-
-        .section-header h3 {
             font-size: 2.5rem;
             font-weight: bold;
-            color: #1f2937;
-            margin-bottom: 1rem;
-        }
-
-        .section-header p {
-            font-size: 1.25rem;
-            color: #6b7280;
+            color: #7c2d12;
+            margin-bottom: 3rem;
         }
 
         .menu-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 2rem;
+            max-width: 800px;
+            margin: 0 auto;
         }
 
         .menu-card {
             background: white;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border-radius: 12px;
             overflow: hidden;
-            transition: box-shadow 0.3s;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
         }
 
         .menu-card:hover {
-            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            transform: translateY(-5px);
         }
 
         .menu-card img {
             width: 100%;
-            height: 250px;
+            height: 200px;
             object-fit: cover;
         }
 
@@ -189,45 +182,31 @@
         .card-header {
             display: flex;
             justify-content: space-between;
-            align-items: flex-start;
+            align-items: center;
             margin-bottom: 0.5rem;
         }
 
         .card-title {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .card-title h4 {
-            font-size: 1.25rem;
-            font-weight: 600;
-            color: #1f2937;
-        }
-
-        .exclusive-badge {
-            background: #ea580c;
-            color: white;
-            font-size: 0.75rem;
-            padding: 0.25rem 0.5rem;
-            border-radius: 9999px;
-            font-weight: 600;
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #7c2d12;
         }
 
         .price {
-            font-size: 1.125rem;
+            font-size: 1.2rem;
             font-weight: bold;
-            color: #eab308;
+            color: #f59e0b;
         }
 
         .card-description {
-            color: #6b7280;
-            margin-bottom: 1rem;
+            color: #666;
+            line-height: 1.5;
         }
 
+        /* About Section */
         .about {
-            padding: 5rem 0;
-            background: linear-gradient(to right, #fefce8, #f0fdf4);
+            padding: 4rem 0;
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
         }
 
         .about-content {
@@ -237,348 +216,283 @@
             align-items: center;
         }
 
-        .about-text h3 {
-            font-size: 2.5rem;
-            font-weight: bold;
-            color: #1f2937;
-            margin-bottom: 1.5rem;
+        .about-text {
+            font-size: 1.1rem;
+            color: #7c2d12;
+            line-height: 1.8;
         }
 
-        .about-text p {
-            font-size: 1.125rem;
-            color: #6b7280;
-            margin-bottom: 1.5rem;
-            line-height: 1.7;
-        }
-
-        .stat {
+        .about-image {
             text-align: center;
+        }
+
+        .about-image img {
+            max-width: 100%;
+            border-radius: 12px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+        }
+
+        /* Contact Section */
+        .contact {
+            padding: 4rem 0;
+            background: white;
+        }
+
+        .contact-info {
+            text-align: center;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .hours {
+            background: #fef3c7;
+            padding: 2rem;
+            border-radius: 12px;
             margin-top: 2rem;
         }
 
-        .stat-number {
-            font-size: 2rem;
-            font-weight: bold;
-            color: #eab308;
+        .hours h3 {
+            color: #7c2d12;
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
         }
 
-        .stat-label {
-            color: #6b7280;
-        }
-
-        .contact {
-            padding: 5rem 0;
-            background: white;
-        }
-
-        .contact-grid {
+        .hours-list {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
+            gap: 0.5rem;
         }
 
-        .contact-card {
-            background: white;
-            padding: 2rem;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            text-align: center;
+        .hours-item {
+            display: flex;
+            justify-content: space-between;
+            color: #92400e;
         }
 
-        .contact-icon {
-            width: 48px;
-            height: 48px;
-            margin: 0 auto 1rem;
-            color: #eab308;
-        }
-
-        .contact-card h4 {
-            font-size: 1.25rem;
-            font-weight: 600;
-            color: #1f2937;
-            margin-bottom: 0.5rem;
-        }
-
-        .contact-card p {
-            color: #6b7280;
-        }
-
+        /* Feedback Section */
         .feedback {
-            padding: 5rem 0;
-            background: #fefce8;
-        }
-
-        .feedback-content {
-            max-width: 800px;
-            margin: 0 auto;
+            padding: 4rem 0;
+            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
             text-align: center;
         }
 
-        .feedback-card {
-            background: white;
-            padding: 2rem;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        .feedback h2 {
+            color: white;
+            margin-bottom: 1rem;
         }
 
-        .feedback-card p {
-            font-size: 1.125rem;
-            color: #374151;
-            margin-bottom: 1.5rem;
+        .feedback p {
+            color: #fef3c7;
+            margin-bottom: 2rem;
+            font-size: 1.1rem;
         }
 
-        .response-counter {
+        .feedback-counter {
             margin-top: 1rem;
+            color: #fef3c7;
             font-size: 0.9rem;
-            color: #6b7280;
         }
 
+        /* Footer */
         footer {
-            background: #1f2937;
+            background: #7c2d12;
             color: white;
             padding: 3rem 0 2rem;
         }
 
         .footer-content {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 2rem;
             margin-bottom: 2rem;
         }
 
-        .footer-section h5 {
-            font-weight: 600;
+        .footer-section h3 {
             margin-bottom: 1rem;
+            color: #fbbf24;
         }
 
-        .footer-section ul {
+        .footer-links {
             list-style: none;
         }
 
-        .footer-section ul li {
-            margin-bottom: 0.5rem;
-        }
-
-        .footer-section ul li a {
-            color: #9ca3af;
+        .footer-links a {
+            color: #fef3c7;
             text-decoration: none;
             transition: color 0.3s;
         }
 
-        .footer-section ul li a:hover {
+        .footer-links a:hover {
             color: #fbbf24;
         }
 
         .footer-bottom {
-            border-top: 1px solid #374151;
-            padding-top: 2rem;
             text-align: center;
-            color: #9ca3af;
+            padding-top: 2rem;
+            border-top: 1px solid #92400e;
+            color: #fef3c7;
         }
 
+        /* Responsive Design */
         @media (max-width: 768px) {
-            .hero h2 {
-                font-size: 2.5rem;
+            .nav-links {
+                display: none;
             }
-            
+
+            .hero h2 {
+                font-size: 2rem;
+            }
+
             .about-content {
                 grid-template-columns: 1fr;
+                text-align: center;
             }
-            
-            nav {
-                display: none;
+
+            .menu-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
             }
         }
     </style>
 </head>
 <body>
+    <!-- Header -->
     <header>
-        <div class="container">
-            <div class="header-content">
-                <div class="logo">
-                    <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/7EBC7994-F4A9-4755-8E96-104D7D0CEF4D-BR7zuIWH9EA4enjyXhGZK6r3OUkXeT.png" alt="Tikitakes Logo">
-                    <h1>Tikitakes</h1>
-                </div>
-                <nav>
-                    <a href="#menu">Menu</a>
-                    <a href="#about">About</a>
-                    <a href="#feedback">Feedback</a>
-                    <a href="#contact">Contact</a>
-                </nav>
+        <nav class="container">
+            <div class="logo">
+                <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/7EBC7994-F4A9-4755-8E96-104D7D0CEF4D-BR7zuIWH9EA4enjyXhGZK6r3OUkXeT.png" alt="Tikitakes Logo">
+                <h1>Tikitakes</h1>
             </div>
-        </div>
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#menu">Menu</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#contact">Contact</a></li>
+                <li><a href="#feedback">Feedback</a></li>
+            </ul>
+        </nav>
     </header>
 
-    <section class="hero">
+    <!-- Hero Section -->
+    <section id="home" class="hero">
         <div class="container">
-            <h2>Fresh <span class="highlight">Lemonade</span><br>Made with Love</h2>
-            <p>Experience the perfect blend of sweet and tangy with our handcrafted lemonades. Made fresh daily with the finest ingredients.</p>
-            <div class="hero-buttons">
-                <a href="#menu" class="btn btn-primary">View Menu</a>
-                <a href="#contact" class="btn btn-outline">Visit Us</a>
+            <h2>Fresh Lemonade & Delicious Cookies</h2>
+            <p>At Tikitakes, we serve the freshest, tangiest lemonade and the most delicious cookies you've ever tasted. Every sip and bite bursts with sunshine!</p>
+            <div class="cta-buttons">
+                <a href="#menu" class="btn btn-primary">View Our Menu</a>
+                <a href="#about" class="btn btn-secondary">Learn More</a>
             </div>
         </div>
     </section>
 
+    <!-- Menu Section -->
     <section id="menu" class="menu">
         <div class="container">
-            <div class="section-header">
-                <h3>Our Fresh Menu</h3>
-                <p>Simple, fresh, and delicious</p>
-            </div>
+            <h2 class="section-title">Our Menu</h2>
             <div class="menu-grid">
                 <div class="menu-card">
                     <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/IMG_1146-Jo1Y4srOss9iRC8hiYPwo4XvSNkPsv.jpeg" alt="Classic Lemonade">
                     <div class="card-content">
                         <div class="card-header">
-                            <div class="card-title">
-                                <h4>Lemonade</h4>
-                            </div>
+                            <h3 class="card-title">Lemonade</h3>
                             <span class="price">$1.50</span>
                         </div>
-                        <p class="card-description">Our classic fresh-squeezed lemonade made with real lemons and pure cane sugar.</p>
+                        <p class="card-description">Our signature fresh-squeezed lemonade made with real lemons, natural sweetness, and a splash of love.</p>
                     </div>
                 </div>
-
                 <div class="menu-card">
-                    <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/IMG_1147-Uu5zomtFnVDR7XVQXkL3Yn6w2ostGS.jpeg" alt="Pink Lemonade">
+                    <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/IMG_1180-pDmJZU6kBov8dVhqaWO4f7jCgPlCXW.jpeg" alt="Chocolate Chip Cookies">
                     <div class="card-content">
                         <div class="card-header">
-                            <div class="card-title">
-                                <h4>Pink Lemonade</h4>
-                            </div>
-                            <span class="price">$2.00</span>
+                            <h3 class="card-title">Cookies</h3>
+                            <span class="price">$1.00</span>
                         </div>
-                        <p class="card-description">Sweet and tangy pink lemonade with a beautiful rosy color and fruity flavor.</p>
-                    </div>
-                </div>
-
-                <div class="menu-card">
-                    <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/IMG_1149-27PMRMDJKJT1w1SWnWTdODg7aTaCDY.jpeg" alt="Sugar Cookies">
-                    <div class="card-content">
-                        <div class="card-header">
-                            <div class="card-title">
-                                <h4>Sugar Cookies</h4>
-                            </div>
-                            <span class="price">$1.25</span>
-                        </div>
-                        <p class="card-description">Soft and chewy homemade sugar cookies, perfect to pair with our fresh lemonade.</p>
-                    </div>
-                </div>
-
-                <div class="menu-card">
-                    <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/IMG_1150-uKb3n3uUsJflr4nwVPdCuzC3OKTCY5.jpeg" alt="Orange Lemonade">
-                    <div class="card-content">
-                        <div class="card-header">
-                            <div class="card-title">
-                                <h4>Orange Lemonade</h4>
-                                <span class="exclusive-badge">EXCLUSIVE</span>
-                            </div>
-                            <span class="price">$2.30</span>
-                        </div>
-                        <p class="card-description">A citrusy twist combining fresh orange juice with our classic lemonade for a zesty flavor.</p>
+                        <p class="card-description">Freshly baked chocolate chip cookies that are crispy on the outside and chewy on the inside.</p>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
+    <!-- About Section -->
     <section id="about" class="about">
         <div class="container">
+            <h2 class="section-title">About Us</h2>
             <div class="about-content">
                 <div class="about-text">
-                    <h3>About Tikitakes</h3>
                     <p>At Tikitakes Lemonade, we keep it fresh and real — lemons you can taste, and quality you can feel.</p>
-                    <p>We started just yesterday with a simple plan: serve the best lemonade we possibly can.</p>
+                    <p>We started with a simple plan: serve the best lemonade we possibly can.</p>
                     <p>No artificial flavors, no shortcuts in sight — just crisp, refreshing goodness in every bite (well… sip).</p>
                     <p>From the first pour to the last drop, we aim to make your taste buds pop.</p>
                     <p>Tikitakes isn't just a drink, it's the vibe of summer in a cup — and we're here to fill it up. 🍋</p>
-                    <div class="stat">
-                        <div class="stat-number">4</div>
-                        <div class="stat-label">Menu Items</div>
-                    </div>
                 </div>
-                <div>
-                    <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/F736D217-FD85-4E19-BC63-AC9073637A78-Xp1aCLWIJ4ZyW5gChYuu30r6nwGWEN.png" alt="Summer beach scene with lemonade" style="width: 100%; border-radius: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.15);">
+                <div class="about-image">
+                    <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/F736D217-FD85-4E19-BC63-AC9073637A78-2G1nIpCtU56XmEjAnY2VbMVvnl5dVt.png" alt="Summer vibes with lemonade">
                 </div>
             </div>
         </div>
     </section>
 
+    <!-- Contact Section -->
     <section id="contact" class="contact">
         <div class="container">
-            <div class="section-header">
-                <h3>Visit Us Today</h3>
-                <p>Find us at our location</p>
-            </div>
-            <div class="contact-grid">
-                <div class="contact-card">
-                    <div class="contact-icon">📍</div>
-                    <h4>Location</h4>
-                    <p>123 Citrus Avenue<br>Sunshine City, SC 12345</p>
-                </div>
-                <div class="contact-card">
-                    <div class="contact-icon">📞</div>
-                    <h4>Phone</h4>
-                    <p>(555) 123-LEMON<br>(555) 123-5366</p>
-                </div>
-                <div class="contact-card">
-                    <div class="contact-icon">🕒</div>
-                    <h4>Hours</h4>
-                    <p>Mon-Fri: 8AM - 8PM<br>Sat-Sun: 9AM - 9PM</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="feedback" class="feedback">
-        <div class="container">
-            <div class="feedback-content">
-                <h3 style="font-size: 2.5rem; font-weight: bold; color: #1f2937; margin-bottom: 1rem;">We'd Love Your Feedback!</h3>
-                <p style="font-size: 1.25rem; color: #6b7280; margin-bottom: 2rem;">Help us improve by sharing your thoughts about our lemonades and service.</p>
-                <div class="feedback-card">
-                    <p>Your feedback is important to us! Let us know what you think about our drinks, service, or any suggestions you might have.</p>
-                    <a href="https://docs.google.com/forms/d/e/1FAIpQLSeNONRdEIv3fKMVrykbCUfUaXQQi8-J5E9O75LrLd8M-a8TTQ/viewform?usp=sharing&ouid=105756255451456152374" target="_blank" class="btn btn-primary" onclick="incrementCounter()">Share Your Feedback</a>
-                    <div class="response-counter" id="responseCounter">
-                        <span id="clickCount">0</span> people have clicked to share feedback
+            <h2 class="section-title">Visit Us</h2>
+            <div class="contact-info">
+                <div class="hours">
+                    <h3>Hours</h3>
+                    <div class="hours-list">
+                        <div class="hours-item">
+                            <span>Monday - Friday</span>
+                            <span>9:00 AM - 6:00 PM</span>
+                        </div>
+                        <div class="hours-item">
+                            <span>Saturday</span>
+                            <span>Open Anytime</span>
+                        </div>
+                        <div class="hours-item">
+                            <span>Sunday</span>
+                            <span>Open Anytime</span>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
+    <!-- Feedback Section -->
+    <section id="feedback" class="feedback">
+        <div class="container">
+            <h2>We'd Love Your Feedback!</h2>
+            <p>Help us improve by sharing your thoughts about our lemonade and cookies.</p>
+            <button class="btn btn-secondary" onclick="handleFeedbackClick()">Share Your Feedback</button>
+            <div class="feedback-counter" id="feedbackCounter">0 people have clicked to share feedback</div>
+        </div>
+    </section>
+
+    <!-- Footer -->
     <footer>
         <div class="container">
             <div class="footer-content">
                 <div class="footer-section">
-                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 1rem;">
-                        <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/7EBC7994-F4A9-4755-8E96-104D7D0CEF4D-BR7zuIWH9EA4enjyXhGZK6r3OUkXeT.png" alt="Tikitakes Logo" style="width: 32px; height: 32px; border-radius: 50%;">
-                        <h5 style="font-size: 1.25rem;">Tikitakes</h5>
-                    </div>
-                    <p style="color: #9ca3af;">Fresh lemonade made with love, served with a smile.</p>
+                    <h3>Tikitakes</h3>
+                    <p>Fresh lemonade and delicious cookies made with love.</p>
                 </div>
                 <div class="footer-section">
-                    <h5>Menu</h5>
-                    <ul>
-                        <li><a href="#">Classic Lemonade</a></li>
-                        <li><a href="#">Flavored Lemonades</a></li>
-                        <li><a href="#">Seasonal Specials</a></li>
+                    <h3>Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#menu">Menu</a></li>
+                        <li><a href="#about">About</a></li>
+                        <li><a href="#contact">Contact</a></li>
                     </ul>
                 </div>
                 <div class="footer-section">
-                    <h5>Company</h5>
-                    <ul>
-                        <li><a href="#">About Us</a></li>
-                        <li><a href="#">Careers</a></li>
-                        <li><a href="#">Contact</a></li>
-                    </ul>
-                </div>
-                <div class="footer-section">
-                    <h5>Follow Us</h5>
-                    <ul>
-                        <li><a href="#">Instagram</a></li>
-                        <li><a href="#">Facebook</a></li>
-                        <li><a href="#">Twitter</a></li>
+                    <h3>Connect</h3>
+                    <ul class="footer-links">
+                        <li><a href="#feedback">Give Feedback</a></li>
                     </ul>
                 </div>
             </div>
@@ -589,18 +503,49 @@
     </footer>
 
     <script>
-        function incrementCounter() {
-            let count = localStorage.getItem('feedbackClicks') || 0;
-            count = parseInt(count) + 1;
-            localStorage.setItem('feedbackClicks', count);
-            document.getElementById('clickCount').textContent = count;
+        // Feedback click counter
+        function handleFeedbackClick() {
+            // Get current count from localStorage
+            let currentCount = parseInt(localStorage.getItem('feedbackClicks') || '0');
+            
+            // Increment count
+            currentCount++;
+            
+            // Save to localStorage
+            localStorage.setItem('feedbackClicks', currentCount.toString());
+            
+            // Update display
+            updateFeedbackCounter();
+            
+            // Open feedback form
+            window.open('https://docs.google.com/forms/d/e/1FAIpQLSeNONRdEIv3fKMVrykbCUfUaXQQi8-J5E9O75LrLd8M-a8TTQ/viewform?usp=sharing&ouid=105756255451456152374', '_blank');
         }
 
-        // Load the counter on page load
-        window.onload = function() {
-            let count = localStorage.getItem('feedbackClicks') || 0;
-            document.getElementById('clickCount').textContent = count;
+        function updateFeedbackCounter() {
+            const count = parseInt(localStorage.getItem('feedbackClicks') || '0');
+            const counterElement = document.getElementById('feedbackCounter');
+            const text = count === 1 ? 'person has' : 'people have';
+            counterElement.textContent = `${count} ${text} clicked to share feedback`;
         }
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Initialize feedback counter on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            updateFeedbackCounter();
+        });
     </script>
 </body>
 </html>
